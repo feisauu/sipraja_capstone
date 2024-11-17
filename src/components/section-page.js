@@ -1,4 +1,4 @@
-class Section extends HTMLElement {
+class SectionPage extends HTMLElement {
   constructor() {
     super();
 
@@ -47,4 +47,4 @@ class Section extends HTMLElement {
 }
 
 // Register custom element
-customElements.define("section", Section);
+customElements.define("section-page", SectionPage);
