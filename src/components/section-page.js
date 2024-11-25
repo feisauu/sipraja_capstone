@@ -9,7 +9,7 @@ class SectionPage extends HTMLElement {
     shadow.innerHTML = `
           <style>
             .section {
-            padding: 40px 40px 60px;
+            padding: 40px 40px;
             }
 
           .section h2 {
