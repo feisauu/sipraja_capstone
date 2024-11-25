@@ -1201,4 +1201,83 @@ form label span {
     background-color: #4b4a91;
 }
 
+/* Profile */
+.profile-page {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-container {
+  padding: 20px;
+  width: 300px;
+}
+
+.profile-name {
+  text-align: center;
+}
+
+.profile-header {
+  margin-bottom: 40px;
+}
+
+.profile-picture {
+  display: block;
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-top: 20px;
+}
+
+.profile-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #E4E7EC;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center; /* Membuat ikon dan teks sejajar secara vertikal */
+  padding: 15px;
+  border-top: 1px solid #ddd;
+  position: relative; /* Menghindari ikon tertumpuk */
+}
+
+.menu-item:first-child {
+  border-top: none;
+}
+
+.menu-item i {
+  margin-right: 10px; /* Memberi jarak antara ikon dan teks */
+  font-size: 1.2em; /* Ukuran ikon agar proporsional */
+  color: #333;
+}
+
+.menu-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  flex-grow: 1; /* Mengisi ruang yang tersisa */
+}
+
+.menu-link:hover {
+  color: #9c27b0;
+}
+
+#profile-form h2 {
+  margin-bottom: 48px;
+}
   
