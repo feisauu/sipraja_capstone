@@ -3,7 +3,7 @@ class SectionPage extends HTMLElement {
     super();
 
     // Buat Shadow DOM
-    const shadow = this.attachShadow({ mode: "open" });
+    const shadow = this.attachShadow({ mode: 'open' });
 
     // HTML untuk card
     shadow.innerHTML = `
@@ -41,10 +41,9 @@ class SectionPage extends HTMLElement {
 
   // Lifecycle method: Called when element is added to DOM
   connectedCallback() {
-    this.shadowRoot.querySelector("h2").textContent =
-      this.getAttribute("title");
+    this.shadowRoot.querySelector('h2').textContent = this.getAttribute('title');
   }
 }
 
 // Register custom element
-customElements.define("section-page", SectionPage);
+customElements.define('section-page', SectionPage);

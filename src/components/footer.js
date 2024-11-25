@@ -1,12 +1,10 @@
+/* eslint-disable quotes */
 class Footer extends HTMLElement {
-  constructor() {
-    super();
-    this.render();
-  }
-
-  render() {
+  connectedCallback() {
     this.innerHTML = `
-            <p>Capstone Project Dicoding 2024</p>
+            <footer>
+        <p>Capstone Project Dicoding 2024</p>
+    </footer>
         `;
   }
 }

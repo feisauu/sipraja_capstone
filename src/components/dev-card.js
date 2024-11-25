@@ -3,7 +3,7 @@ class DevCard extends HTMLElement {
     super();
 
     // Buat Shadow DOM
-    const shadow = this.attachShadow({ mode: "open" });
+    const shadow = this.attachShadow({ mode: 'open' });
 
     // HTML untuk card
     shadow.innerHTML = `
@@ -54,11 +54,11 @@ class DevCard extends HTMLElement {
 
   // Lifecycle method: Called when element is added to DOM
   connectedCallback() {
-    this.shadowRoot.querySelector("img").src = this.getAttribute("image");
-    this.shadowRoot.querySelector("h3").textContent = this.getAttribute("name");
-    this.shadowRoot.querySelector("p").textContent = this.getAttribute("role");
+    this.shadowRoot.querySelector('img').src = this.getAttribute('image');
+    this.shadowRoot.querySelector('h3').textContent = this.getAttribute('name');
+    this.shadowRoot.querySelector('p').textContent = this.getAttribute('role');
   }
 }
 
 // Register custom element
-customElements.define("dev-card", DevCard);
+customElements.define('dev-card', DevCard);

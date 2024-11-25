@@ -1,12 +1,12 @@
 class NotifItem extends HTMLElement {
-    constructor() {
-      super();
-  
-      // Buat Shadow DOM
-      const shadow = this.attachShadow({ mode: "open" });
-  
-      // HTML dan CSS untuk komponen
-      shadow.innerHTML = `
+  constructor() {
+    super();
+
+    // Buat Shadow DOM
+    const shadow = this.attachShadow({ mode: 'open' });
+
+    // HTML dan CSS untuk komponen
+    shadow.innerHTML = `
         <style>
           .notif-item {
             border-bottom: 1px solid #ddd;
@@ -82,26 +82,25 @@ class NotifItem extends HTMLElement {
           <div class="description"></div>
         </div>
       `;
-    }
-  
-    connectedCallback() {
-      // Ambil atribut dari elemen
-      const status = this.getAttribute("status") || "Laporan";
-      const time = this.getAttribute("time") || "Waktu tidak tersedia";
-      const description = this.innerHTML.trim();
-  
-      // Tentukan warna berdasarkan status
-      const statusClass = status === "Laporan Selesai" ? "green" : "orange";
-  
-      // Isi konten dalam komponen
-      this.shadowRoot.querySelector(".dot").classList.add(statusClass);
-      this.shadowRoot.querySelector(".status").classList.add(statusClass);
-      this.shadowRoot.querySelector(".status-text").textContent = status;
-      this.shadowRoot.querySelector(".time").textContent = time;
-      this.shadowRoot.querySelector(".description").textContent = description;
-    }
   }
-  
-  // Daftarkan custom element
-  customElements.define("notif-item", NotifItem);
-  
+
+  connectedCallback() {
+    // Ambil atribut dari elemen
+    const status = this.getAttribute('status') || 'Laporan';
+    const time = this.getAttribute('time') || 'Waktu tidak tersedia';
+    const description = this.innerHTML.trim();
+
+    // Tentukan warna berdasarkan status
+    const statusClass = status === 'Laporan Selesai' ? 'green' : 'orange';
+
+    // Isi konten dalam komponen
+    this.shadowRoot.querySelector('.dot').classList.add(statusClass);
+    this.shadowRoot.querySelector('.status').classList.add(statusClass);
+    this.shadowRoot.querySelector('.status-text').textContent = status;
+    this.shadowRoot.querySelector('.time').textContent = time;
+    this.shadowRoot.querySelector('.description').textContent = description;
+  }
+}
+
+// Daftarkan custom element
+customElements.define('notif-item', NotifItem);
