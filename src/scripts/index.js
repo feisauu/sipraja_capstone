@@ -18,6 +18,8 @@ import createDashboard from './pages/dashboard.js';
 import createLaporanPage from './pages/laporan.js';
 import createAboutPage from './pages/about.js';
 import createNotificationPage from './pages/detail-notif.js';
+import createProfilePage from './pages/profile.js';
+import createChangePasswordPage from './pages/ubah-sandi.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
@@ -85,6 +87,11 @@ function handleHashChange() {
     createLaporanPage();
   } else if (currentHash === '#/notifikasi') {
     createNotificationPage();
+  } else if (currentHash === '#/profile') {
+    createProfilePage();
+  } else if (currentHash === '#/ubah-sandi') {
+    // Pastikan halaman ubah kata sandi di-render dengan benar
+    createChangePasswordPage();
   } else {
     renderHomePage();
   }
