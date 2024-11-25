@@ -18,7 +18,7 @@ class Navbar extends HTMLElement {
             </ul>
             <div class="navbar-right">
               <i class="fas fa-bell" id="notification-bell"></i>
-              <div class="user">
+              <div class="user" id="user-profile">
                 <img src="../images/profil.webp" alt="User Profile">
                 <span>Kim Taehyung</span>
               </div>
@@ -29,14 +29,21 @@ class Navbar extends HTMLElement {
 
     // Event listener untuk ikon bel
     const bellIcon = this.querySelector('#notification-bell');
-    bellIcon.addEventListener('click', this.showNotificationDetails);
+    bellIcon.addEventListener('click', this.showNotificationDetails.bind(this));
+
+    // Event listener untuk profil
+    const profileLink = this.querySelector('#user-profile');
+    profileLink.addEventListener('click', this.showProfile.bind(this));
   }
 
   // Fungsi untuk menampilkan halaman detail notifikasi
   showNotificationDetails() {
     window.location.hash = '#/notifikasi';
+  }
 
-    handleHashChange();
+  // Fungsi untuk navigasi ke profil
+  showProfile() {
+    window.location.hash = '#/profile';
   }
 }
 
