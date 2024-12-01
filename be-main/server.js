@@ -7,10 +7,17 @@ const connectDB = require('./config/db');
 const path = require('path');
 const helmet = require('helmet')
 const expressMongoSanitize = require('express-mongo-sanitize')
- 
+const cloudinary = require('cloudinary').v2;
+
+
 env.config();
 
 const app = express();
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET_KEY
+});
 
 // Middleware
 app.use(cors());
