@@ -15,6 +15,11 @@ import '../styles/style.css';
 import renderLoginPage from './pages/login.js';
 import renderRegisterPage from './pages/register.js';
 import createDashboard from './pages/dashboard.js';
+import createDashboardAdmin from './admin-pages/dashboard-admin.js';
+import createLaporanAdmin from './admin-pages/laporan-admin.js';
+import createArsipAdmin from './admin-pages/arsip-admin.js';
+import createProfilAdmin from './admin-pages/profil-admin.js';
+import createKonfirmasi from './admin-pages/konfirmasi.js';
 import createLaporanPage from './pages/laporan.js';
 import createAboutPage from './pages/about.js';
 import createNotificationPage from './pages/detail-notif.js';
@@ -81,6 +86,14 @@ function handleHashChange() {
     renderLoginPage();
   } else if (currentHash === '#/dashboard') {
     createDashboard();
+  } else if (currentHash === '#/dashboard-admin') {
+    createDashboardAdmin();
+  } else if (currentHash === '#/laporan-admin') {
+    createLaporanAdmin();
+  } else if (currentHash === '#/arsip-admin') {
+    createArsipAdmin();
+  } else if (currentHash === '#/profil-admin') {
+    createProfilAdmin();
   } else if (currentHash === '#/about') {
     createAboutPage();
   } else if (currentHash === '#/laporan') {
@@ -90,7 +103,7 @@ function handleHashChange() {
   } else if (currentHash === '#/profile') {
     createProfilePage();
   } else if (currentHash === '#/ubah-sandi') {
-    // Pastikan halaman ubah kata sandi di-render dengan benar
+  // Pastikan halaman ubah kata sandi di-render dengan benar
     createChangePasswordPage();
   } else {
     renderHomePage();
