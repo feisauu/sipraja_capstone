@@ -46,7 +46,7 @@ const renderLoginPage = () => {
     if (email === 'kimtaehyung@gmail.com' && password === 'password123') {
       console.log('Login berhasil. Mengarahkan ke dashboard...');
       window.location.hash = '#/dashboard';
-    } else if (email === 'admin@example.com' && password === 'admin123') {
+    } else if (email === 'admin@gmail.com' && password === 'admin123') {
       console.log('Login berhasil sebagai admin. Mengarahkan ke dashboard admin...');
       window.location.hash = '#/dashboard-admin';
     } else {
