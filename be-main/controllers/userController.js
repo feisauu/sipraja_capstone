@@ -50,10 +50,10 @@ const Login = async(req, res) => {
 
        res.cookie('authToken', token , {
         httpOnly : true,
-        secure :  process.env.NODE_ENV === 'production'
+        secure :  process.env.NODE_ENV === 'production',
        })
 
-        res.status(200).json({ message: 'Login berhasil', data: { userId: user._id } });
+        res.status(200).json({ message: 'Login berhasil', data: { userId: user._id}, token, role: user.role });
    } catch (err) {
       return res.status(500).json({ error: 'Terjadi Kesalahan server' });
       
