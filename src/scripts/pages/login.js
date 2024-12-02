@@ -1,4 +1,6 @@
 /* eslint-disable no-alert */
+import ENDPOINT from '../globals/endpoint';
+
 const renderLoginPage = () => {
   document.body.innerHTML = `
     <main>
@@ -35,23 +37,60 @@ const renderLoginPage = () => {
 
   // Tambahkan event listener untuk form login
   const loginForm = document.getElementById('login-form');
-  loginForm.addEventListener('submit', (event) => {
+  loginForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Mencegah form reload halaman
 
     // Ambil data dari form
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    // Validasi login dengan data dummy
-    if (email === 'kimtaehyung@gmail.com' && password === 'password123') {
-      console.log('Login berhasil. Mengarahkan ke dashboard...');
-      window.location.hash = '#/dashboard';
-    } else if (email === 'admin@gmail.com' && password === 'admin123') {
-      console.log('Login berhasil sebagai admin. Mengarahkan ke dashboard admin...');
-      window.location.hash = '#/dashboard-admin';
-    } else {
-      console.log('Login gagal.');
-      alert('Email atau kata sandi salah. Silakan coba lagi.');
+    try {
+      const response = await fetch(ENDPOINT.LOGIN, {
+        method: 'POST',
+        credentials: 'include', // Mengirimkan cookie dengan permintaan
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      // Debug respons mentah
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
+      // Cek tipe konten respons
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && contentType.includes('application/json')) {
+        const result = await response.json(); // Parse JSON jika tipe konten benar
+        console.log('Parsed JSON:', result);
+
+        if (response.ok) {
+          console.log('Login berhasil.');
+          
+          // Cek role pengguna dari data respons
+          if (result.role === 'admin') {
+            // Redirect ke halaman admin
+            window.location.hash = '#/dashboard-admin';
+            console.log('Login berhasil sebagai admin. Mengarahkan ke dashboard admin...');
+          } else if (result.role === 'user') {
+            // Redirect ke halaman user
+            window.location.hash = '#/dashboard';
+          } else {
+            // Default redirect jika role tidak dikenal
+            alert('Role pengguna tidak dikenali.');
+          }
+        } else {
+          alert(result.message || 'Email atau kata sandi salah.');
+        }
+      } else {
+        console.error('Unexpected response type:', contentType);
+        const textResponse = await response.text(); // Baca sebagai teks
+        console.error('HTML Response:', textResponse);
+        alert('Server mengembalikan respons yang tidak valid.');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      alert(`Error detail: ${error.message}`);
     }
   });
 
