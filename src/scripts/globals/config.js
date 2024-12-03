@@ -1,5 +1,5 @@
 const CONFIG = {
-  REPORT: 'http://localhost:5000/api/v1/',
+  REPORT: 'https://backend-sipraja.vercel.app/api/v1/',
 };
 
 export default CONFIG;
