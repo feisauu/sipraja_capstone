@@ -68,21 +68,7 @@ const renderRegisterPage = () => {
     const confirmPassword = document.getElementById('confirm-password').value.trim();
     const phone = document.getElementById('phone').value.trim();
 
-    // Validasi nama tidak boleh kosong dan tidak lebih dari 50 karakter
-    if (!name) {
-      alert('Nama wajib diisi atau tidak boleh kosong.');
-      return; // Hentikan proses submit
-    }
-    if (name.length > 50) {
-      alert('Nama tidak boleh lebih dari 50 karakter.');
-      return; // Hentikan proses submit
-    }
 
-    // Validasi email tidak boleh kosong
-    if (!email) {
-      alert('Email tidak boleh kosong.');
-      return; // Hentikan proses submit
-    }
 
     // Validasi format email
     const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
