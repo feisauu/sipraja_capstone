@@ -1,6 +1,7 @@
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
+import ENDPOINT from '../globals/endpoint';
 
 const createDetailLaporanPage = () => {
   // Buat elemen navbar
@@ -12,7 +13,7 @@ const createDetailLaporanPage = () => {
   detailLaporanSection.className = 'detail-laporan';
   detailLaporanSection.innerHTML = `
     <h1>Formulir Laporan</h1>
-    <form>
+    <form id="form-laporan">
       <label for="nama">Nama Pelapor</label>
       <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Anda" required>
 
@@ -29,17 +30,50 @@ const createDetailLaporanPage = () => {
       <input type="text" id="lokasi" name="lokasi" placeholder="Masukkan Lokasi" required>
 
       <label for="deskripsi">Deskripsi Masalah</label>
-      <textarea id="deskripsi" name="deskripsi" placeholder="Masukkan Deskripsi Masalah" rows="5" required></textarea>
+      <textarea id="deskripsi" name="description" placeholder="Masukkan Deskripsi Masalah" rows="5" required></textarea>
 
       <label for="foto">Foto Pendukung</label>
       <div class="file-upload">
-        <input type="file" id="foto" name="foto" accept="image/*">
+        <input type="file" id="foto" name="gambar_pendukung" accept="image/*">
       </div>
 
       <button type="submit" class="submit-button">Buat Laporan</button>
     </form>
   `;
   document.body.appendChild(detailLaporanSection);
+
+  // Event listener untuk form submission
+  const form = document.getElementById('form-laporan');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+  
+    const formData = new FormData(form);
+    console.log([...formData]); // Debug data yang dikirimkan
+  
+    try {
+      const response = await fetch(ENDPOINT.CREATELAPORAN, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+  
+      const textResponse = await response.text();
+      console.log('Raw Response:', textResponse);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+  
+      const result = JSON.parse(textResponse);
+      console.log('Parsed Response:', result);
+  
+      alert('Laporan berhasil dibuat!');
+      window.location.href = '#/dashboard'; // Redirect ke halaman utama
+    } catch (error) {
+      console.error('Error:', error.message);
+      alert(`Gagal membuat laporan: ${error.message}`);
+    }
+  });
 
   // Buat elemen footer
   const footer = document.createElement('footer-component');
