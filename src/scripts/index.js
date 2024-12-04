@@ -84,6 +84,8 @@ function handleHashChange() {
   // Menangani berbagai halaman berdasarkan hash
   if (currentHash === '#/login') {
     renderLoginPage();
+  } else if (currentHash === '#/register') {
+    renderRegisterPage();
   } else if (currentHash === '#/dashboard') {
     createDashboard();
   } else if (currentHash === '#/dashboard-admin') {
