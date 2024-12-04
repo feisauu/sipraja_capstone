@@ -43,6 +43,83 @@ const renderRegisterPage = () => {
     </section>
   </main>
     `;
+  const profilePictureInput = document.getElementById('profile-picture');
+  profilePictureInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!validFormats.includes(file.type)) {
+        alert('Format file tidak didukung. Upload ulang dengan format .jpg, .jpeg, atau .png.');
+        // eslint-disable-next-line no-param-reassign
+        event.target.value = ''; // Reset input file
+      }
+    }
+  });
+
+  // Validasi saat formulir disubmit
+  const registerForm = document.getElementById('register-form');
+  registerForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Ambil data dari input
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirm-password').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    // Validasi nama tidak boleh kosong dan tidak lebih dari 50 karakter
+    if (!name) {
+      alert('Nama wajib diisi atau tidak boleh kosong.');
+      return; // Hentikan proses submit
+    }
+    if (name.length > 50) {
+      alert('Nama tidak boleh lebih dari 50 karakter.');
+      return; // Hentikan proses submit
+    }
+
+    // Validasi email tidak boleh kosong
+    if (!email) {
+      alert('Email tidak boleh kosong.');
+      return; // Hentikan proses submit
+    }
+
+    // Validasi format email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailPattern.test(email)) {
+      alert('Format email tidak valid. Email harus menggunakan domain @gmail.com.');
+      return; // Hentikan proses submit
+    }
+
+    // Validasi panjang password
+    if (password.length < 8) {
+      alert('Password harus terdiri dari minimal 8 karakter.');
+      return; // Hentikan proses submit
+    }
+
+    // Validasi konfirmasi password
+    if (password !== confirmPassword) {
+      alert('Password dan konfirmasi password tidak sesuai.');
+      return; // Hentikan proses submit
+    }
+
+    // Validasi nomor telepon hanya angka
+    const phonePattern = /^[0-9]+$/;
+    if (!phonePattern.test(phone)) {
+      alert('Nomor telepon hanya boleh mengandung angka.');
+      return; // Hentikan proses submit
+    }
+
+    // Jika semua validasi lolos
+    alert('Registrasi berhasil!');
+  });
+
+  // Navigasi ke halaman login
+  const registerLink = document.getElementById('login-link');
+  registerLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.hash = '#/login'; // Kembali ke halaman login
+  });
 };
 
 export default renderRegisterPage;
