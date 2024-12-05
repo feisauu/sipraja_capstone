@@ -1095,23 +1095,31 @@ form label span {
   color: #000000; 
   margin-right: 10px;
 }
-
-.kategori {
-  display: inline-flex;
-  align-items: center; 
-  background-color: #e6f9e6; 
-  padding: 5px 10px; 
-  border-radius: 5px; 
-  color: #2d862d !important;
+/* Badge Umum */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-weight: bold;
+  color: #fff;
+  text-transform: capitalize;
+  margin-top: 5px;
 }
 
-.kategori-icon {
-  width: 10px; 
-  height: 10px;
-  background-color: #28a745; 
-  border-radius: 50%; 
-  margin-right: 10px; 
+/* Status: Belum Diproses */
+.status-pending {
+  background-color: #ff0707; /* Kuning */
+}
+
+/* Status: Sedang Diproses */
+.status-in-progress {
+  background-color: #ffc107; /* Biru */
+}
+
+/* Status: Selesai */
+.status-done {
+  background-color: #28a745; /* Hijau */
 }
 
 .arrow-container {
