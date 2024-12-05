@@ -66,17 +66,28 @@ const renderLoginPage = () => {
 
         if (response.ok) {
           console.log('Login berhasil.');
-          
+
+          // Simpan token dan ID pengguna ke localStorage
+          if (result.token) {
+            localStorage.setItem('authToken', result.token);
+            console.log('Token disimpan di localStorage:', result.token);
+          } else {
+            console.error('Token tidak ditemukan dalam respons.');
+          }
+
+          if (result.userId) {
+            localStorage.setItem('userId', result.userId);
+            console.log('User ID disimpan di localStorage:', result.userId);
+          } else {
+            console.error('User ID tidak ditemukan dalam respons.');
+          }
+
           // Cek role pengguna dari data respons
           if (result.role === 'admin') {
-            // Redirect ke halaman admin
             window.location.hash = '#/dashboard-admin';
-            console.log('Login berhasil sebagai admin. Mengarahkan ke dashboard admin...');
           } else if (result.role === 'user') {
-            // Redirect ke halaman user
             window.location.hash = '#/dashboard';
           } else {
-            // Default redirect jika role tidak dikenal
             alert('Role pengguna tidak dikenali.');
           }
         } else {
