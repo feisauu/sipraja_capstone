@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
 import createDetailLaporanPage from './detail-laporan.js'; // Import fungsi halaman detail
@@ -33,20 +34,20 @@ const createLaporanCard = (laporan) => {
   const card = document.createElement('div');
   card.className = 'laporan-card';
   card.innerHTML = `
-    <div class="laporan-card-left">
-      <img src="${laporan.gambar_pendukung?.[0] || '../../images/default-image.png'}" alt="Foto Laporan">
+     <div class="laporan-card-left">
+      <img src="${laporan.gambar_pendukung?.[0] || '../../images/default-image.png'}" alt="Foto Laporan" />
     </div>
     <div class="laporan-card-right">
-      <h4>${laporan.judul}</h4>
-      <p>${laporan.kategori}</p>
-      <p>${laporan.tanggal}</p>
-      <p><i class="fas fa-map-marker-alt"></i> ${laporan.lokasi}</p>
+      <h4>${laporan.judul || 'Judul tidak tersedia'}</h4>
+      <p>${laporan.kategori || 'Kategori tidak tersedia'}</p>
+      <p>${laporan.tanggal || 'Tanggal tidak tersedia'}</p>
+      <p><i class="fas fa-map-marker-alt"></i> ${laporan.lokasi || 'Lokasi tidak tersedia'}</p>
       <p class="kategori">
-        <span class="kategori-icon"></span> ${laporan.status}
+        <span class="status-badge ${laporan.status === 'selesai' ? 'status-done' : laporan.status === 'di proses' ? 'status-in-progress' : 'status-pending'}"> ${laporan.status || 'Status tidak tersedia'}</span>
       </p>
       <p class="deskripsi">${laporan.description || 'Deskripsi tidak tersedia'}</p>
     </div>
-    <div class="arrow-container" id="arrow-to-detail-laporan">
+    <div class="arrow-container">
       <div class="arrow">
         <i class="fas fa-chevron-right"></i>
       </div>
