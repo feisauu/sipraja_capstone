@@ -174,12 +174,14 @@ header .logo {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .user span {
   font-size: 1em;
   font-weight: bold;
   color: #333;
+  cursor: pointer;
 }
 
 /* Responsive Navbar */
