@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable object-curly-newline */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable import/no-unresolved */
@@ -8,7 +9,17 @@ import '../../components/navbar.js';
 import '../../components/footer.js';
 import '../../components/section-page.js';
 
-const createProfilePage = () => {
+const createProfilePage = async () => {
+  try {
+    // Ambil data dari API
+    const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/');
+    const apiResult = await response.json();
+
+    if (!response.ok) throw new Error(apiResult.message);
+
+    // Ambil user pertama (atau pilih data tertentu berdasarkan kondisi)
+    const user = apiResult.data.find((item) => item.nama === 'monica') || apiResult.data[0];
+
 // Navbar
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
@@ -37,7 +48,7 @@ const createProfilePage = () => {
 
   const profileName = document.createElement('h2');
   profileName.classList.add('profile-name');
-  profileName.textContent = 'Kim Taehyung';
+  profileName.textContent = user.nama;
 
   profileHeader.appendChild(profileImage);
   profileHeader.appendChild(profileName);
@@ -59,7 +70,7 @@ const createProfilePage = () => {
     const link = document.createElement('a');
     link.href = item.href;
     link.classList.add('menu-link');
-    link.dataset.action = item.action; // Tambahkan dataset.action
+    link.dataset.action = item.action; 
     link.innerHTML = `<i class="${item.icon}"></i>${item.label}`;
   
     listItem.appendChild(link);
@@ -78,9 +89,9 @@ const createProfilePage = () => {
   profileForm.appendChild(formTitle);
 
   const formFields = [
-    { id: 'nama', label: 'Nama', type: 'text', icon: 'fas fa-user', value: 'Kim Taehyung' },
-    { id: 'email', label: 'Email', type: 'email', icon: 'fas fa-envelope', value: 'kimtaehyung@gmail.com' },
-    { id: 'telepon', label: 'Nomor Telepon', type: 'tel', icon: 'fas fa-phone', value: '081234567890' },
+    { id: 'nama', label: 'Nama', type: 'text', icon: 'fas fa-user', value: user.nama },
+    { id: 'email', label: 'Email', type: 'email', icon: 'fas fa-envelope', value: user.email },
+    { id: 'telepon', label: 'Nomor Telepon', type: 'tel', icon: 'fas fa-phone', value: user.telp },
   ];
 
   formFields.forEach((field) => {
@@ -133,9 +144,9 @@ const createProfilePage = () => {
     event.preventDefault(); // Hindari reload halaman
 
     if (action === 'profile') {
-      window.location.hash = '#/profile'; // Tetap di halaman profil
+      window.location.hash = '#/profile'; 
     } else if (action === 'ubah-sandi') {
-      window.location.hash = '#/ubah-sandi'; // Navigasi ke halaman ubah kata sandi
+      window.location.hash = '#/ubah-sandi'; 
     } else if (action === 'logout') {
       // Tampilkan SweetAlert
       Swal.fire({
@@ -147,11 +158,19 @@ const createProfilePage = () => {
         cancelButtonText: 'Batal',
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.hash = '#/login'; // Arahkan ke halaman login
+          window.location.hash = '#/login';
         }
       });
     }
   });
+} catch (error) {
+  console.error('Error fetching user data:', error.message);
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Gagal memuat data profil. Silakan coba lagi.',
+  });  
+}
 };
 
 export default createProfilePage;
