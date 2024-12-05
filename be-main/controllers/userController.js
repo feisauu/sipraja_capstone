@@ -23,7 +23,7 @@ const getUserId = async (req, res) => {
     const id = req.params.id;
     const data = await User.findById(id)
     try {
-       res.status(200).json({message : 'get success', data : data})
+       res.status(200).json({message : 'get success', data : data, nama: data.nama, email: data.email, telp: data.telp, image: data.image})
         
     } catch (error) {
    res.status(500).json({message : 'failure', error : error.message})
@@ -49,11 +49,12 @@ const Login = async(req, res) => {
        const token = generateToken(user);
 
        res.cookie('authToken', token , {
-        httpOnly : true,
-        secure :  process.env.NODE_ENV === 'production',
+        httpOnly : false,
+        secure :  true,
+        sameSite : 'None',
        })
 
-        res.status(200).json({ message: 'Login berhasil', data: { userId: user._id}, token, role: user.role });
+        res.status(200).json({ message: 'Login berhasil', data: { userId: user._id}, userId: user._id, token, role: user.role });
    } catch (err) {
       return res.status(500).json({ error: 'Terjadi Kesalahan server' });
       
