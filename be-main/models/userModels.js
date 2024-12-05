@@ -29,7 +29,7 @@ const userSchema = new Schema(
         },
         image: {
             type: String,
-            default: '/images/default/default-profile.jpg'
+            default: 'https://static.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/2023/07/13/Screenshot-358-3185835934.png'
         },
         telp: {
             type: Number,
