@@ -153,17 +153,18 @@ const createProfilePage = () => {
   
 
   // Event Listener untuk navigasi menu
-  profileMenu.addEventListener('click', (event) => {
+  profileMenu.addEventListener('click', async (event) => {
     const action = event.target.closest('a')?.dataset.action;
     if (!action) return;
-
+  
     event.preventDefault();
-
+  
     if (action === 'profile') {
       window.location.hash = '#/profile';
     } else if (action === 'ubah-sandi') {
       window.location.hash = '#/ubah-sandi';
     } else if (action === 'logout') {
+      // Tampilkan konfirmasi logout
       Swal.fire({
         title: 'Konfirmasi Keluar',
         text: 'Apakah Anda yakin ingin keluar?',
@@ -171,12 +172,40 @@ const createProfilePage = () => {
         showCancelButton: true,
         confirmButtonText: 'Ya, Keluar',
         cancelButtonText: 'Batal',
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          // Hapus userId dari localStorage saat logout
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('userId');
-          window.location.hash = '#/login';
+          try {
+            const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
+            if (!authToken) {
+              throw new Error('Token tidak ditemukan, silakan login ulang.');
+            }
+  
+            // Kirim permintaan logout ke server
+            const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/logout', {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                Authorization: `Bearer ${authToken}`, // Sertakan token dalam header Authorization
+                'Content-Type': 'application/json',
+              },
+            });
+  
+            const data = await response.json();
+  
+            if (response.ok) {
+              // Hapus data dari localStorage
+              localStorage.removeItem('authToken');
+              localStorage.removeItem('userId');
+              // Arahkan ke halaman login
+              window.location.hash = '#/login';
+              Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
+            } else {
+              throw new Error(data.message || 'Gagal logout. Silakan coba lagi.');
+            }
+          } catch (error) {
+            console.error('Error during logout:', error.message);
+            Swal.fire('Error', error.message, 'error');
+          }
         }
       });
     }
