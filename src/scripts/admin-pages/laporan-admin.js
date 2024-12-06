@@ -1,3 +1,10 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-alert */
+/* eslint-disable no-unused-vars */
+import ENDPOINT from '../globals/endpoint'; // Assuming you have the ENDPOINTs imported
+// eslint-disable-next-line no-unused-vars
+import CONFIG from '../globals/config';
+
 const createLaporanAdmin = () => {
   document.body.className = 'admin-page';
 
@@ -15,7 +22,6 @@ const createLaporanAdmin = () => {
 
   const menu = document.createElement('nav');
   menu.className = 'menu';
-
   menu.innerHTML = `
     <div class="menu-section-admin">
         <span>Menu</span>
@@ -29,7 +35,6 @@ const createLaporanAdmin = () => {
         <a href="#"><i class="fas fa-sign-out-alt"></i>Keluar</a>
       </div>
   `;
-
   sidebar.append(logo, menu);
 
   // Main Content
@@ -44,6 +49,7 @@ const createLaporanAdmin = () => {
       <span class="user-name">Admin</span>
     </div>
   `;
+
   // Filter Section
   const filterSection = document.createElement('section');
   filterSection.className = 'filters-admin';
@@ -51,14 +57,14 @@ const createLaporanAdmin = () => {
     <h2 class="h2">Laporan</h2>
       <section class="filters-admin">
         <div class="filter-input-admin">
-          <input type="text" placeholder="Cari Laporan">
+          <input type="text" id="searchInput" placeholder="Cari Laporan">
         </div>
         <div class="filter-date-admin">
-          <input type="date">
+          <input type="date" id="startDate">
           <span>To</span>
-          <input type="date">
+          <input type="date" id="endDate">
         </div>
-        <button class="filter-btn-admin">Cari</button>
+        <button class="filter-btn-admin" id="filterBtn">Cari</button>
       </section>
   `;
 
@@ -76,35 +82,8 @@ const createLaporanAdmin = () => {
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>
-  <a href="#/konfirmasi">
-    <strong>Judul Laporan</strong><br>
-    <small>Nama Pelapor</small>
-  </a>
-</td>
-
-          <td><span class="status selesai">Selesai</span></td>
-          <td>Jalan</td>
-          <td>Yogyakarta</td>
-          <td>
-            <button class="icon"><i class="fas fa-link"></i></button>
-            <button class="icon"><i class="fas fa-trash-alt"></i></button>
-            <button class="archive"><i class="fas fa-folder-plus"></i> Arsip</button>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Lana Steiner</strong><br><small>email@gmail.com</small></td>
-          <td><span class="status diproses">Diproses</span></td>
-          <td>Jembatan</td>
-          <td>Jakarta</td>
-          <td>
-            <button class="icon"><i class="fas fa-link"></i></button>
-            <button class="icon"><i class="fas fa-trash-alt"></i></button>
-            <button class="archive"><i class="fas fa-folder-plus"></i> Arsip</button>
-          </td>
-        </tr>
+      <tbody id="laporanTableBody">
+        <!-- Reports will be populated here dynamically -->
       </tbody>
     </table>
   `;
@@ -142,8 +121,119 @@ const createLaporanAdmin = () => {
 
   mainContent.append(header, filterSection, tableContainer, sidebarFilters, pagination);
   container.append(sidebar, mainContent);
-
   document.body.appendChild(container);
+
+  // Fetch Laporan data and display in table
+  const fetchLaporanData = async (filters = {}) => {
+    const userId = localStorage.getItem('userId');
+    const authToken = localStorage.getItem('authToken');
+  
+    if (!userId || !authToken) {
+      console.error('User ID atau Auth Token tidak ditemukan di localStorage');
+      return;
+    }
+  
+    try {
+      // Build query string from filters
+      const response = await fetch(ENDPOINT.GETLAPORAN, {
+        method: 'GET',
+        credentials: 'include', // Kirim cookie lintas domain
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal memuat laporan.');
+      }
+  
+      const data = await response.json();
+      // Check if the response is an object with the 'message' key containing an array
+      const laporanData = Array.isArray(data.message) ? data.message : [];
+  
+      if (laporanData.length === 0) {
+        console.error('No laporan data found.');
+        return;
+      }
+  
+      const laporanTableBody = document.getElementById('laporanTableBody');
+      laporanTableBody.innerHTML = ''; // Clear existing data
+      laporanData.forEach((laporan) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <a href="#/konfirmasi">
+              <strong>${laporan.judul}</strong><br>
+              <small>${laporan.nama}</small>
+            </a>
+          </td>
+          <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
+          <td>${laporan.kategori}</td>
+          <td>${laporan.lokasi}</td>
+          <td>
+            <button class="icon"><i class="fas fa-link"></i></button>
+            <button class="icon"><i class="fas fa-trash-alt" onclick="deleteLaporan(${laporan._id})"></i></button>
+            <button class="archive" onclick="archiveLaporan(${laporan._id})"><i class="fas fa-folder-plus"></i> Arsip</button>
+          </td>
+        `;
+        laporanTableBody.appendChild(row);
+      });
+    } catch (error) {
+      console.error('Error fetching laporan data:', error);
+    }
+  };  
+  
+  // Handle filter button click
+  const filterButton = document.getElementById('filterBtn');
+  filterButton.addEventListener('click', () => {
+    const searchInput = document.getElementById('searchInput').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const status = document.querySelector('input[name="status"]:checked').value;
+    const kategori = document.querySelector('input[name="kategori"]:checked').value;
+
+    // Send filters to the API
+    const filters = {
+      search: searchInput,
+      start_date: startDate,
+      end_date: endDate,
+      status: status !== 'semua' ? status : '',
+      kategori: kategori !== 'semua' ? kategori : '',
+    };
+
+    fetchLaporanData(filters);
+  });
+
+  // Initialize with all laporan data
+  fetchLaporanData();
+
+};
+
+// Handle delete Laporan
+const deleteLaporan = async (id) => {
+  try {
+    await fetch(`${ENDPOINT.GETLAPORAN}${id}`, {
+      method: 'DELETE',
+    });
+    alert('Laporan deleted successfully');
+    createLaporanAdmin(); // Refresh the page
+  } catch (error) {
+    console.error('Error deleting laporan:', error);
+  }
+};
+
+// Handle archiving Laporan
+const archiveLaporan = async (id) => {
+  try {
+    await fetch(`${ENDPOINT.GETLAPORAN}archive/${id}`, {
+      method: 'PUT',
+    });
+    alert('Laporan archived successfully');
+    createLaporanAdmin(); // Refresh the page
+  } catch (error) {
+    console.error('Error archiving laporan:', error);
+  }
 };
 
 export default createLaporanAdmin;
