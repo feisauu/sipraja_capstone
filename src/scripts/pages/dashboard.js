@@ -82,7 +82,7 @@ const createDashboard = () => {
       <div class="report-content">
         <h3>Lapor Sekarang</h3>
         <p>Bantu kami menjaga Yogyakarta tetap aman dan nyaman. Mari laporkan setiap kerusakan fasilitas umum yang Anda temui, agar perbaikan dapat dilakukan lebih cepat. Dengan melaporkan segera, Anda turut membantu menciptakan lingkungan yang lebih baik untuk kita semua.</p>
-        <button class="report-btn">Laporkan Sekarang</button>
+        <button class="report-btn" onclick="window.location.href='#/laporan'">Laporkan Sekarang</button>
       </div>
       <div class="report-image">
         <img src="../images/image3.png" alt="Ilustrasi Laporan" />
