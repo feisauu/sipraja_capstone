@@ -1515,6 +1515,7 @@ margin-bottom: 48px;
   align-items: center;
   font-size: 16px;
   color: #374151;
+  gap: 10px;
 }
 
 .bell-icon-admin {
