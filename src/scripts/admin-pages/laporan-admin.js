@@ -1,3 +1,7 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
@@ -55,17 +59,17 @@ const createLaporanAdmin = () => {
   filterSection.className = 'filters-admin';
   filterSection.innerHTML = `
     <h2 class="h2">Laporan</h2>
-      <section class="filters-admin">
-        <div class="filter-input-admin">
-          <input type="text" id="searchInput" placeholder="Cari Laporan">
-        </div>
-        <div class="filter-date-admin">
-          <input type="date" id="startDate">
-          <span>To</span>
-          <input type="date" id="endDate">
-        </div>
-        <button class="filter-btn-admin" id="filterBtn">Cari</button>
-      </section>
+    <section class="filters-admin">
+      <div class="filter-input-admin">
+        <input type="text" id="searchInput" placeholder="Cari Laporan">
+      </div>
+      <div class="filter-date-admin">
+        <input type="date" id="startDate">
+        <span>To</span>
+        <input type="date" id="endDate">
+      </div>
+      <button class="filter-btn-admin" id="filterBtn">Cari</button>
+    </section>
   `;
 
   // Table Section
@@ -75,10 +79,12 @@ const createLaporanAdmin = () => {
     <table>
       <thead>
         <tr>
+          <th>No</th>
           <th>Nama</th>
           <th>Status</th>
           <th>Kategori</th>
           <th>Lokasi</th>
+          <th>Tanggal</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -112,78 +118,126 @@ const createLaporanAdmin = () => {
   const pagination = document.createElement('div');
   pagination.className = 'pagination';
   pagination.innerHTML = `
-    <button class="page-btn">«</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">»</button>
+    <button class="page-btn" id="prevPageBtn">«</button>
+    <button class="page-btn active" id="page1Btn">1</button>
+    <button class="page-btn" id="page2Btn">2</button>
+    <button class="page-btn" id="page3Btn">3</button>
+    <button class="page-btn" id="nextPageBtn">»</button>
   `;
 
   mainContent.append(header, filterSection, tableContainer, sidebarFilters, pagination);
   container.append(sidebar, mainContent);
   document.body.appendChild(container);
 
+  let currentPage = 1;
+  const reportsPerPage = 10;
+
   // Fetch Laporan data and display in table
-  const fetchLaporanData = async (filters = {}) => {
+  const fetchLaporanData = async (filters = {}, page = 1) => {
     const userId = localStorage.getItem('userId');
     const authToken = localStorage.getItem('authToken');
-  
+
     if (!userId || !authToken) {
       console.error('User ID atau Auth Token tidak ditemukan di localStorage');
       return;
     }
-  
+
     try {
-      // Build query string from filters
-      const response = await fetch(ENDPOINT.GETLAPORAN, {
+      // Add pagination to the filters
+      filters.page = page;
+      filters.limit = reportsPerPage;
+
+      const response = await fetch(`${ENDPOINT.GETLAPORAN}?${new URLSearchParams(filters).toString()}`, {
         method: 'GET',
-        credentials: 'include', // Kirim cookie lintas domain
+        credentials: 'include', // Send cookies for cross-domain requests
         headers: {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Gagal memuat laporan.');
       }
-  
+
       const data = await response.json();
-      // Check if the response is an object with the 'message' key containing an array
       const laporanData = Array.isArray(data.message) ? data.message : [];
-  
+      const totalReports = data.total || 0;
+
       if (laporanData.length === 0) {
         console.error('No laporan data found.');
         return;
       }
-  
+
       const laporanTableBody = document.getElementById('laporanTableBody');
       laporanTableBody.innerHTML = ''; // Clear existing data
-      laporanData.forEach((laporan) => {
+
+      laporanData.forEach((laporan, index) => {
         const row = document.createElement('tr');
+        row.id = `laporan-${laporan._id}`;
         row.innerHTML = `
-          <td>
-            <a href="#/konfirmasi">
-              <strong>${laporan.judul}</strong><br>
-              <small>${laporan.nama}</small>
-            </a>
-          </td>
-          <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
-          <td>${laporan.kategori}</td>
-          <td>${laporan.lokasi}</td>
-          <td>
-            <button class="icon"><i class="fas fa-link"></i></button>
-            <button class="icon"><i class="fas fa-trash-alt" onclick="deleteLaporan(${laporan._id})"></i></button>
-            <button class="archive" onclick="archiveLaporan(${laporan._id})"><i class="fas fa-folder-plus"></i> Arsip</button>
-          </td>
-        `;
+  <td>${(currentPage - 1) * reportsPerPage + index + 1}</td>
+  <td><a onclick="window.location.href='#/konfirmasi'">
+      <strong>${laporan.judul}</strong><br>
+      <small>${laporan.nama}</small>
+    </a>
+  </td>
+  <td><span class="status ${laporan.status.toLowerCase()}" id="status-${laporan._id}">${laporan.status}</span></td>
+  <td>${laporan.kategori}</td>
+  <td>${laporan.lokasi}</td>
+  <td>${laporan.tanggal}</td>
+  <td class="action-icons">
+    <button class="icon edit-btn" onclick="showEditForm('${laporan._id}', '${laporan.status}')">
+      <i class="fas fa-edit"></i> 
+    </button>
+    <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id}')">
+      <i class="fas fa-trash-alt"></i> 
+    </button>
+    <button class="archive-btn" onclick="archiveLaporan('${laporan._id}')">
+      <i class="fas fa-folder-plus"></i> 
+    </button>
+  </td>
+`;
         laporanTableBody.appendChild(row);
       });
+
+      // Handle pagination
+      const totalPages = Math.ceil(totalReports / reportsPerPage);
+      updatePagination(totalPages, page);
     } catch (error) {
       console.error('Error fetching laporan data:', error);
     }
-  };  
-  
+  };
+
+  // Handle pagination
+  const updatePagination = (totalPages, currentPage) => {
+    // Disable/enable pagination buttons based on currentPage
+    document.getElementById('prevPageBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+
+    // Update page buttons dynamically
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.getElementById(`page${i}Btn`);
+      if (pageBtn) {
+        pageBtn.textContent = i;
+        pageBtn.classList.toggle('active', i === currentPage);
+      }
+    }
+  };
+
+  // Handle page change
+  document.getElementById('prevPageBtn').addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchLaporanData({}, currentPage);
+    }
+  });
+
+  document.getElementById('nextPageBtn').addEventListener('click', () => {
+    currentPage++;
+    fetchLaporanData({}, currentPage);
+  });
+
   // Handle filter button click
   const filterButton = document.getElementById('filterBtn');
   filterButton.addEventListener('click', () => {
@@ -202,24 +256,130 @@ const createLaporanAdmin = () => {
       kategori: kategori !== 'semua' ? kategori : '',
     };
 
-    fetchLaporanData(filters);
+    fetchLaporanData(filters, currentPage);
   });
 
   // Initialize with all laporan data
-  fetchLaporanData();
+  fetchLaporanData({}, currentPage);
+};
 
+// Menampilkan form untuk mengedit status laporan
+window.showEditForm = (id, currentStatus) => {
+  const statusCell = document.getElementById(`status-${id}`);
+  if (!statusCell) {
+    console.warn(`Element dengan ID status-${id} tidak ditemukan.`);
+    return;
+  }
+
+  // Membuat elemen form secara dinamis
+  const form = document.createElement('form');
+  form.id = `editForm-${id}`;
+
+  const select = document.createElement('select');
+  select.id = `statusSelect-${id}`;
+
+  // Menentukan opsi status
+  const options = [
+    { value: 'belum diproses', label: 'Belum Diproses' },
+    { value: 'diproses', label: 'Diproses' },
+    { value: 'selesai', label: 'Selesai' },
+  ];
+
+  // Menambahkan options ke dalam select
+  options.forEach((option) => {
+    const optionElement = document.createElement('option');
+    optionElement.value = option.value;
+    optionElement.textContent = option.label;
+    if (currentStatus === option.value) {
+      optionElement.selected = true;
+    }
+    select.appendChild(optionElement);
+  });
+
+  // Menambahkan tombol update ke dalam form
+  const updateButton = document.createElement('button');
+  updateButton.type = 'button';
+  updateButton.textContent = 'Update';
+  updateButton.onclick = () => updateStatus(id); // Pastikan id dikirim ke fungsi updateStatus
+
+  // Menambahkan elemen ke dalam form
+  form.appendChild(select);
+  form.appendChild(updateButton);
+
+  // Menampilkan form di dalam statusCell
+  statusCell.innerHTML = ''; // Menghapus konten sebelumnya
+  statusCell.appendChild(form);
+};
+
+// Mengupdate status laporan
+window.updateStatus = async (id) => {
+  const userId = localStorage.getItem('userId'); // Ambil userId dari localStorage
+  const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
+  const newStatus = document.getElementById(`statusSelect-${id}`).value;
+
+  if (!userId || !authToken) {
+    console.error('User ID atau Auth Token tidak ditemukan di localStorage');
+    Swal.fire('Error', 'Token atau User ID tidak ditemukan, silakan login ulang', 'error');
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/${id}`, { // Pastikan 'id' menggunakan huruf kecil
+      method: 'PUT', // Seharusnya menggunakan PUT untuk memperbarui data
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Kirim token dalam header Authorization
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus }), // Kirim status baru dalam body
+    });
+
+    if (response.ok) {
+      alert('Status laporan berhasil diperbarui.');
+      fetchLaporanData(); // Refresh data laporan
+    } else {
+      const errorData = await response.json();
+      console.error('Error response from API:', errorData);
+      alert(`Gagal memperbarui status: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+    alert(`Terjadi kesalahan: ${error.message}`);
+  }
 };
 
 // Handle delete Laporan
-const deleteLaporan = async (id) => {
+window.deleteLaporan = async (id) => {
   try {
-    await fetch(`${ENDPOINT.GETLAPORAN}${id}`, {
+    // Fetch the authToken from localStorage
+    const authToken = localStorage.getItem('authToken');
+
+    // Check if the authToken exists, if not, throw an error
+    if (!authToken) {
+      throw new Error('Authentication token is missing.');
+    }
+
+    // Make sure the URL for deleting is correct
+    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
     });
-    alert('Laporan deleted successfully');
-    createLaporanAdmin(); // Refresh the page
+
+    if (response.ok) {
+      alert('Laporan deleted successfully');
+      createLaporanAdmin(); // Re-fetch and update the list of reports
+    } else {
+      const responseText = await response.text();
+      console.error('Error response:', responseText);
+      alert(`Failed to delete laporan: ${responseText}`);
+    }
   } catch (error) {
     console.error('Error deleting laporan:', error);
+    alert(`Error deleting laporan: ${error.message}`);
   }
 };
 
@@ -227,7 +387,7 @@ const deleteLaporan = async (id) => {
 const archiveLaporan = async (id) => {
   try {
     await fetch(`${ENDPOINT.GETLAPORAN}archive/${id}`, {
-      method: 'PUT',
+      method: 'POST',
     });
     alert('Laporan archived successfully');
     createLaporanAdmin(); // Refresh the page
