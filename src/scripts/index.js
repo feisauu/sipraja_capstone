@@ -92,6 +92,8 @@ function handleHashChange() {
     createDashboardAdmin();
   } else if (currentHash === '#/laporan-admin') {
     createLaporanAdmin();
+  } else if (currentHash === '#/konfirmasi') {
+    createKonfirmasi();
   } else if (currentHash === '#/arsip-admin') {
     createArsipAdmin();
   } else if (currentHash === '#/profil-admin') {
@@ -121,4 +123,11 @@ function renderHomePage() {
     .catch((error) => console.error('Error loading index.html:', error));
 }
 
+window.addEventListener('hashchange', handleHashChange);
+
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#/konfirmasi') {
+    // Tampilkan halaman konfirmasi
+    createKonfirmasi(); // Fungsi untuk merender halaman konfirmasi
+  }
 window.addEventListener('hashchange', handleHashChange);
