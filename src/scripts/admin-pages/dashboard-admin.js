@@ -1,8 +1,13 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
 /* eslint-disable import/extensions */
+import Swal from 'sweetalert2';
+import CONFIG from '../globals/config';
+import ENDPOINT from '../globals/endpoint';
 
-const createDashboardAdmin = () => {
+const createDashboardAdmin = async () => {
   document.body.className = 'admin-page';
 
   // Create main container
@@ -30,7 +35,9 @@ const createDashboardAdmin = () => {
 
   const menuSection2 = createMenuSection('Akun', [
     { href: '#/profil-admin', icon: 'fa-user', text: 'Profil' },
-    { href: '#', icon: 'fa-sign-out-alt', text: 'Keluar' },
+    {
+      href: '#', icon: 'fa-sign-out-alt', text: 'Keluar', action: logout,
+    },
   ]);
 
   menu.append(menuSection1, menuSection2);
@@ -45,11 +52,13 @@ const createDashboardAdmin = () => {
   headerAdmin.innerHTML = `
     <div class="user-info-admin">
       <i class="fas fa-bell bell-icon"></i>
-      <span class="user-name">Admin</span>
+      <span class="user-name"> Admin</span>
     </div>
   `;
 
-  const dashboardAdmin = createDashboardSection();
+  // Fetch report data
+  const reportData = await fetchReportData();
+  const dashboardAdmin = createDashboardSection(reportData);
   contentAdmin.append(headerAdmin, dashboardAdmin);
 
   // Append all to container
@@ -58,6 +67,7 @@ const createDashboardAdmin = () => {
   // Append container to body
   document.body.appendChild(containerAdmin);
 };
+
 // Helper function to create menu sections
 function createMenuSection(title, links) {
   const section = document.createElement('div');
@@ -71,6 +81,7 @@ function createMenuSection(title, links) {
     anchor.href = link.href;
     if (link.active) anchor.className = 'active';
     anchor.innerHTML = `<i class="fas ${link.icon}"></i>${link.text}`;
+    if (link.action) anchor.addEventListener('click', link.action);
     return anchor;
   });
 
@@ -79,24 +90,24 @@ function createMenuSection(title, links) {
 }
 
 // Helper function to create dashboard section
-function createDashboardSection() {
+function createDashboardSection(reportData) {
   const section = document.createElement('section');
   section.className = 'dashboard-admin';
 
   section.innerHTML = `
     <h2>Status Laporan</h2>
     <div class="status-cards-admin">
-      ${createCardHTML('Semua', '45', 'fa-layer-group', '')}
-      ${createCardHTML('Selesai', '10', 'fa-check-circle', 'green-card')}
-      ${createCardHTML('Diproses', '20', 'fa-spinner', 'yellow-card')}
-      ${createCardHTML('Belum Diproses', '15', 'fa-times-circle', 'gray-card')}
+      ${createCardHTML('Semua', reportData.totalLaporan, 'fa-layer-group', '')}
+      ${createCardHTML('Selesai', reportData.selesai, 'fa-check-circle', 'green-card')}
+      ${createCardHTML('Diproses', reportData.diproses, 'fa-spinner', 'yellow-card')}
+      ${createCardHTML('Belum Diproses', reportData.belumDiproses, 'fa-times-circle', 'gray-card')}
     </div>
     <h2>Waktu Laporan</h2>
     <div class="time-cards-admin">
-      ${createCardHTML('Semua', '45', 'fa-calendar', '')}
-      ${createCardHTML('Hari Ini', '10', 'fa-calendar-day', 'blue-card')}
-      ${createCardHTML('Minggu Ini', '20', 'fa-calendar-week', 'orange-card')}
-      ${createCardHTML('Bulan Ini', '15', 'fa-calendar-alt', 'purple-card')}
+      ${createCardHTML('Semua', reportData.totalLaporan, 'fa-calendar', '')}
+      ${createCardHTML('Hari Ini', reportData.hariIni, 'fa-calendar-day', 'blue-card')}
+      ${createCardHTML('Bulan Ini', reportData.bulanIni, 'fa-calendar-alt', 'orange-card')}
+      ${createCardHTML('Tahun Ini', reportData.tahunIni, 'fa-calendar-week', 'purple-card')}
     </div>
   `;
   return section;
@@ -116,4 +127,138 @@ function createCardHTML(title, count, icon, cardClass) {
     </div>
   `;
 }
+
+// Fetch report data from API
+const fetchReportData = async () => {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    console.error('User is not authenticated!');
+    return {
+      totalLaporan: 0,
+      selesai: 0,
+      diproses: 0,
+      belumDiproses: 0,
+      hariIni: 0,
+      bulanIni: 0,
+      tahunIni: 0,
+    };
+  }
+
+  try {
+    console.log('Fetching data with token:', authToken); // Debug log
+
+    const response = await fetch(ENDPOINT.GETLAPORAN, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Response status:', response.status); // Log response status
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    console.log('Fetched data:', data); // Log response data
+
+    const laporan = data.message || []; // Assuming 'message' contains the report array
+
+    // Count total reports and categorize them based on their status
+    const totalLaporan = laporan.length;
+    const selesai = laporan.filter((report) => report.status === 'selesai').length;
+    const diproses = laporan.filter((report) => report.status === 'di proses').length;
+    const belumDiproses = laporan.filter((report) => report.status === 'belum di proses').length;
+
+    // Date-based categorizations
+    const today = new Date();
+    const hariIni = laporan.filter((report) => new Date(report.tanggal).toDateString() === today.toDateString()).length;
+    const bulanIni = laporan.filter((report) => {
+      const reportDate = new Date(report.tanggal);
+      return reportDate.getMonth() === today.getMonth() && reportDate.getFullYear() === today.getFullYear();
+    }).length;
+    const tahunIni = laporan.filter((report) => {
+      const reportDate = new Date(report.tanggal);
+      return reportDate.getFullYear() === today.getFullYear();
+    }).length;
+
+    return {
+      totalLaporan,
+      selesai,
+      diproses,
+      belumDiproses,
+      hariIni,
+      bulanIni,
+      tahunIni,
+    };
+  } catch (error) {
+    console.error('Terjadi kesalahan saat mengambil data laporan:', error);
+    return {
+      totalLaporan: 0,
+      selesai: 0,
+      diproses: 0,
+      belumDiproses: 0,
+      hariIni: 0,
+      bulanIni: 0,
+      tahunIni: 0,
+    };
+  }
+};
+
+// Logout action
+function logout(event) {
+  event.preventDefault();
+
+  Swal.fire({
+    title: 'Konfirmasi Keluar',
+    text: 'Apakah Anda yakin ingin keluar?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Keluar',
+    cancelButtonText: 'Batal',
+  }).then(async (result) => { // Pindahkan .then() ke sini
+    if (result.isConfirmed) {
+      try {
+        const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        if (!authToken) {
+          throw new Error('Token tidak ditemukan, silakan login ulang.');
+        }
+
+        // Kirim permintaan logout ke server
+        const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/logout', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Sertakan token dalam header Authorization
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Hapus data dari localStorage
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userId');
+
+          // Arahkan ke halaman login
+          window.location.hash = '#/login';
+
+          Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
+        } else {
+          throw new Error(data.message || 'Gagal logout. Silakan coba lagi.');
+        }
+      } catch (error) {
+        console.error('Error during logout:', error.message);
+        Swal.fire('Error', error.message, 'error');
+      }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire('Dibatalkan', 'Anda tetap login.', 'info');
+    }
+  });
+}
+
 export default createDashboardAdmin;
