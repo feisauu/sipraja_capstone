@@ -9,7 +9,7 @@ const fetchLaporan = async () => {
   try {
     const response = await fetch(ENDPOINT.GETLAPORAN, {
       method: 'GET',
-      credentials: 'include', // Kirim cookie lintas domain
+      credentials: 'include', // Mengirim cookie jika diperlukan
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,13 +21,16 @@ const fetchLaporan = async () => {
     }
 
     const data = await response.json();
-    console.log('Laporan diterima:', data);
-    return data.message || []; // Sesuaikan dengan struktur respons API
+    console.log('Respons API:', data);
+
+    // Pastikan data yang dikembalikan adalah array
+    return Array.isArray(data.message) ? data.message : [];
   } catch (error) {
     console.error('Fetch Laporan Error:', error.message);
     return [];
   }
 };
+
 
 // Fungsi untuk membuat kartu laporan berdasarkan data dari fetch
 const createLaporanCard = (laporan) => {
