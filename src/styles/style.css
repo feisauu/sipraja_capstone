@@ -1684,7 +1684,7 @@ margin-bottom: 48px;
   border-radius: 10px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   width: 250px;
-  position: fixed; /* Gunakan fixed untuk memastikan sidebar tetap pada tempatnya saat scroll */
+  position: absolute;
   right: 30px; /* Tetap rata kanan */
   top: 120px; /* Beri jarak dari header */
   z-index: 10; /* Pastikan tetap berada di atas elemen lainnya */
@@ -1744,7 +1744,6 @@ margin-bottom: 48px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 10px;
 }
 
 .filter-btn-admin:hover {
@@ -1761,14 +1760,53 @@ margin-bottom: 48px;
 
 .table-container-admin th, .table-container-admin td {
   padding: 15px;
-  text-align: left;
+  text-align: center;
   font-size: 14px;
   color: #6B7280;
+  text-transform: capitalize;
 }
 
 .table-container-admin th {
   background: #F3F4F6;
   color: #4B5563;
+}
+
+#laporanTableBody td:nth-child(2) {
+  font-weight: bold;
+  color: #333;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide text that exceeds the column width */
+  text-overflow: ellipsis; /* Show ellipsis (...) for overflowed text */
+  max-width: 200px; /* Optional: Set a maximum width for the column */
+  min-width: 120px; /* Optional: Set a minimum width for the column */
+}
+
+/* Styling for the link inside the Nama column */
+#laporanTableBody td:nth-child(2) a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+/* Hover effects for the link inside the Nama column */
+#laporanTableBody td:nth-child(2) a:hover {
+  color: #007bff; /* Blue color on hover */
+  text-decoration: underline;
+}
+
+/* Styling for the small text inside the Nama column */
+#laporanTableBody td:nth-child(2) small {
+  display: block;
+  font-size: 0.875rem;
+  color: #777; /* Lighter color for the name */
+  margin-top: 5px;
+}
+
+#laporanTableBody td:nth-child(6) {
+  max-width: 200px; /* Optional: Set a maximum width for the column */
+  min-width: 120px; /* Optional: Set a minimum width for the column */
 }
 
 .table-container-admin tbody tr {
@@ -1783,17 +1821,17 @@ margin-bottom: 48px;
   text-transform: capitalize;
 }
 
-.table-container-admin td .selesai {
+.table-container-admin td .status.selesai {
   background: #10B981;
   color: #fff;
 }
 
-.table-container-admin td .diproses {
+.table-container-admin td .status.di.proses {
   background: #F59E0B;
   color: #fff;
 }
 
-.table-container-admin td .belum_diproses {
+.table-container-admin td .status.belum.di.proses {
   background: #EF4444;
   color: #fff;
 }
@@ -2023,4 +2061,78 @@ h1 {
   .card-admin {
       margin-bottom: 20px;
   }
+}
+
+/* Menyusun tombol dalam satu baris dan memberi jarak antar tombol */
+.action-icons {
+  display: flex;
+  gap: 5px; 
+  justify-content: flex-start; 
+  align-items: center; 
+}
+
+/* Styling untuk tombol-tombol */
+.icon,
+.archive-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6B7280; 
+  display: flex;
+  align-items: center; 
+  transition: all 0.3s ease; 
+  padding: 5px; 
+  border-radius: 5px; 
+}
+
+/* Warna untuk ikon dan teks */
+.icon i {
+  color: #4CAF50; 
+}
+
+.delete-btn i {
+  color: #F44336; 
+}
+
+.archive-btn i {
+  color: #FF9800;
+}
+
+/* Warna background dan ikon saat hover */
+.icon:hover {
+  background-color: #E8F5E9; 
+  color: #388E3C; 
+}
+
+.delete-btn:hover {
+  background-color: #FFEBEE; 
+  color: #D32F2F; 
+}
+
+.archive-btn:hover {
+  background-color: #FFF3E0; 
+  color: #F57C00; 
+}
+
+/* Menambahkan efek pada ikon */
+.icon i,
+.delete-btn i,
+.archive-btn i {
+  font-size: 18px; /* Ukuran ikon */
+}
+
+/* Styling untuk tampilan hover */
+.icon:hover i,
+.delete-btn:hover i,
+.archive-btn:hover i {
+  transform: scale(1.1); /* Menambahkan efek memperbesar ikon saat hover */
+}
+
+/* Styling untuk tombol saat di-click */
+.icon:active,
+.delete-btn:active,
+.archive-btn:active {
+  transform: scale(0.95); /* Efek mengecilkan tombol saat di-click */
 }
