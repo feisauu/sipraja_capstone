@@ -4,11 +4,12 @@ import '../../components/footer.js';
 import createDetailLaporanPage from './detail-laporan.js'; // Import fungsi halaman detail
 import ENDPOINT from '../globals/endpoint';
 
+// Fetch data laporan dari API
 const fetchLaporan = async () => {
   try {
     const response = await fetch(ENDPOINT.GETLAPORAN, {
       method: 'GET',
-      credentials: 'include', // Kirim cookie lintas domain
+      credentials: 'include', // Kirim cookie jika diperlukan
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,21 +21,22 @@ const fetchLaporan = async () => {
     }
 
     const data = await response.json();
-    console.log('Laporan diterima:', data);
-    return data.message || []; // Sesuaikan dengan struktur respons API
+    console.log('Respons API:', data);
+
+    // Filter hanya laporan yang tidak diarsipkan
+    return Array.isArray(data.message) ? data.message.filter((laporan) => !laporan.isArchived) : [];
   } catch (error) {
     console.error('Fetch Laporan Error:', error.message);
     return [];
   }
 };
 
-
-// Fungsi untuk membuat kartu laporan berdasarkan data dari fetch
+// Membuat kartu laporan berdasarkan data laporan
 const createLaporanCard = (laporan) => {
   const card = document.createElement('div');
   card.className = 'laporan-card';
   card.innerHTML = `
-     <div class="laporan-card-left">
+    <div class="laporan-card-left">
       <img src="${laporan.gambar_pendukung?.[0] || '../../images/default-image.png'}" alt="Foto Laporan" />
     </div>
     <div class="laporan-card-right">
@@ -47,22 +49,17 @@ const createLaporanCard = (laporan) => {
       </p>
       <p class="deskripsi">${laporan.description || 'Deskripsi tidak tersedia'}</p>
     </div>
-    <div class="arrow-container">
-      <div class="arrow">
-        <i class="fas fa-chevron-right"></i>
-      </div>
-    </div>
   `;
   return card;
 };
 
-// Fungsi utama untuk membuat halaman laporan
+// Membuat halaman laporan
 const createLaporanPage = () => {
-  // Membuat elemen navbar
+  // Tambahkan navbar ke halaman
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
-  // Membuat elemen fitur bar (search bar dan tombol laporan baru)
+  // Buat fitur bar (search bar dan tombol laporan baru)
   const featuresBar = document.createElement('div');
   featuresBar.className = 'features-bar';
   featuresBar.innerHTML = `
@@ -78,11 +75,11 @@ const createLaporanPage = () => {
   `;
   document.body.appendChild(featuresBar);
 
-  // Membuat container utama
+  // Buat container utama
   const container = document.createElement('div');
   container.className = 'container';
 
-  // Membuat sidebar kiri (Status Laporan dan Kategori)
+  // Tambahkan sidebar kiri (Status Laporan dan Kategori)
   const sidebars = document.createElement('div');
   sidebars.className = 'sidebars';
 
@@ -137,35 +134,35 @@ const createLaporanPage = () => {
   sidebars.appendChild(statusSidebar);
   sidebars.appendChild(kategoriSidebar);
 
-  // Membuat elemen utama untuk laporan
+  // Buat elemen utama untuk laporan
   const mainContent = document.createElement('div');
   mainContent.className = 'main-content';
-
-  // Tambahkan pesan loading
-  mainContent.innerHTML = '<p>Loading laporan...</p>';
+  mainContent.innerHTML = '<p>Loading laporan...</p>'; // Tampilkan pesan loading
 
   // Fetch data laporan dan tambahkan ke halaman
-  fetchLaporan().then((laporanData) => {
-    mainContent.innerHTML = ''; // Kosongkan setelah data tersedia
-    if (laporanData.length === 0) {
-      mainContent.innerHTML = '<p>Tidak ada laporan tersedia.</p>';
-    } else {
-      laporanData.forEach((laporan) => {
-        const card = createLaporanCard(laporan);
-        mainContent.appendChild(card);
-      });
-    }
-  }).catch((error) => {
-    mainContent.innerHTML = '<p>Gagal memuat laporan. Silakan coba lagi nanti.</p>';
-    console.error(error);
-  });
+  fetchLaporan()
+    .then((laporanData) => {
+      mainContent.innerHTML = ''; // Kosongkan setelah data tersedia
+      if (laporanData.length === 0) {
+        mainContent.innerHTML = '<p>Tidak ada laporan tersedia.</p>';
+      } else {
+        laporanData.forEach((laporan) => {
+          const card = createLaporanCard(laporan);
+          mainContent.appendChild(card);
+        });
+      }
+    })
+    .catch((error) => {
+      mainContent.innerHTML = '<p>Gagal memuat laporan. Silakan coba lagi nanti.</p>';
+      console.error(error);
+    });
 
-  // Gabungkan elemen sidebar dan konten utama ke dalam container
+  // Gabungkan sidebar dan konten utama ke container
   container.appendChild(sidebars);
   container.appendChild(mainContent);
   document.body.appendChild(container);
 
-  // Membuat elemen footer
+  // Tambahkan footer ke halaman
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
