@@ -4,12 +4,11 @@ import '../../components/footer.js';
 import createDetailLaporanPage from './detail-laporan.js'; // Import fungsi halaman detail
 import ENDPOINT from '../globals/endpoint';
 
-// Fetch data laporan dari API
 const fetchLaporan = async () => {
   try {
     const response = await fetch(ENDPOINT.GETLAPORAN, {
       method: 'GET',
-      credentials: 'include', // Mengirim cookie jika diperlukan
+      credentials: 'include', // Kirim cookie lintas domain
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,10 +20,8 @@ const fetchLaporan = async () => {
     }
 
     const data = await response.json();
-    console.log('Respons API:', data);
-
-    // Pastikan data yang dikembalikan adalah array
-    return Array.isArray(data.message) ? data.message : [];
+    console.log('Laporan diterima:', data);
+    return data.message || []; // Sesuaikan dengan struktur respons API
   } catch (error) {
     console.error('Fetch Laporan Error:', error.message);
     return [];
