@@ -25,6 +25,7 @@ import createAboutPage from './pages/about.js';
 import createNotificationPage from './pages/detail-notif.js';
 import createProfilePage from './pages/profile.js';
 import createChangePasswordPage from './pages/ubah-sandi.js';
+import renderUpdatePage from './pages/update-profil.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
@@ -104,6 +105,8 @@ function handleHashChange() {
     createLaporanPage();
   } else if (currentHash === '#/notifikasi') {
     createNotificationPage();
+  } else if (currentHash === '#/updateprofile'){
+    renderUpdatePage();
   } else if (currentHash === '#/profile') {
     createProfilePage();
   } else if (currentHash === '#/ubah-sandi') {
