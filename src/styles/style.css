@@ -1686,7 +1686,7 @@ margin-bottom: 48px;
   width: 250px;
   position: absolute;
   right: 30px; /* Tetap rata kanan */
-  top: 120px; /* Beri jarak dari header */
+  top: 190px; /* Beri jarak dari header */
   z-index: 10; /* Pastikan tetap berada di atas elemen lainnya */
   display: flex;
   flex-direction: column; /* Tata elemen secara vertikal */
