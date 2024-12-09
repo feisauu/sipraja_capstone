@@ -5,6 +5,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
+import Swal from 'sweetalert2';
 import ENDPOINT from '../globals/endpoint'; // Assuming you have the ENDPOINTs imported
 // eslint-disable-next-line no-unused-vars
 import CONFIG from '../globals/config';
@@ -318,68 +319,115 @@ window.updateStatus = async (id) => {
   const newStatus = document.getElementById(`statusSelect-${id}`).value;
 
   if (!userId || !authToken) {
-    console.error('User ID atau Auth Token tidak ditemukan di localStorage');
-    Swal.fire('Error', 'Token atau User ID tidak ditemukan, silakan login ulang', 'error');
+    alert('Autentikasi tidak valid. Silakan login kembali.');
     return;
   }
 
   try {
-    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/${id}`, { // Pastikan 'id' menggunakan huruf kecil
-      method: 'PUT', // Seharusnya menggunakan PUT untuk memperbarui data
-      credentials: 'include',
+    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/acc/${id}`, {
+      method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${authToken}`, // Kirim token dalam header Authorization
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`, // Tambahkan header autentikasi jika diperlukan
       },
-      body: JSON.stringify({ status: newStatus }), // Kirim status baru dalam body
+      body: JSON.stringify({ status: newStatus }),
     });
 
-    if (response.ok) {
-      alert('Status laporan berhasil diperbarui.');
-      fetchLaporanData(); // Refresh data laporan
-    } else {
+    if (!response.ok) {
       const errorData = await response.json();
-      console.error('Error response from API:', errorData);
-      alert(`Gagal memperbarui status: ${errorData.message}`);
+      throw new Error(errorData.message || 'Gagal mengupdate status laporan.');
     }
+
+    // Jika sukses, perbarui tampilan status
+    const statusCell = document.getElementById(`status-${id}`);
+    statusCell.innerHTML = `<span class="status ${newStatus.toLowerCase()}">${newStatus}</span>`;
+    alert('Status laporan berhasil diperbarui.');
   } catch (error) {
-    console.error('Error updating status:', error);
-    alert(`Terjadi kesalahan: ${error.message}`);
+    console.error('Error saat mengupdate status laporan:', error);
+    alert('Terjadi kesalahan saat memperbarui status laporan. Silakan coba lagi.');
   }
 };
 
 // Handle delete Laporan
 window.deleteLaporan = async (id) => {
   try {
-    // Fetch the authToken from localStorage
-    const authToken = localStorage.getItem('authToken');
-
-    // Check if the authToken exists, if not, throw an error
-    if (!authToken) {
-      throw new Error('Authentication token is missing.');
-    }
-
-    // Make sure the URL for deleting is correct
-    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      },
+    // Tampilkan SweetAlert untuk konfirmasi
+    const result = await Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda tidak dapat mengembalikan laporan yang sudah dihapus!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     });
 
-    if (response.ok) {
-      alert('Laporan deleted successfully');
-      createLaporanAdmin(); // Re-fetch and update the list of reports
+    // Jika pengguna menekan "Ya, hapus!"
+    if (result.isConfirmed) {
+      // Fetch the authToken from localStorage
+      const authToken = localStorage.getItem('authToken');
+
+      // Check if the authToken exists, if not, throw an error
+      if (!authToken) {
+        throw new Error('Authentication token is missing.');
+      }
+
+      // Lakukan permintaan ke API untuk menghapus laporan
+      const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/delete/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Tampilkan notifikasi berhasil
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Laporan berhasil dihapus.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        // Hapus elemen DOM yang terkait dengan laporan
+        const laporanElement = document.getElementById(`laporan-${id}`);
+        if (laporanElement) {
+          laporanElement.remove(); // Hapus elemen dari DOM
+        }
+      } else {
+        const responseText = await response.text();
+        console.error('Error response:', responseText);
+
+        // Tampilkan notifikasi gagal
+        Swal.fire({
+          title: 'Gagal!',
+          text: `Gagal menghapus laporan: ${responseText}`,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
     } else {
-      const responseText = await response.text();
-      console.error('Error response:', responseText);
-      alert(`Failed to delete laporan: ${responseText}`);
+      // Tampilkan notifikasi jika pengguna membatalkan
+      Swal.fire({
+        title: 'Dibatalkan!',
+        text: 'Laporan tidak dihapus.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+      });
     }
   } catch (error) {
     console.error('Error deleting laporan:', error);
-    alert(`Error deleting laporan: ${error.message}`);
+
+    // Tampilkan notifikasi jika terjadi error
+    Swal.fire({
+      title: 'Error!',
+      text: `Terjadi kesalahan saat menghapus laporan: ${error.message}`,
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
   }
 };
 
