@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable import/extensions */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-shadow */
 /* eslint-disable no-use-before-define */
@@ -6,6 +8,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
 import Swal from 'sweetalert2';
+import '../../components/modal-admin.js';
 import ENDPOINT from '../globals/endpoint'; // Assuming you have the ENDPOINTs imported
 // eslint-disable-next-line no-unused-vars
 import CONFIG from '../globals/config';
@@ -266,69 +269,86 @@ const createLaporanAdmin = () => {
 
 // Menampilkan form untuk mengedit status laporan
 window.showEditForm = (id, currentStatus) => {
-  const statusCell = document.getElementById(`status-${id}`);
-  if (!statusCell) {
-    console.warn(`Element dengan ID status-${id} tidak ditemukan.`);
-    return;
-  }
+  // Membuat elemen modal
+  const modal = document.createElement('modal-component');
+  document.body.appendChild(modal); // Menambahkan modal ke DOM
 
-  // Membuat elemen form secara dinamis
-  const form = document.createElement('form');
-  form.id = `editForm-${id}`;
-
-  const select = document.createElement('select');
-  select.id = `statusSelect-${id}`;
-
-  // Menentukan opsi status
-  const options = [
-    { value: 'belum diproses', label: 'Belum Diproses' },
-    { value: 'diproses', label: 'Diproses' },
-    { value: 'selesai', label: 'Selesai' },
-  ];
-
-  // Menambahkan options ke dalam select
-  options.forEach((option) => {
-    const optionElement = document.createElement('option');
-    optionElement.value = option.value;
-    optionElement.textContent = option.label;
-    if (currentStatus === option.value) {
-      optionElement.selected = true;
+  // Tunggu hingga modal siap di-render
+  setTimeout(() => {
+    // Mendapatkan referensi ke dropdown statusSelect dalam shadowRoot
+    const select = modal.shadowRoot.querySelector('#statusSelect');
+    if (!select) {
+      console.error('Dropdown statusSelect tidak ditemukan.');
+      return;
     }
-    select.appendChild(optionElement);
-  });
 
-  // Menambahkan tombol update ke dalam form
-  const updateButton = document.createElement('button');
-  updateButton.type = 'button';
-  updateButton.textContent = 'Update';
-  updateButton.onclick = () => updateStatus(id); // Pastikan id dikirim ke fungsi updateStatus
+    // Reset opsi lama dan tambahkan opsi baru
+    select.innerHTML = '';
+    const options = [
+      { value: 'belum diproses', label: 'Belum Diproses' },
+      { value: 'di proses', label: 'Diproses' },
+      { value: 'selesai', label: 'Selesai' },
+    ];
 
-  // Menambahkan elemen ke dalam form
-  form.appendChild(select);
-  form.appendChild(updateButton);
+    options.forEach((option) => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.value;
+      optionElement.textContent = option.label;
+      if (currentStatus === option.value) {
+        optionElement.selected = true;
+      }
+      select.appendChild(optionElement);
+    });
 
-  // Menampilkan form di dalam statusCell
-  statusCell.innerHTML = ''; // Menghapus konten sebelumnya
-  statusCell.appendChild(form);
+    // Menampilkan modal dengan memanggil metode open()
+    modal.open();
+
+    // Menambahkan event listener ke tombol update
+    const updateButton = modal.shadowRoot.querySelector('#updateButton');
+    if (updateButton) {
+      updateButton.onclick = () => {
+        updateStatus(id, select.value);
+      };
+    }
+
+    // Menambahkan event listener ke tombol close
+    const closeButton = modal.shadowRoot.querySelector('#closeModal');
+    if (closeButton) {
+      closeButton.onclick = () => {
+        modal.close();
+        modal.remove();
+      };
+    }
+
+    window.onclick = (event) => {
+      if (event.target === modal) {
+        modal.close();
+        modal.remove();
+      }
+    };
+  }, 100);
 };
 
-// Mengupdate status laporan
-window.updateStatus = async (id) => {
-  const userId = localStorage.getItem('userId'); // Ambil userId dari localStorage
+// Fungsi untuk mengupdate status
+window.updateStatus = async (id, newStatus) => {
   const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
-  const newStatus = document.getElementById(`statusSelect-${id}`).value;
 
-  if (!userId || !authToken) {
-    alert('Autentikasi tidak valid. Silakan login kembali.');
+  if (!authToken) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Autentikasi Tidak Valid',
+      text: 'Silakan login kembali.',
+    });
     return;
   }
 
   try {
     const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/acc/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`, // Tambahkan header autentikasi jika diperlukan
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({ status: newStatus }),
     });
@@ -338,13 +358,27 @@ window.updateStatus = async (id) => {
       throw new Error(errorData.message || 'Gagal mengupdate status laporan.');
     }
 
-    // Jika sukses, perbarui tampilan status
-    const statusCell = document.getElementById(`status-${id}`);
-    statusCell.innerHTML = `<span class="status ${newStatus.toLowerCase()}">${newStatus}</span>`;
-    alert('Status laporan berhasil diperbarui.');
+    Swal.fire({
+      icon: 'success',
+      title: 'Status Diperbarui',
+      text: 'Status laporan berhasil diperbarui.',
+    });
+
+    document.querySelector('modal-component').remove(); // Hapus modal setelah update berhasil
+
+    // Perbarui status laporan dalam tabel tanpa merefresh halaman
+    const statusCell = document.querySelector(`#status-${id}`);
+    if (statusCell) {
+      statusCell.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1); // Mengubah teks
+      statusCell.className = `status ${newStatus}`; // Mengubah kelas untuk menyesuaikan warna
+    }
   } catch (error) {
     console.error('Error saat mengupdate status laporan:', error);
-    alert('Terjadi kesalahan saat memperbarui status laporan. Silakan coba lagi.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Kesalahan',
+      text: 'Terjadi kesalahan saat memperbarui status laporan.',
+    });
   }
 };
 
