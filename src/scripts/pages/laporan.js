@@ -48,8 +48,18 @@ const createLaporanCard = (laporan) => {
         <span class="status-badge ${laporan.status === 'selesai' ? 'status-done' : laporan.status === 'di proses' ? 'status-in-progress' : 'status-pending'}"> ${laporan.status || 'Status tidak tersedia'}</span>
       </p>
       <p class="deskripsi">${laporan.description || 'Deskripsi tidak tersedia'}</p>
+      <button class="detail-button" data-id="${laporan._id}">Lihat Detail</button>
     </div>
   `;
+
+  // Event listener untuk tombol "Lihat Detail"
+  const detailButton = card.querySelector('.detail-button');
+  detailButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    const laporanId = detailButton.dataset.id;
+    window.location.href = `#/detailnya?id=${laporanId}`; // Navigasi ke halaman detail dengan ID
+  });
+
   return card;
 };
 
@@ -64,8 +74,8 @@ const createLaporanPage = () => {
   featuresBar.className = 'features-bar';
   featuresBar.innerHTML = `
     <div class="search-bar">
-      <input type="text" placeholder="Cari Laporan...">
-      <button><i class="fas fa-search"></i> Cari</button>
+      <input type="text" id="search-input" placeholder="Cari Laporan...">
+      <button id="search-button"><i class="fas fa-search"></i> Cari</button>
     </div>
     <div class="create-report">
       <a href="#" id="create-laporan-button">
