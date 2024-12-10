@@ -1,10 +1,15 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-shadow */
 /* eslint-disable no-undef */
 /* eslint-disable no-use-before-define */
 import Swal from 'sweetalert2';
-import ENDPOINT from '../globals/endpoint';
 
-const createKonfirmasi = async () => {
+const createKonfirmasi = async (id) => {
+  if (!id) {
+    Swal.fire('Error', 'ID is required to fetch the data', 'error');
+    return;
+  }
+
   // Clear existing content (if any)
   const existingContainer = document.querySelector('.container-admin');
   if (existingContainer) {
@@ -72,6 +77,9 @@ const createKonfirmasi = async () => {
   loading.textContent = 'Loading... Please wait.';
   mainContent.append(loading);
 
+  containerAdmin.append(sidebarAdmin, mainContent);
+  document.body.appendChild(containerAdmin);
+
   // Fetch Data from API
   const authToken = localStorage.getItem('authToken');
   if (!authToken) {
@@ -80,93 +88,81 @@ const createKonfirmasi = async () => {
   }
 
   try {
-    const response = await fetch(`${ENDPOINT.GETLAPORAN}`, {
+    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/${id}`, {
       method: 'GET',
-      credentials: 'include', // Kirim cookie lintas domain
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
     const data = await response.json();
+    console.log(data); // Log data to check the structure
 
     if (response.ok) {
+      // Check and access the nested 'laporan' object
+      const laporan = data.laporan;
+      if (!laporan) {
+        throw new Error('Laporan tidak ditemukan.');
+      }
+
       // Remove loading indicator
       loading.remove();
 
-      // Check if Konfirmasi already exists to avoid duplication
-      const existingConfirmationContainer = document.querySelector('.container-confirmation');
-      if (!existingConfirmationContainer) {
-        // Generate and append report details
-        const containerConfirmation = document.createElement('div');
-        containerConfirmation.className = 'container-confirmation';
+      // Generate and append report details using the fetched data
+      const containerConfirmation = document.createElement('div');
+      containerConfirmation.className = 'container-confirmation';
 
-        const confirmationLeftSection = document.createElement('div');
-        confirmationLeftSection.className = 'confirmation-left-section';
-        const confirmationTitle = document.createElement('h1');
-        confirmationTitle.textContent = 'Konfirmasi Laporan';
+      const confirmationLeftSection = document.createElement('div');
+      confirmationLeftSection.className = 'confirmation-left-section';
+      const confirmationTitle = document.createElement('h1');
+      confirmationTitle.textContent = 'Konfirmasi Laporan';
 
-        // Create Form Groups using API data
-        const formGroup1 = createFormGroup('Status', data.status, 'select');
-        const formGroup2 = createFormGroup('Nama Pelapor', data.nama, 'text', true);
-        const formGroup3 = createFormGroup('Tanggal Laporan', data.tanggal, 'text', true);
-        const formGroup4 = createFormGroup('Judul Laporan', data.judul, 'text', true);
-        const formGroup5 = createFormGroup('Lokasi', data.lokasi, 'text', true, 'map');
-        const formGroup6 = createFormGroup('Kategori Laporan', data.kategori, 'text', true);
-        const formGroup7 = createTextArea('Deskripsi Masalah', data.deskripsi);
+      // Form generation from API data
+      confirmationLeftSection.append(
+        confirmationTitle,
+        createFormGroup('Status', laporan.status || 'Tidak tersedia', 'text', true),
+        createFormGroup('Nama Pelapor', laporan.nama || 'Tidak tersedia', 'text', true),
+        createFormGroup('Tanggal Laporan', laporan.tanggal || 'Tidak tersedia', 'text', true),
+        createFormGroup('Judul Laporan', laporan.judul || 'Tidak tersedia', 'text', true),
+        createFormGroup('Lokasi', laporan.lokasi || 'Tidak tersedia', 'text', true),
+        createFormGroup('Kategori Laporan', laporan.kategori || 'Tidak tersedia', 'text', true),
+        createTextArea('Deskripsi Masalah', laporan.description || 'Tidak tersedia'),
+      );
 
-        confirmationLeftSection.append(
-          confirmationTitle,
-          formGroup1,
-          formGroup2,
-          formGroup3,
-          formGroup4,
-          formGroup5,
-          formGroup6,
-          formGroup7,
-        );
+      const confirmationRightSection = document.createElement('div');
+      confirmationRightSection.className = 'confirmation-right-section';
 
-        const confirmationRightSection = document.createElement('div');
-        confirmationRightSection.className = 'confirmation-right-section';
+      const continueButton = document.createElement('a');
+      continueButton.className = 'confirmation-btn';
+      continueButton.href = '#';
+      continueButton.innerHTML = '<i class="fas fa-paper-plane"></i> Teruskan ke Instansi';
 
-        const continueButton = document.createElement('a');
-        continueButton.className = 'confirmation-btn';
-        continueButton.href = '#';
-        continueButton.innerHTML = '<i class="fas fa-paper-plane"></i> Teruskan ke Instansi';
-
-        // Check if gambar_pendukung exists and is an array before looping
-        if (Array.isArray(data.gambar_pendukung) && data.gambar_pendukung.length > 0) {
-          const photosContainer = document.createElement('div');
-          photosContainer.className = 'photos';
-          data.gambar_pendukung.forEach((src) => {
-            const img = document.createElement('img');
-            img.alt = 'Supporting photo';
-            img.src = src;
-            photosContainer.appendChild(img);
-          });
-
-          confirmationRightSection.append(continueButton, photosContainer);
-        } else {
-          // If no images, display a message
-          const noPhotosMessage = document.createElement('p');
-          noPhotosMessage.textContent = 'Tidak ada foto yang tersedia.';
-          confirmationRightSection.append(continueButton, noPhotosMessage);
-        }
-
-        containerConfirmation.append(confirmationLeftSection, confirmationRightSection);
-
-        mainContent.append(headerAdmin, containerConfirmation);
-
-        containerAdmin.append(sidebarAdmin, mainContent);
-        document.body.appendChild(containerAdmin);
+      // Handling supporting images (if any)
+      if (Array.isArray(laporan.gambar_pendukung) && laporan.gambar_pendukung.length > 0) {
+        const photosContainer = document.createElement('div');
+        photosContainer.className = 'photos';
+        laporan.gambar_pendukung.forEach((src) => {
+          const img = document.createElement('img');
+          img.alt = 'Supporting photo';
+          img.src = src;
+          photosContainer.appendChild(img);
+        });
+        confirmationRightSection.append(continueButton, photosContainer);
+      } else {
+        const noPhotosMessage = document.createElement('p');
+        noPhotosMessage.textContent = 'Tidak ada foto yang tersedia.';
+        confirmationRightSection.append(continueButton, noPhotosMessage);
       }
+
+      containerConfirmation.append(confirmationLeftSection, confirmationRightSection);
+      mainContent.append(containerConfirmation);
     } else {
       throw new Error(data.message || 'Gagal mengambil data laporan.');
     }
   } catch (error) {
-    // Remove loading indicator
     loading.remove();
-    console.error('Error fetching data:', error.message);
     Swal.fire('Error', error.message, 'error');
   }
 };
@@ -215,5 +211,4 @@ const createTextArea = (labelText, value) => {
   return formGroup;
 };
 
-// Export function
 export default createKonfirmasi;
