@@ -465,16 +465,53 @@ window.deleteLaporan = async (id) => {
   }
 };
 
-// Handle archiving Laporan
-const archiveLaporan = async (id) => {
+// Handle the Archive Button click
+window.archiveLaporan = (id) => {
+  Swal.fire({
+    title: 'Apa Anda yakin mengarsipkan laporan ini?',
+    text: 'Laporan yang diarsipkan tidak dapat dikembalikan lagi!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, arsipkan!',
+    cancelButtonText: 'Batal',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // If confirmed, archive the report
+      moveToArchive(id);
+    }
+  });
+};
+
+const moveToArchive = async (id) => {
   try {
-    await fetch(`${ENDPOINT.GETLAPORAN}archive/${id}`, {
-      method: 'POST',
+    const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/laporan/archive/${id}`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+      },
     });
-    alert('Laporan archived successfully');
-    createLaporanAdmin(); // Refresh the page
+
+    if (response.ok) {
+      Swal.fire(
+        'Tersimpan!',
+        'Laporan telah berhasil diarsipkan.',
+        'success',
+      );
+
+      window.location.href = '#/arsip-admin';
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Gagal mengarsipkan laporan.');
+    }
   } catch (error) {
     console.error('Error archiving laporan:', error);
+    Swal.fire(
+      'Terjadi kesalahan!',
+      'Gagal mengarsipkan laporan. Silakan coba lagi.',
+      'error',
+    );
   }
 };
 
