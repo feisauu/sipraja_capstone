@@ -181,7 +181,7 @@ const createLaporanAdmin = () => {
         row.id = `laporan-${laporan._id}`;
         row.innerHTML = `
   <td>${(currentPage - 1) * reportsPerPage + index + 1}</td>
-  <td><a onclick="window.location.href='#/konfirmasi'">
+  <td><a href="#/konfirmasi/${laporan._id}">
       <strong>${laporan.judul}</strong><br>
       <small>${laporan.nama}</small>
     </a>
