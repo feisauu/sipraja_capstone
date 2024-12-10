@@ -111,8 +111,13 @@ function handleHashChange() {
         renderRegisterPage();
     } else if (currentHash === '#/forget') {
         renderForgetPasswordPage();
-    } else if (currentHash === '#/konfirmasi') {
-        createKonfirmasi();
+    } else if (currentHash.startsWith('#/konfirmasi')) {
+      const id = currentHash.split('/').pop();
+      if (id) {
+        createKonfirmasi(id);
+      } else {
+      Swal.fire('Error', 'ID not found in the URL', 'error');
+      }
     } else if (currentHash === '#/dashboard') {
         createDashboard();
     } else if (currentHash === '#/create-laporan') {
