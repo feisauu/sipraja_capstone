@@ -147,13 +147,12 @@ const createLaporanAdmin = () => {
     }
 
     try {
-      // Add pagination to the filters
       filters.page = page;
       filters.limit = reportsPerPage;
 
       const response = await fetch(`${ENDPOINT.GETLAPORAN}?${new URLSearchParams(filters).toString()}`, {
         method: 'GET',
-        credentials: 'include', // Send cookies for cross-domain requests
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -174,34 +173,36 @@ const createLaporanAdmin = () => {
       }
 
       const laporanTableBody = document.getElementById('laporanTableBody');
-      laporanTableBody.innerHTML = ''; // Clear existing data
+      laporanTableBody.innerHTML = '';
 
-      laporanData.forEach((laporan, index) => {
+      const filteredLaporanData = laporanData.filter((laporan) => !laporan.isArchived);
+
+      filteredLaporanData.forEach((laporan, index) => {
         const row = document.createElement('tr');
         row.id = `laporan-${laporan._id}`;
         row.innerHTML = `
-  <td>${(currentPage - 1) * reportsPerPage + index + 1}</td>
-  <td><a href="#/konfirmasi/${laporan._id}">
-      <strong>${laporan.judul}</strong><br>
-      <small>${laporan.nama}</small>
-    </a>
-  </td>
-  <td><span class="status ${laporan.status.toLowerCase()}" id="status-${laporan._id}">${laporan.status}</span></td>
-  <td>${laporan.kategori}</td>
-  <td>${laporan.lokasi}</td>
-  <td>${laporan.tanggal}</td>
-  <td class="action-icons">
-    <button class="icon edit-btn" onclick="showEditForm('${laporan._id}', '${laporan.status}')">
-      <i class="fas fa-edit"></i> 
-    </button>
-    <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id}')">
-      <i class="fas fa-trash-alt"></i> 
-    </button>
-    <button class="archive-btn" onclick="archiveLaporan('${laporan._id}')">
-      <i class="fas fa-folder-plus"></i> 
-    </button>
-  </td>
-`;
+        <td>${(page - 1) * reportsPerPage + index + 1}</td>
+        <td><a href="#/konfirmasi/${laporan._id}">
+            <strong>${laporan.judul}</strong><br>
+            <small>${laporan.nama}</small>
+          </a>
+        </td>
+        <td><span class="status ${laporan.status.toLowerCase()}" id="status-${laporan._id}">${laporan.status}</span></td>
+        <td>${laporan.kategori}</td>
+        <td>${laporan.lokasi}</td>
+        <td>${laporan.tanggal}</td>
+        <td class="action-icons">
+          <button class="icon edit-btn" onclick="showEditForm('${laporan._id}', '${laporan.status}')">
+            <i class="fas fa-edit"></i> 
+          </button>
+          <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id}')">
+            <i class="fas fa-trash-alt"></i> 
+          </button>
+          <button class="archive-btn" onclick="archiveLaporan('${laporan._id}')">
+            <i class="fas fa-folder-plus"></i> 
+          </button>
+        </td>
+      `;
         laporanTableBody.appendChild(row);
       });
 
@@ -391,8 +392,6 @@ window.deleteLaporan = async (id) => {
       text: 'Anda tidak dapat mengembalikan laporan yang sudah dihapus!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Ya, hapus!',
       cancelButtonText: 'Batal',
     });
@@ -465,7 +464,7 @@ window.deleteLaporan = async (id) => {
   }
 };
 
-// Handle the Archive Button click
+/// Handle the Archive Button click
 window.archiveLaporan = (id) => {
   Swal.fire({
     title: 'Apa Anda yakin mengarsipkan laporan ini?',
@@ -494,12 +493,18 @@ const moveToArchive = async (id) => {
     });
 
     if (response.ok) {
+      // Clear the table before updating
+      const tableBody = document.getElementById('laporanTableBody');
+      tableBody.innerHTML = ''; // Mengosongkan tabel arsip
+
+      // Show success message
       Swal.fire(
         'Tersimpan!',
         'Laporan telah berhasil diarsipkan.',
         'success',
       );
 
+      // Redirect to archive page
       window.location.href = '#/arsip-admin';
     } else {
       const errorData = await response.json();
