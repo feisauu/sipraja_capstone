@@ -1617,6 +1617,7 @@ margin-bottom: 48px;
   border-radius: 10px;
   gap: 20px;
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 /* Flexbox to align input fields and button in a row */
@@ -1625,6 +1626,7 @@ margin-bottom: 48px;
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 .filter-input-admin input,
@@ -1685,39 +1687,40 @@ margin-bottom: 48px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   width: 250px;
   position: absolute;
-  right: 30px; /* Tetap rata kanan */
-  top: 190px; /* Beri jarak dari header */
-  z-index: 10; /* Pastikan tetap berada di atas elemen lainnya */
+  right: 30px;
+  top: 190px;
+  z-index: 10;
   display: flex;
-  flex-direction: column; /* Tata elemen secara vertikal */
-  gap: 10px; /* Beri jarak antar elemen */
+  flex-direction: column;
+  gap: 10px;
 }
 
 .filters-sidebar-admin h3{
-  margin-bottom: 0px;}
+  margin-bottom: 0px;
+}
 
 .filters-sidebar-admin form {
   display: flex;
-  flex-direction: column; /* Tata elemen form secara vertikal */
-  gap: 15px; /* Tambahkan jarak antar elemen form */
+  flex-direction: column;
+  gap: 15px;
 }
 
 .filters-sidebar-admin label {
   display: flex;
-  align-items: center; /* Rata tengah antara teks dan radio button */
+  align-items: center;
   cursor: pointer;
   font-size: 14px;
   color: #333;
 }
 
 .filters-sidebar-admin input[type="radio"] {
-  appearance: none; /* Hilangkan tampilan default radio */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 16px;
   height: 16px;
   border: 2px solid #5a54e0;
-  border-radius: 50%; /* Bentuk lingkaran */
+  border-radius: 50%;
   margin-right: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1735,7 +1738,7 @@ margin-bottom: 48px;
 
 /* Tombol Filter */
 .filter-btn-admin {
-  align-self: center; /* Rata tengah */
+  align-self: center;
   background-color: #4C1D95;
   color: #fff;
   padding: 10px 20px;
@@ -1749,7 +1752,6 @@ margin-bottom: 48px;
 .filter-btn-admin:hover {
   background-color: #6B4E9C;
 }
-
 
 /* Table and Pagination */
 .table-container-admin table {
@@ -1776,37 +1778,34 @@ margin-bottom: 48px;
   color: #333;
   padding: 10px;
   text-align: left;
-  white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide text that exceeds the column width */
-  text-overflow: ellipsis; /* Show ellipsis (...) for overflowed text */
-  max-width: 200px; /* Optional: Set a maximum width for the column */
-  min-width: 120px; /* Optional: Set a minimum width for the column */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  min-width: 120px;
 }
 
-/* Styling for the link inside the Nama column */
 #laporanTableBody td:nth-child(2) a {
   text-decoration: none;
   color: #333;
   display: block;
 }
 
-/* Hover effects for the link inside the Nama column */
 #laporanTableBody td:nth-child(2) a:hover {
-  color: #007bff; /* Blue color on hover */
+  color: #007bff;
   text-decoration: underline;
 }
 
-/* Styling for the small text inside the Nama column */
 #laporanTableBody td:nth-child(2) small {
   display: block;
   font-size: 0.875rem;
-  color: #777; /* Lighter color for the name */
+  color: #777;
   margin-top: 5px;
 }
 
 #laporanTableBody td:nth-child(6) {
-  max-width: 200px; /* Optional: Set a maximum width for the column */
-  min-width: 120px; /* Optional: Set a minimum width for the column */
+  max-width: 200px;
+  min-width: 120px;
 }
 
 .table-container-admin tbody tr {
@@ -1863,16 +1862,16 @@ margin-bottom: 48px;
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 30px; /* Increased margin */
+  margin-top: 30px;
   width: 70%;
 }
 
 .page-btn {
-  padding: 5px 12px; /* Slightly increased padding */
+  padding: 5px 12px; 
   border: 1px solid #ddd;
   background-color: #fff;
   cursor: pointer;
-  margin: 0 7px; /* Adjusted margin for better spacing */
+  margin: 0 7px; 
   font-size: 16px;
   color: #6B7280;
 }
@@ -1880,6 +1879,65 @@ margin-bottom: 48px;
 .page-btn.active {
   background-color: #6B7280;
   color: #fff;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1385px) {
+  .filters-sidebar-admin {
+    position: static; 
+    width: 100%; 
+    margin-top: 20px; 
+    right: auto;
+    top: auto; 
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-admin {
+    flex-direction: column;
+    padding-left: 20px;
+  }
+
+  .table-filters-container-admin {
+    flex-direction: column;
+  }
+
+  .filters-sidebar-admin {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 20px; 
+  }
+
+  .table-container-admin table {
+    width: 100%;
+  }
+
+  .filter-input-admin input,
+  .filter-date-admin input {
+    max-width: 100%; 
+  }
+
+  .pagination {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .page-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-sidebar-admin {
+    padding: 15px;
+  }
+
+  .filter-btn-admin {
+    width: 100%;
+  }
 }
 
 /* General Layout */
@@ -1894,7 +1952,6 @@ margin-bottom: 48px;
   width: 300px;
   text-align: center;
 }
-
 
 .profile-picture-admin {
   display: block;
@@ -1930,7 +1987,6 @@ h3{
   font-size: 1.5em;
   text-align: center;
 }
-
 
 .form-group-admin label {
   font-weight: bold;
@@ -2074,7 +2130,7 @@ h1 {
 /* Styling untuk tombol-tombol */
 .icon,
 .archive-btn,
-.delete-btn {
+.delete-btn, .unarchive-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -2096,7 +2152,7 @@ h1 {
   color: #F44336; 
 }
 
-.archive-btn i {
+.archive-btn, .unarchive-btn i {
   color: #FF9800;
 }
 
@@ -2111,7 +2167,7 @@ h1 {
   color: #D32F2F; 
 }
 
-.archive-btn:hover {
+.archive-btn:hover,  .unarchive-btn:hover {
   background-color: #FFF3E0; 
   color: #F57C00; 
 }
@@ -2119,25 +2175,23 @@ h1 {
 /* Menambahkan efek pada ikon */
 .icon i,
 .delete-btn i,
-.archive-btn i {
+.archive-btn i, .unarchive-btn i {
   font-size: 18px; /* Ukuran ikon */
 }
 
 /* Styling untuk tampilan hover */
 .icon:hover i,
 .delete-btn:hover i,
-.archive-btn:hover i {
+.archive-btn:hover i, .unarchive-btn:hover i {
   transform: scale(1.1); /* Menambahkan efek memperbesar ikon saat hover */
 }
 
 /* Styling untuk tombol saat di-click */
 .icon:active,
 .delete-btn:active,
-.archive-btn:active {
+.archive-btn:active, .unarchive-btn:active {
   transform: scale(0.95); /* Efek mengecilkan tombol saat di-click */
 }
-
-
 
 /*UPDATE PROFILE*/
 .update-profile-wrapper {
@@ -2286,7 +2340,6 @@ h1 {
   margin-top: 20px;
 }
 
-
 .detail-button {
   padding: 10px 20px;
   background-color: #6f42c1;
@@ -2300,4 +2353,102 @@ h1 {
 
 .detail-button:hover {
   background-color: #6f42c1;
+}
+
+#arsipTableBody td:nth-child(2) {
+  font-weight: bold;
+  color: #333;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  min-width: 120px; 
+}
+
+#arsipTableBody td:nth-child(2) a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+#arsipTableBody td:nth-child(2) a:hover {
+  color: #007bff; 
+  text-decoration: underline;
+}
+
+#arsipTableBody td:nth-child(2) small {
+  display: block;
+  font-size: 0.875rem;
+  color: #777; 
+  margin-top: 5px;
+}
+
+#arsipTableBody td:nth-child(6) {
+  max-width: 200px; 
+  min-width: 120px; 
+}
+
+.table-admin {
+  background-color: #fff;
+}
+
+.table-admin table {
+  width: 72%;
+  margin: 20px; 
+  border-collapse: collapse;
+}
+
+.table-admin th,
+.table-admin td {
+  padding: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #6B7280;
+  text-transform: capitalize;
+}
+
+.table-admin th {
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
+.table-admin tbody tr:hover {
+  background: #FFFFFF;
+}
+
+.table-admin td .status {
+  padding: 5px 12px;
+  font-weight: bold;
+  border-radius: 5px;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.table-admin td .status.selesai {
+  background: #10B981;
+  color: #fff;
+}
+
+.table-admin td .status.di.proses {
+  background-color: #f39c12;
+  color: #fff;
+}
+
+.table-admin td .status.belum.di.proses {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+.table-admin .icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6B7280;
+  display: flex;
+}
+
+.table-admin .icon:hover {
+  color: #4C1D95;
 }
