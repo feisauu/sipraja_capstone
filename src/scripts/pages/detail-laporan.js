@@ -1,7 +1,10 @@
+/* eslint-disable import/order */
+/* eslint-disable no-alert */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
 import ENDPOINT from '../globals/endpoint';
+import Swal from 'sweetalert2';
 
 const createDetailLaporanPage = () => {
   // Buat elemen navbar
@@ -46,32 +49,54 @@ const createDetailLaporanPage = () => {
   const form = document.getElementById('form-laporan');
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-  
+
     const formData = new FormData(form);
-    console.log([...formData]); // Debug data yang dikirimkan
-  
+    const submitButton = document.querySelector('.submit-button');
+
+    // Tambahkan class untuk animasi loading
+    submitButton.disabled = true;
+    submitButton.innerText = 'Mengirim...';
+
     try {
       const response = await fetch(ENDPOINT.CREATELAPORAN, {
         method: 'POST',
         credentials: 'include',
         body: formData,
       });
-  
+
       const textResponse = await response.text();
       console.log('Raw Response:', textResponse);
-  
+
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status}`);
       }
-  
+
       const result = JSON.parse(textResponse);
       console.log('Parsed Response:', result);
-  
-      alert('Laporan berhasil dibuat!');
-      window.location.href = '#/dashboard'; // Redirect ke halaman utama
+
+      Swal.fire({
+        title: 'Berhasil!',
+        text: 'Laporan berhasil dibuat!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      }).then(() => {
+        document.body.classList.remove('swal2-shown');
+        document.body.style.overflow = '';
+        window.location.href = '#/dashboard';
+      });
     } catch (error) {
       console.error('Error:', error.message);
-      alert(`Gagal membuat laporan: ${error.message}`);
+
+      Swal.fire({
+        title: 'Gagal!',
+        text: `Gagal membuat laporan: ${error.message}`,
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    } finally {
+      // Kembalikan tombol ke state awal
+      submitButton.disabled = false;
+      submitButton.innerText = 'Buat Laporan';
     }
   });
 
