@@ -2630,3 +2630,206 @@ h1 {
   display: none;
 }
 
+
+/*INI CSS CREATE LAPORAN dan EDIT LAPORAN*/
+/* Kontainer Utama untuk Formulir */
+.detail-laporan {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Judul Form */
+.detail-laporan .form-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333333;
+}
+
+/* Kontainer Form */
+.detail-laporan .form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Grup Input Form */
+.detail-laporan .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label */
+.detail-laporan .form-group label {
+  font-size: 14px;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+/* Input dan Textarea */
+.detail-laporan .form-group input,
+.detail-laporan .form-group textarea {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.detail-laporan .form-group input:focus,
+.detail-laporan .form-group textarea:focus {
+  border-color: #4b4a91;
+  box-shadow: 0 0 5px rgba(75, 74, 145, 0.5);
+}
+
+/* Tombol Submit */
+.detail-laporan .submit-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #4b4a91;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.detail-laporan .submit-button:hover {
+  background-color: #36358f;
+  transform: scale(1.03);
+}
+
+/* Kontainer Upload File */
+.detail-laporan .file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px dashed #d2d6dc;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.detail-laporan .file-upload:hover {
+  border-color: #4b4a91;
+}
+
+/* Label Tombol Upload */
+.detail-laporan .file-upload-label {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #4b4a91;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.detail-laporan .file-upload-label:hover {
+  background-color: #36358f;
+}
+
+/* Sembunyikan Input File */
+.detail-laporan input[type="file"] {
+  display: none;
+}
+
+/* Info Jumlah File */
+.detail-laporan .file-upload-info {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 10px;
+}
+
+/* Kontainer Preview */
+.detail-laporan .preview-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+  justify-items: center;
+}
+
+/* Gambar Preview */
+.detail-laporan .preview-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-laporan .preview-image:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  .detail-laporan {
+    padding: 15px;
+  }
+
+  .detail-laporan .form-group input,
+  .detail-laporan .form-group textarea {
+    font-size: 12px;
+  }
+
+  .detail-laporan .submit-button {
+    font-size: 14px;
+  }
+
+  .detail-laporan .file-upload-label {
+    font-size: 12px;
+  }
+}
+/* Button styling */
+.form-submit-button, .form-cancel-button {
+  padding: 12px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.form-submit-button {
+  background-color: #4b4a91;
+  color: white;
+}
+
+.form-submit-button:hover {
+  background-color: #4b4a91;
+}
+
+.form-cancel-button {
+  background-color: #dc3545;
+  color: white;
+  margin-left: 10px;
+}
+
+.form-cancel-button:hover {
+  background-color: #c82333;
+}
+
