@@ -12,6 +12,7 @@ const renderLoginPage = () => {
 
       <section class="login-container">
         <form id="login-form">
+        <h1>Login</h1>
           <div class="form-group">
             <label for="email">Email</label>
             <div class="input-icon">
@@ -82,10 +83,9 @@ const renderLoginPage = () => {
         title: 'Login Berhasil!',
         text: 'Anda akan diarahkan ke halaman dashboard.',
         icon: 'success',
-        timer: 2000, // Timer selama 2 detik
+        timer: 2000,
         showConfirmButton: false,
       }).then(() => {
-        // Pengalihan halaman
         if (result.role === 'admin') {
           window.location.hash = '#/dashboard-admin';
         } else {
