@@ -8,10 +8,8 @@ import '../../components/navbar.js';
 import '../../components/footer.js';
 import '../../components/section-page.js';
 
-const createProfilePage = () => {
-  // Navbar
-  console.log('Current Local Storage (userId):', localStorage.getItem('userId')); // Debugging userId dari localStorage
-
+const createChangePasswordPage = () => {
+// Navbar
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
@@ -27,7 +25,7 @@ const createProfilePage = () => {
   // Profile Container
   const profileContainer = document.createElement('div');
   profileContainer.classList.add('profile-container');
-
+  
   // Profile Header
   const profileHeader = document.createElement('div');
   profileHeader.classList.add('profile-header');
@@ -39,7 +37,7 @@ const createProfilePage = () => {
 
   const profileName = document.createElement('h2');
   profileName.classList.add('profile-name');
-  profileName.textContent = 'Loading...'; // Placeholder sebelum data dimuat
+  profileName.textContent = 'Kim Taehyung';
 
   profileHeader.appendChild(profileImage);
   profileHeader.appendChild(profileName);
@@ -53,20 +51,20 @@ const createProfilePage = () => {
     { href: '#/ubah-sandi', icon: 'fas fa-key', label: 'Ubah Kata Sandi', action: 'ubah-sandi' },
     { href: '#', icon: 'fa-solid fa-right-from-bracket', label: 'Keluar', action: 'logout' },
   ];
-
+  
   menuItems.forEach((item) => {
     const listItem = document.createElement('li');
     listItem.classList.add('menu-item');
-
+  
     const link = document.createElement('a');
     link.href = item.href;
     link.classList.add('menu-link');
     link.dataset.action = item.action; // Tambahkan dataset.action
     link.innerHTML = `<i class="${item.icon}"></i>${item.label}`;
-
+  
     listItem.appendChild(link);
     profileMenu.appendChild(listItem);
-  });
+  });  
 
   profileContainer.appendChild(profileHeader);
   profileContainer.appendChild(profileMenu);
@@ -74,6 +72,49 @@ const createProfilePage = () => {
   // Profile Form
   const profileForm = document.createElement('form');
   profileForm.id = 'profile-form';
+
+  const formTitle = document.createElement('h2');
+  formTitle.textContent = 'Ubah Kata Sandi';
+  profileForm.appendChild(formTitle);
+
+  const formFields = [
+    { label: 'Kata Sandi Sekarang', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan kata sandi sekarang' },
+    { label: 'Kata Sandi Baru', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan kata sandi baru' },
+    { label: 'Ulangi Kata Sandi Baru', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan ulang kata sandi baru' },
+  ];
+
+  formFields.forEach((field) => {
+    const formGroup = document.createElement('div');
+    formGroup.classList.add('form-group');
+
+    const label = document.createElement('label');
+    label.htmlFor = field.id;
+    label.textContent = field.label;
+
+    const inputIcon = document.createElement('div');
+    inputIcon.classList.add('input-icon');
+
+    const icon = document.createElement('i');
+    icon.className = field.icon;
+
+    const input = document.createElement('input');
+    input.type = field.type;
+    input.placeholder = field.placeholder; // Hanya menggunakan placeholder
+    input.value = ''; // Pastikan value kosong
+    input.required = true;
+
+    inputIcon.appendChild(icon);
+    inputIcon.appendChild(input);
+    formGroup.appendChild(label);
+    formGroup.appendChild(inputIcon);
+    profileForm.appendChild(formGroup);
+  });
+
+  const saveButton = document.createElement('button');
+  saveButton.type = 'submit';
+  saveButton.classList.add('btn', 'primary');
+  saveButton.textContent = 'Simpan Perubahan';
+  profileForm.appendChild(saveButton);
 
   // Gabungkan semua elemen ke dalam profile-page
   profilePage.append(profileContainer, profileForm);
@@ -84,87 +125,19 @@ const createProfilePage = () => {
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
-  // Ambil data user dari API
-  const fetchUserData = async () => {
-    const userId = localStorage.getItem('userId'); // Ambil userId dari localStorage
-    const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
-  
-    if (!userId || !authToken) {
-      console.error('User ID atau Auth Token tidak ditemukan di localStorage');
-      Swal.fire('Error', 'Token atau User ID tidak ditemukan, silakan login ulang', 'error');
-      return;
-    }
-  
-    try {
-      const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/user/${userId}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Kirim token dalam header Authorization
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-  
-      if (response.ok) {
-        console.log(data);
-        profileName.textContent = data.nama || 'Nama tidak tersedia';
-        profileImage.src = data.image || '../images/profil.webp';
-        const formTitle = document.createElement('h2');
-        formTitle.textContent = 'Informasi User';
-        profileForm.appendChild(formTitle);
-        // Tambahkan data ke form
-        const formFields = [
-          { id: 'nama', label: 'Nama', type: 'text', value: data.nama || '-' },
-          { id: 'email', label: 'Email', type: 'email', value: data.email || '-' },
-          { id: 'telepon', label: 'Nomor Telepon', type: 'tel', value: data.telp || '-' },
-        ];
-  
-        formFields.forEach((field) => {
-          const formGroup = document.createElement('div');
-          formGroup.classList.add('form-group');
-  
-          const label = document.createElement('label');
-          label.htmlFor = field.id;
-          label.textContent = field.label;
-  
-          const input = document.createElement('input');
-          input.type = field.type;
-          input.id = field.id;
-          input.value = field.value;
-          input.readOnly = true; // Agar tidak dapat diedit
-  
-          formGroup.appendChild(label);
-          formGroup.appendChild(input);
-          profileForm.appendChild(formGroup);
-        });
-      } else {
-        console.error('Failed to fetch profile data:', data.message);
-        Swal.fire('Error', data.message || 'Gagal mengambil data profil', 'error');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      Swal.fire('Error', 'Gagal mengambil data pengguna', 'error');
-    }
-  };
-  
-  // Panggil fetchUserData saat halaman dimuat
-  fetchUserData();
-  
-
   // Event Listener untuk navigasi menu
-  profileMenu.addEventListener('click', async (event) => {
-    const action = event.target.closest('a')?.dataset.action;
+  profileMenu.addEventListener('click', (event) => {
+    const action = event.target.closest('a')?.dataset.action; // Dapatkan data-action
     if (!action) return;
-  
-    event.preventDefault();
-  
+
+    event.preventDefault(); // Hindari reload halaman
+
     if (action === 'profile') {
-      window.location.hash = '#/profile';
+      window.location.hash = '#/profile'; // Tetap di halaman profil
     } else if (action === 'ubah-sandi') {
-      window.location.hash = '#/ubah-sandi';
+      window.location.hash = '#/ubah-sandi'; // Navigasi ke halaman ubah kata sandi
     } else if (action === 'logout') {
-      // Tampilkan konfirmasi logout
+      // Tampilkan SweetAlert
       Swal.fire({
         title: 'Konfirmasi Keluar',
         text: 'Apakah Anda yakin ingin keluar?',
@@ -172,44 +145,13 @@ const createProfilePage = () => {
         showCancelButton: true,
         confirmButtonText: 'Ya, Keluar',
         cancelButtonText: 'Batal',
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-          try {
-            const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
-            if (!authToken) {
-              throw new Error('Token tidak ditemukan, silakan login ulang.');
-            }
-  
-            // Kirim permintaan logout ke server
-            const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/logout', {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                Authorization: `Bearer ${authToken}`, // Sertakan token dalam header Authorization
-                'Content-Type': 'application/json',
-              },
-            });
-  
-            const data = await response.json();
-  
-            if (response.ok) {
-              // Hapus data dari localStorage
-              localStorage.removeItem('authToken');
-              localStorage.removeItem('userId');
-              // Arahkan ke halaman login
-              window.location.hash = '#/login';
-              Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
-            } else {
-              throw new Error(data.message || 'Gagal logout. Silakan coba lagi.');
-            }
-          } catch (error) {
-            console.error('Error during logout:', error.message);
-            Swal.fire('Error', error.message, 'error');
-          }
+          window.location.hash = '#/login'; // Arahkan ke halaman login
         }
       });
     }
   });
 };
 
-export default createProfilePage;
+export default createChangePasswordPage;
