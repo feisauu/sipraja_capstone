@@ -2457,3 +2457,30 @@ h1 {
   color: #6c5ce7; 
   font-weight: bold;
 }
+
+/* Styling untuk tombol Cetak Laporan */
+.print-btn, .print-btn-laporan {
+    display: inline-flex; 
+    align-self: flex-start;
+    align-items: center;
+    background-color: rgb(187, 31, 31);
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 5px;
+    margin-top: 28px;
+}
+
+.print-btn:hover, .print-btn-laporan:hover {
+  background-color: darkred;
+}
+
+.print-btn i, .print-btn i {
+  font-size: 14px;
+}
+
