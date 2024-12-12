@@ -41,6 +41,8 @@
     "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "regenerator-runtime": "^0.14.0",
     "sweetalert2": "^11.14.5"
   }
