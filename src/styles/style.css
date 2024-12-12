@@ -2452,3 +2452,8 @@ h1 {
 .table-admin .icon:hover {
   color: #4C1D95;
 }
+
+.active-link {
+  color: #6c5ce7; 
+  font-weight: bold;
+}
