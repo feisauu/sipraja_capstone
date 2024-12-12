@@ -1064,23 +1064,26 @@ input:focus {
   background-color: #4b4a91;
 }
 
+.create-report a {
+  text-decoration: none; /* Remove underline from anchor tag */
+}
+
 .create-report button {
-  padding: 10px 20px; 
+  padding: 10px 20px;
   background-color: #6c5ce7;
   color: white;
   border: none;
-  border-radius: 25px; 
+  border-radius: 25px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 150px;
   font-size: 14px;
-  text-decoration: none;
 }
 
 .create-report button i {
-  margin-right: 8px; 
+  margin-right: 8px; /* Add space between the icon and text */
 }
 
 .create-report button:hover {
