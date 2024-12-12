@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable object-curly-newline */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable import/no-unresolved */
@@ -8,7 +9,17 @@ import '../../components/navbar.js';
 import '../../components/footer.js';
 import '../../components/section-page.js';
 
-const createChangePasswordPage = () => {
+const createProfilePage = async () => {
+  try {
+    // Ambil data dari API
+    const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/');
+    const apiResult = await response.json();
+
+    if (!response.ok) throw new Error(apiResult.message);
+
+    // Ambil user pertama (atau pilih data tertentu berdasarkan kondisi)
+    const user = apiResult.data.find((item) => item.nama === 'monica') || apiResult.data[0];
+
 // Navbar
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
@@ -37,7 +48,7 @@ const createChangePasswordPage = () => {
 
   const profileName = document.createElement('h2');
   profileName.classList.add('profile-name');
-  profileName.textContent = 'Kim Taehyung';
+  profileName.textContent = user.nama;
 
   profileHeader.appendChild(profileImage);
   profileHeader.appendChild(profileName);
@@ -46,11 +57,13 @@ const createChangePasswordPage = () => {
   const profileMenu = document.createElement('ul');
   profileMenu.classList.add('profile-menu');
 
+  const path = window.location.hash; // Mendapatkan bagian hash dari URL
+
   const menuItems = [
-    { href: '#/profile', icon: 'fas fa-user', label: 'Profil', action: 'profile' },
-    { href: '#/ubah-sandi', icon: 'fas fa-key', label: 'Ubah Kata Sandi', action: 'ubah-sandi' },
+    { href: '#/profile', icon: 'fas fa-user', label: 'Profil', action: 'profile', active: path === '#/profile' },
+    { href: '#/ubah-sandi', icon: 'fas fa-key', label: 'Ubah Kata Sandi', action: 'ubah-sandi', active: path === '#/ubah-sandi' },
     { href: '#', icon: 'fa-solid fa-right-from-bracket', label: 'Keluar', action: 'logout' },
-  ];
+  ];  
   
   menuItems.forEach((item) => {
     const listItem = document.createElement('li');
@@ -59,9 +72,14 @@ const createChangePasswordPage = () => {
     const link = document.createElement('a');
     link.href = item.href;
     link.classList.add('menu-link');
-    link.dataset.action = item.action; // Tambahkan dataset.action
+    link.dataset.action = item.action; 
     link.innerHTML = `<i class="${item.icon}"></i>${item.label}`;
   
+    // Tambahkan kelas 'active-link' jika menu aktif
+  if (item.active) {
+    link.classList.add('active-link');
+  }
+
     listItem.appendChild(link);
     profileMenu.appendChild(listItem);
   });  
@@ -74,13 +92,13 @@ const createChangePasswordPage = () => {
   profileForm.id = 'profile-form';
 
   const formTitle = document.createElement('h2');
-  formTitle.textContent = 'Ubah Kata Sandi';
+  formTitle.textContent = 'Edit Profil';
   profileForm.appendChild(formTitle);
 
   const formFields = [
-    { label: 'Kata Sandi Sekarang', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan kata sandi sekarang' },
-    { label: 'Kata Sandi Baru', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan kata sandi baru' },
-    { label: 'Ulangi Kata Sandi Baru', type: 'password', icon: 'fas fa-lock', placeholder: 'Masukkan ulang kata sandi baru' },
+    { id: 'nama', label: 'Nama', type: 'text', icon: 'fas fa-user', value: user.nama },
+    { id: 'email', label: 'Email', type: 'email', icon: 'fas fa-envelope', value: user.email },
+    { id: 'telepon', label: 'Nomor Telepon', type: 'tel', icon: 'fas fa-phone', value: user.telp },
   ];
 
   formFields.forEach((field) => {
@@ -99,8 +117,8 @@ const createChangePasswordPage = () => {
 
     const input = document.createElement('input');
     input.type = field.type;
-    input.placeholder = field.placeholder; // Hanya menggunakan placeholder
-    input.value = ''; // Pastikan value kosong
+    input.id = field.id;
+    input.value = field.value;
     input.required = true;
 
     inputIcon.appendChild(icon);
@@ -133,9 +151,9 @@ const createChangePasswordPage = () => {
     event.preventDefault(); // Hindari reload halaman
 
     if (action === 'profile') {
-      window.location.hash = '#/profile'; // Tetap di halaman profil
+      window.location.hash = '#/profile'; 
     } else if (action === 'ubah-sandi') {
-      window.location.hash = '#/ubah-sandi'; // Navigasi ke halaman ubah kata sandi
+      window.location.hash = '#/ubah-sandi'; 
     } else if (action === 'logout') {
       // Tampilkan SweetAlert
       Swal.fire({
@@ -147,11 +165,19 @@ const createChangePasswordPage = () => {
         cancelButtonText: 'Batal',
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.hash = '#/login'; // Arahkan ke halaman login
+          window.location.hash = '#/login';
         }
       });
     }
   });
+} catch (error) {
+  console.error('Error fetching user data:', error.message);
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Gagal memuat data profil. Silakan coba lagi.',
+  });  
+}
 };
 
-export default createChangePasswordPage;
+export default createProfilePage;
