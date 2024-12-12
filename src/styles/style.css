@@ -1318,17 +1318,30 @@ form label span {
   margin: 0;
   color: #555;
 }
+
 .submit-button {
-  padding: 10px;
   background-color: #6c5ce7;
-  color: #fff;
+  color: white;
+  padding: 10px;
   border: none;
   border-radius: 17px;
   cursor: pointer;
   font-size: 16px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
+
 .submit-button:hover {
-  background-color: #4b4a91;
+  background-color:  #4b4a91; 
+}
+
+.submit-button:active {
+  transform: scale(0.95); 
+  background-color: #2f276f;
+}
+
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 /* Profile */
