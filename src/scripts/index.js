@@ -28,136 +28,131 @@ import createProfilePage from './pages/profile.js';
 import createChangePasswordPage from './pages/ubah-sandi.js';
 import renderUpdatePage from './pages/update-profil.js';
 import createDetailnyaPage from './pages/detailnya.js';
+import createEditLaporanPage from './pages/edit-laporan.js';
+import createDetailLaporanPage from './pages/detail-laporan.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
   const authButtons = document.querySelector('.auth-buttons');
 
-  // Toggle 'active' class on click
-  hamburger.addEventListener('click', () => {
-    authButtons.classList.toggle('active');
+  if (hamburger && authButtons) {
+    hamburger.addEventListener('click', () => {
+      authButtons.classList.toggle('active');
+    });
+  }
+  if (!window.location.hash || window.location.hash === '#/') {
+    window.location.hash = '#/'; 
+    renderHomePage();
+  } else {
+    handleHashChange();
+  }
+
+  window.addEventListener('hashchange', handleHashChange);
+
+  const loginButton = document.getElementById('loginButton');
+  if (loginButton) {
+    loginButton.addEventListener('click', () => {
+      renderLoginPage();
+    });
+  }
+
+  const signupButton = document.getElementById('signupButton');
+  if (signupButton) {
+    signupButton.addEventListener('click', () => {
+      renderRegisterPage();
+    });
+  }
+
+  document.body.addEventListener('click', (event) => {
+    if (event.target && event.target.id === 'register-link') {
+      event.preventDefault();
+      renderRegisterPage();
+    }
+
+    if (event.target && event.target.id === 'login-link') {
+      event.preventDefault();
+      renderLoginPage(); 
+    }
   });
 });
 
-// Tambahkan event listener untuk tombol login
-document.getElementById('loginButton').addEventListener('click', () => {
-  renderLoginPage();
-});
-
-// Tambahkan event listener untuk tombol register
-document.getElementById('signupButton').addEventListener('click', () => {
-  renderRegisterPage();
-});
-
-document.body.addEventListener('click', (event) => {
-  if (event.target && event.target.id === 'register-link') {
-    event.preventDefault(); // Hindari reload halaman
-    renderRegisterPage(); // Render halaman login
-  }
-});
-
-document.body.addEventListener('click', (event) => {
-  if (event.target && event.target.id === 'login-link') {
-    event.preventDefault(); // Hindari reload halaman
-    renderLoginPage(); // Render halaman login
-  }
-});
-
-// Tunggu hingga halaman sepenuhnya dimuat
-document.addEventListener('DOMContentLoaded', () => {
-  // Jika tidak ada hash, arahkan ke halaman utama
-  if (!window.location.hash || window.location.hash === '#/') {
-    window.location.hash = '#/'; // Arahkan ke halaman utama
-    renderHomePage(); // Render halaman utama
-  } else {
-    handleHashChange(); // Jalankan fungsi untuk menangani hash saat ini
-  }
-
-  // Pasang event listener untuk mendeteksi perubahan hash
-  window.addEventListener('hashchange', handleHashChange);
-});
-
-// Fungsi untuk mendapatkan ID dari parameter URL
 const getLaporanIdFromUrl = () => {
-    const params = new URLSearchParams(window.location.hash.split('?')[1]);
-    return params.get('id'); // Ambil nilai dari parameter `id`
+  const params = new URLSearchParams(window.location.hash.split('?')[1]);
+  return params.get('id'); 
 };
 
-// Tunggu hingga halaman sepenuhnya dimuat
-document.addEventListener('DOMContentLoaded', () => {
-    // Jika tidak ada hash, arahkan ke halaman utama
-    if (!window.location.hash || window.location.hash === '#/') {
-        window.location.hash = '#/'; // Arahkan ke halaman utama
-        renderHomePage(); // Render halaman utama
-    } else {
-        handleHashChange(); // Jalankan fungsi untuk menangani hash saat ini
-    }
-
-    // Pasang event listener untuk mendeteksi perubahan hash
-    window.addEventListener('hashchange', handleHashChange);
-});
-
-// Fungsi untuk menangani perubahan hash
 function handleHashChange() {
-    const currentHash = window.location.hash;
+  const currentHash = window.location.hash;
 
-    // Bersihkan konten sebelumnya
-    document.body.innerHTML = '';
+  document.body.innerHTML = '';
 
-    // Menangani berbagai halaman berdasarkan hash
-    if (currentHash === '#/login') {
-        renderLoginPage();
-    } else if (currentHash === '#/register') {
-        renderRegisterPage();
-    } else if (currentHash === '#/forget') {
-        renderForgetPasswordPage();
-    } else if (currentHash.startsWith('#/konfirmasi')) {
-      const id = currentHash.split('/').pop();
-      if (id) {
-        createKonfirmasi(id);
-      } else {
+  if (currentHash === '#/login') {
+    renderLoginPage();
+  } else if (currentHash === '#/register') {
+    renderRegisterPage();
+  } else if (currentHash === '#/forget') {
+    renderForgetPasswordPage();
+  } else if (currentHash.startsWith('#/konfirmasi')) {
+    const id = currentHash.split('/').pop();
+    if (id) {
+      createKonfirmasi(id);
+    } else {
       Swal.fire('Error', 'ID not found in the URL', 'error');
-      }
-    } else if (currentHash === '#/dashboard') {
-        createDashboard();
-    } else if (currentHash === '#/create-laporan') {
-        createDetailLaporanPage();
-    } else if (currentHash === '#/dashboard-admin') {
-        createDashboardAdmin();
-    } else if (currentHash === '#/laporan-admin') {
-        createLaporanAdmin();
-    } else if (currentHash === '#/arsip-admin') {
-        createArsipAdmin();
-    } else if (currentHash === '#/profil-admin') {
-        createProfilAdmin();
-    } else if (currentHash === '#/about') {
-        createAboutPage();
-    } else if (currentHash === '#/laporan') {
-        createLaporanPage();
-    } else if (currentHash === '#/notifikasi') {
-        createNotificationPage();
-    } else if (currentHash === '#/profile') {
-        createProfilePage();
-    } else if (currentHash === '#/updateprofile') {
-        renderUpdatePage();
-    } if (currentHash.startsWith('#/detailnya')) {
-      const laporanId = getLaporanIdFromUrl(); // Ambil ID dari URL
-      console.log('Laporan ID:', laporanId); // Debugging
-      if (laporanId) {
-        createDetailnyaPage(laporanId); // Panggil fungsi detail dengan ID
-      } else {
-        document.body.innerHTML = '<p>Error: ID laporan tidak ditemukan di URL.</p>';
-      }
     }
+  } else if (currentHash === '#/dashboard') {
+    createDashboard();
+  } else if (currentHash === '#/create-laporan') {
+    createDetailLaporanPage();
+  } else if (currentHash === '#/dashboard-admin') {
+    createDashboardAdmin();
+  } else if (currentHash === '#/laporan-admin') {
+    createLaporanAdmin();
+  } else if (currentHash === '#/arsip-admin') {
+    createArsipAdmin();
+  } else if (currentHash === '#/profil-admin') {
+    createProfilAdmin();
+  } else if (currentHash === '#/about') {
+    createAboutPage();
+  } else if (currentHash === '#/laporan') {
+    createLaporanPage();
+  } else if (currentHash === '#/notifikasi') {
+    createNotificationPage();
+  } else if (currentHash === '#/profile') {
+    createProfilePage();
+  } else if (currentHash.startsWith('#/detailnya')) {
+    const laporanId = getLaporanIdFromUrl();
+    if (laporanId) {
+      createDetailnyaPage(laporanId); 
+    } else {
+      document.body.innerHTML = '<p>Error: ID laporan tidak ditemukan di URL.</p>';
+    }
+  }else if (currentHash.startsWith('#/edit-laporan')) {
+    const laporanId = getLaporanIdFromUrl();
+    if (laporanId && laporanId.trim() !== '') { 
+      createEditLaporanPage(laporanId); 
+    } else {
+      document.body.innerHTML = '<p>Error: ID laporan tidak valid atau tidak ditemukan di URL.</p>';
+    }
+  } else if (currentHash === '#/updateprofile') {
+    renderUpdatePage();
+  } else {
+    document.body.innerHTML = '<p>Error 404: Halaman tidak ditemukan.</p>';
+  }
 }
 
 function renderHomePage() {
-    fetch('index.html') // Memuat file index.html
-        .then((response) => response.text())
-        .then((html) => {
-            document.body.innerHTML = html;
-        })
-        .catch((error) => console.error('Error loading index.html:', error));
+  fetch('index.html')
+    .then((response) => {
+      if (!response.ok) throw new Error('Gagal memuat halaman utama.');
+      return response.text();
+    })
+    .then((html) => {
+      document.body.innerHTML = html;
+    })
+    .catch((error) => {
+      console.error('Error loading index.html:', error);
+      document.body.innerHTML = '<p>Error: Tidak dapat memuat halaman utama.</p>';
+    });
 }
 
 window.addEventListener('hashchange', handleHashChange);
