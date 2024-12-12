@@ -1,6 +1,11 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-shadow */
+/* eslint-disable new-cap */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import Swal from 'sweetalert2';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import ENDPOINT from '../globals/endpoint';
 
 const createArsipAdmin = () => {
@@ -63,7 +68,12 @@ const createArsipAdmin = () => {
         <span>To</span>
         <input type="date">
       </div>
-      <button class="filter-btn-admin">Cari</button>
+      <button class="filter-btn-admin">
+        <i class="fas fa-search"></i> Cari
+      </button>
+      <button class="print-btn">
+        <i class="fas fa-print"></i> Cetak Laporan
+      </button>
     `;
 
   // Table Section
@@ -191,6 +201,38 @@ const createArsipAdmin = () => {
 
   // Fetch data after DOM setup
   tableContainer();
+
+  // Print Report Function
+  const printReportArsip = () => {
+    const doc = new jsPDF();
+
+    // Get table content
+    const tableContent = document.querySelectorAll('.table-admin table')[0];
+    const tableHeaders = Array.from(tableContent.querySelectorAll('thead th')).map((th) => th.innerText);
+    const tableRows = Array.from(tableContent.querySelectorAll('tbody tr')).map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.innerText));
+
+    // Add title to the PDF
+    doc.setFontSize(18);
+    doc.text('Arsip Laporan', 14, 20);
+
+    // Use autoTable to format the table
+    doc.autoTable({
+      head: [tableHeaders],
+      body: tableRows,
+      startY: 30,
+      theme: 'striped',
+      headStyles: {
+        fillColor: [22, 160, 133], // Customize the header background color
+      },
+      margin: { top: 20 },
+    });
+
+    // Save the PDF
+    doc.save('arsip-laporan.pdf');
+  };
+
+  // Add event listener for the print button
+  document.querySelector('.print-btn').addEventListener('click', printReportArsip);
 };
 
 // Fungsi untuk menangani Unarchive
