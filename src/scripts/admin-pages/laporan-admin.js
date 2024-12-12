@@ -321,7 +321,7 @@ window.showEditForm = (id, currentStatus) => {
     // Reset opsi lama dan tambahkan opsi baru
     select.innerHTML = '';
     const options = [
-      { value: 'belum diproses', label: 'Belum Diproses' },
+      { value: 'belum di proses', label: 'Belum Diproses' },
       { value: 'di proses', label: 'Diproses' },
       { value: 'selesai', label: 'Selesai' },
     ];
