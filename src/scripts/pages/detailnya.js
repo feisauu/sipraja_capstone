@@ -3,14 +3,11 @@ import '../../components/navbar.js';
 import '../../components/footer.js';
 import ENDPOINT from '../globals/endpoint';
 
-// Fungsi untuk mendapatkan ID laporan dari URL
 const getLaporanIdFromUrl = () => {
   const params = new URLSearchParams(window.location.hash.split('?')[1]);
   return params.get('id');
 };
 
-
-// Fetch data laporan detail
 const fetchLaporanDetail = async (id) => {
   try {
     const response = await fetch(`${ENDPOINT.GETLAPORAN}${id}`, {
@@ -34,13 +31,10 @@ const fetchLaporanDetail = async (id) => {
   }
 };
 
-// Create Detail Laporan Page
 const createDetailnyaPage = async (id) => {
-  // Tambahkan navbar ke halaman
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
-  // Tambahkan loading indicator
   const loadingContainer = document.createElement('div');
   loadingContainer.className = 'loading-container';
   loadingContainer.innerHTML = `
@@ -53,54 +47,75 @@ const createDetailnyaPage = async (id) => {
   try {
     const laporan = await fetchLaporanDetail(id);
 
-    // Hapus loading indicator
     loadingContainer.remove();
 
-    // Buat elemen utama untuk detail laporan
     const detailContainer = document.createElement('div');
     detailContainer.className = 'detail-container';
+
+    const loggedInUserId = localStorage.getItem('userId');
+
     detailContainer.innerHTML = `
       <h1>${laporan.judul || 'Judul tidak tersedia'}</h1>
+      <div class="status-badge">Laporan Selesai</div>
+      
       <div class="detail-content">
+        <!-- Left section with profile and image gallery -->
         <div class="image-gallery">
-          ${laporan.gambar_pendukung?.map((imageUrl, index) => `
-            <img src="${imageUrl}" alt="Gambar Pendukung ${index + 1}" class="image-item" />
-          `).join('')}
+          ${
+            laporan.gambar_pendukung?.length > 0
+              ? laporan.gambar_pendukung
+                  .map(
+                    (imageUrl, index) =>
+                      `<img src="${imageUrl}" alt="Gambar Pendukung ${index + 1}" class="image-item" />`
+                  )
+                  .join('')
+              : '<p>Gambar tidak tersedia</p>'
+          }
         </div>
-        <p><strong>Nama:</strong> ${laporan.nama || 'Tidak tersedia'}</p>
-        <p><strong>Tanggal:</strong> ${laporan.tanggal || 'Tidak tersedia'}</p>
-        <p><strong>Kategori:</strong> ${laporan.kategori || 'Tidak tersedia'}</p>
-        <p><strong>Lokasi:</strong> ${laporan.lokasi || 'Tidak tersedia'}</p>
-        <p><strong>Status:</strong> ${laporan.status || 'Tidak tersedia'}</p>
-        <p><strong>Deskripsi:</strong></p>
-        <p>${laporan.description || 'Tidak tersedia'}</p>
+
+        <!-- Right section with report details -->
+        <div class="text-content">
+          <p><strong>Nama Pelapor:</strong> ${laporan.nama || 'Tidak tersedia'}</p>
+          <p><strong>Tanggal Laporan:</strong> ${laporan.tanggal || 'Tidak tersedia'}</p>
+          <p><strong>Kategori Laporan:</strong> ${laporan.kategori || 'Tidak tersedia'}</p>
+          <p><strong>Lokasi:</strong> ${laporan.lokasi || 'Tidak tersedia'}</p>
+          <p><strong>Status:</strong> ${laporan.status || 'Tidak tersedia'}</p>
+          <p><strong>Deskripsi Masalah:</strong></p>
+          <p>${laporan.description || 'Tidak tersedia'}</p>
+        </div>
       </div>
+
       <div class="detail-footer">
+        ${
+          laporan.userId === loggedInUserId
+            ? `<button id="edit-button" class="btn-edit">Edit Laporan</button>`
+            : ''
+        }
         <button id="back-button" class="btn-back">Kembali</button>
       </div>
     `;
 
     document.body.appendChild(detailContainer);
 
-    // Tambahkan event untuk tombol kembali
     document.getElementById('back-button').addEventListener('click', () => {
-      window.location.hash = '#/laporan'; // Kembali ke halaman laporan
+      window.location.hash = '#/laporan';
     });
+
+    if (laporan.userId === loggedInUserId) {
+      const editButton = document.getElementById('edit-button');
+      editButton.addEventListener('click', () => {
+        window.location.hash = `#/edit-laporan?id=${id}`;
+      });
+    }
   } catch (error) {
-    // Hapus loading indicator
     loadingContainer.remove();
 
-    // Tampilkan pesan error
     const errorContainer = document.createElement('div');
     errorContainer.className = 'error-container';
-    errorContainer.innerHTML = `
-      <h1>Error</h1>
-      <p>${error.message}</p>
-    `;
+    errorContainer.innerHTML = `<h1>Error</h1><p>${error.message}</p>`;
     document.body.appendChild(errorContainer);
   }
 
-  // Tambahkan footer ke halaman
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 };
