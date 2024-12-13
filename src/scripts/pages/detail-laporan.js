@@ -1,24 +1,25 @@
-/* eslint-disable no-alert */
-/* eslint-disable import/extensions */
 import Swal from 'sweetalert2';
 import '../../components/navbar.js';
 import '../../components/footer.js';
 import ENDPOINT from '../globals/endpoint';
 
-const createDetailLaporanPage = () => {
-  // Tambahkan navbar ke halaman
+const createDetailLaporanPage = async () => {
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
-  // Tambahkan form detail laporan ke halaman
   const detailLaporanSection = document.createElement('section');
   detailLaporanSection.className = 'detail-laporan';
   detailLaporanSection.innerHTML = `
     <h1 class="form-title">Formulir Laporan</h1>
     <form id="form-laporan" class="form-container">
       <div class="form-group">
+        <label for="userId">User ID</label>
+        <input type="text" id="userId" name="userId" readonly>
+      </div>
+
+      <div class="form-group">
         <label for="nama">Nama Pelapor</label>
-        <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Anda" required>
+        <input type="text" id="nama" name="nama" readonly>
       </div>
 
       <div class="form-group">
@@ -33,7 +34,13 @@ const createDetailLaporanPage = () => {
 
       <div class="form-group">
         <label for="kategori">Kategori Laporan</label>
-        <input type="text" id="kategori" name="kategori" placeholder="Masukkan Kategori Laporan" required>
+        <select id="kategori" name="kategori" required>
+          <option value="" disabled selected>Pilih Kategori</option>
+          <option value="Jembatan">Jembatan</option>
+          <option value="Jalan">Jalan</option>
+          <option value="Lalu Lintas">Lalu Lintas</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -61,11 +68,51 @@ const createDetailLaporanPage = () => {
   `;
   document.body.appendChild(detailLaporanSection);
 
-  // Preview foto yang dipilih
+  // Fetch user data
+  const fetchUserData = async () => {
+    const userId = localStorage.getItem('userId');
+    const authToken = localStorage.getItem('authToken');
+
+    if (!userId || !authToken) {
+      console.error('User ID atau Auth Token tidak ditemukan di localStorage');
+      Swal.fire('Error', 'Token atau User ID tidak ditemukan, silakan login ulang', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/user/${userId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        const userIdInput = document.getElementById('userId');
+        const namaPelaporInput = document.getElementById('nama');
+
+        userIdInput.value = userId || 'ID tidak tersedia';
+        namaPelaporInput.value = data.nama || 'Nama tidak tersedia';
+      } else {
+        console.error('Failed to fetch profile data:', data.message);
+        Swal.fire('Error', data.message || 'Gagal mengambil data profil', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      Swal.fire('Error', 'Gagal mengambil data pengguna', 'error');
+    }
+  };
+
+  await fetchUserData();
+
   const fotoInput = document.getElementById('foto');
   const previewContainer = document.getElementById('preview-container');
+
   fotoInput.addEventListener('change', () => {
-    previewContainer.innerHTML = '';
+    previewContainer.innerHTML = ''; 
     const files = Array.from(fotoInput.files);
 
     files.forEach((file) => {
@@ -81,12 +128,13 @@ const createDetailLaporanPage = () => {
   });
 
   const form = document.getElementById('form-laporan');
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  const submitButton = form.querySelector('.submit-button');
 
-    const submitButton = document.querySelector('.submit-button');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); 
+
+    if (submitButton.disabled) return; 
     submitButton.disabled = true;
-    submitButton.textContent = 'Mengirim...';
 
     const formData = new FormData(form);
     console.log([...formData]);
@@ -124,11 +172,9 @@ const createDetailLaporanPage = () => {
       });
     } finally {
       submitButton.disabled = false;
-      submitButton.textContent = 'Buat Laporan';
     }
   });
 
-  // Tambahkan footer ke halaman
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 };
