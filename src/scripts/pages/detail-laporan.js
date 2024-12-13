@@ -6,9 +6,11 @@ import '../../components/footer.js';
 import ENDPOINT from '../globals/endpoint';
 
 const createDetailLaporanPage = () => {
+  // Tambahkan navbar ke halaman
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
+  // Tambahkan form detail laporan ke halaman
   const detailLaporanSection = document.createElement('section');
   detailLaporanSection.className = 'detail-laporan';
   detailLaporanSection.innerHTML = `
@@ -47,11 +49,11 @@ const createDetailLaporanPage = () => {
       <div class="form-group">
         <label for="foto">Foto Pendukung</label>
         <div class="file-upload">
-  <label for="foto" class="file-upload-label" style = "color: white">Klik di sini untuk upload foto</label>
-  <input type="file" id="foto" name="gambar_pendukung" accept="image/*" multiple>
-  <span class="file-upload-info">Pilih beberapa foto pendukung (opsional).</span>
-  <div id="preview-container" class="preview-container"></div>
-</div>
+          <label for="foto" class="file-upload-label" style="color: white">Klik di sini untuk upload foto</label>
+          <input type="file" id="foto" name="gambar_pendukung" accept="image/*" multiple>
+          <span class="file-upload-info">Pilih beberapa foto pendukung (opsional).</span>
+          <div id="preview-container" class="preview-container"></div>
+        </div>
       </div>
 
       <button type="submit" class="submit-button">Buat Laporan</button>
@@ -59,10 +61,11 @@ const createDetailLaporanPage = () => {
   `;
   document.body.appendChild(detailLaporanSection);
 
+  // Preview foto yang dipilih
   const fotoInput = document.getElementById('foto');
   const previewContainer = document.getElementById('preview-container');
   fotoInput.addEventListener('change', () => {
-    previewContainer.innerHTML = ''; 
+    previewContainer.innerHTML = '';
     const files = Array.from(fotoInput.files);
 
     files.forEach((file) => {
@@ -80,6 +83,10 @@ const createDetailLaporanPage = () => {
   const form = document.getElementById('form-laporan');
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    const submitButton = document.querySelector('.submit-button');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Mengirim...';
 
     const formData = new FormData(form);
     console.log([...formData]);
@@ -115,10 +122,13 @@ const createDetailLaporanPage = () => {
         icon: 'error',
         confirmButtonText: 'OK',
       });
-    
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Buat Laporan';
     }
   });
 
+  // Tambahkan footer ke halaman
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 };
