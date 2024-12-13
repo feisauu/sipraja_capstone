@@ -96,9 +96,11 @@ const createDetailnyaPage = async (id) => {
     `;
 
     document.body.appendChild(detailContainer);
-
+    localStorage.setItem('lastVisitedPage', '#/laporan');
+    localStorage.setItem('lastVisitedPage', '#/laporan-user');
     document.getElementById('back-button').addEventListener('click', () => {
-      window.location.hash = '#/laporan';
+      const lastVisitedPage = localStorage.getItem('lastVisitedPage'); // Default ke #/laporan
+      window.location.hash = lastVisitedPage;
     });
 
     if (laporan.userId === loggedInUserId) {
