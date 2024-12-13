@@ -79,6 +79,7 @@ const renderUpdatePage = async () => {
             </div>
           </div>
           <button type="submit" class="update-profile-button">Update</button>
+          <button type="button" id="cancel-profile-button" class="cancel-profile-button">Cancel</button>
         </form>
       </section>
     `;
@@ -93,6 +94,12 @@ const renderUpdatePage = async () => {
         };
         reader.readAsDataURL(file);
       }
+    });
+
+    // Tambahkan event listener untuk tombol Cancel
+    const cancelButton = document.getElementById('cancel-profile-button');
+    cancelButton.addEventListener('click', () => {
+      window.location.hash = '#/profile';
     });
 
     const updateForm = document.getElementById('update-profile-form');
