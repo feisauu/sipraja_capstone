@@ -41,16 +41,26 @@ const createKonfirmasi = async (id) => {
 
   menu.innerHTML = `
     <div class="menu-section-admin">
-      <span>Menu</span>
-      <a href="#/dashboard-admin" class="active"><i class="fas fa-home"></i>Dashboard</a>
-      <a href="#/laporan-admin"><i class="fas fa-file-alt"></i>Laporan</a>
-      <a href="#/arsip-admin"><i class="fas fa-archive"></i>Arsip Laporan</a>
-    </div>
-    <div class="menu-section-admin">
-      <span>Akun</span>
-      <a href="#/profil-admin"><i class="fas fa-user"></i>Profil</a>
-      <a href="#"><i class="fas fa-sign-out-alt"></i>Keluar</a>
-    </div>
+        <span>Menu</span>
+        <a href="#/dashboard-admin" class="${window.location.hash === '#/dashboard-admin' ? 'active' : ''}">
+          <i class="fas fa-home"></i>Dashboard
+        </a>
+        <a href="#/laporan-admin" class="${window.location.hash === '#/laporan-admin' ? 'active' : ''}">
+          <i class="fas fa-file-alt"></i>Laporan
+        </a>
+        <a href="#/arsip-admin" class="${window.location.hash === '#/arsip-admin' ? 'active' : ''}">
+          <i class="fas fa-archive"></i>Arsip Laporan
+        </a>
+      </div>
+      <div class="menu-section-admin">
+        <span>Akun</span>
+        <a href="#/profil-admin" class="${window.location.hash === '#/profil-admin' ? 'active' : ''}">
+          <i class="fas fa-user"></i>Profil
+        </a>
+        <a href="#" id="logoutLink">
+          <i class="fas fa-sign-out-alt"></i>Keluar
+        </a>
+      </div>
   `;
 
   sidebarAdmin.append(logoAdmin, menu);
@@ -74,11 +84,70 @@ const createKonfirmasi = async (id) => {
   // Show loading indicator
   const loading = document.createElement('div');
   loading.className = 'loading-indicator';
-  loading.textContent = 'Loading... Please wait.';
+  loading.textContent = 'Loading...';
   mainContent.append(loading);
 
   containerAdmin.append(sidebarAdmin, mainContent);
   document.body.appendChild(containerAdmin);
+
+  // Add the event listener for logout
+  document.getElementById('logoutLink').addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    const authToken = localStorage.getItem('authToken'); // Mendapatkan token dari localStorage
+
+    Swal.fire({
+      title: 'Konfirmasi Logout',
+      text: 'Apakah Anda yakin ingin keluar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Keluar',
+      cancelButtonText: 'Batal',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Gagal logout, silakan coba lagi.');
+          }
+
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userId');
+
+          Swal.fire({
+            title: 'Berhasil Logout',
+            text: 'Anda telah keluar dari aplikasi.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+
+          setTimeout(() => {
+            // Clean up admin-specific styles and scripts
+            document.body.className = '';
+            document.body.innerHTML = '';
+            // Redirect to the login page
+            window.location.hash = '#/login';
+          }, 2000);
+        } catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
+      }
+    });
+  });
 
   // Fetch Data from API
   const authToken = localStorage.getItem('authToken');
