@@ -139,17 +139,24 @@ const createLaporanPage = () => {
   mainContent.className = 'main-content';
   mainContent.innerHTML = '<p>Loading laporan...</p>';
 
+let laporanDataCache = []; // Cache laporan untuk mempermudah filter
+
+  const renderLaporan = (laporanList) => {
+    mainContent.innerHTML = '';
+    if (laporanList.length === 0) {
+      mainContent.innerHTML = '<p>Tidak ada laporan sesuai pencarian.</p>';
+    } else {
+      laporanList.forEach((laporan) => {
+        const card = createLaporanCard(laporan);
+        mainContent.appendChild(card);
+      });
+    }
+  };
+
   fetchLaporan()
     .then((laporanData) => {
-      mainContent.innerHTML = ''; 
-      if (laporanData.length === 0) {
-        mainContent.innerHTML = '<p>Tidak ada laporan tersedia.</p>';
-      } else {
-        laporanData.forEach((laporan) => {
-          const card = createLaporanCard(laporan);
-          mainContent.appendChild(card);
-        });
-      }
+      laporanDataCache = laporanData; // Simpan data laporan di cache
+      renderLaporan(laporanData);
     })
     .catch((error) => {
       mainContent.innerHTML = '<p>Gagal memuat laporan. Silakan coba lagi nanti.</p>';
@@ -163,10 +170,26 @@ const createLaporanPage = () => {
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
+  // Event Listener untuk pencarian
+  const searchButton = document.getElementById('search-button');
+  const searchInput = document.getElementById('search-input');
+
+  searchButton.addEventListener('click', () => {
+    const keyword = searchInput.value.toLowerCase().trim();
+    const filteredLaporan = laporanDataCache.filter((laporan) => laporan.judul.toLowerCase().includes(keyword));
+    renderLaporan(filteredLaporan);
+  });
+
+  searchInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      searchButton.click();
+    }
+  });
+
   const createReportButton = document.getElementById('create-laporan-button');
   createReportButton.addEventListener('click', (event) => {
-    event.preventDefault(); 
-    document.body.innerHTML = ''; 
+    event.preventDefault();
+    document.body.innerHTML = '';
     window.location.hash = '#/create-laporan';
     createDetailLaporanPage();
   });
