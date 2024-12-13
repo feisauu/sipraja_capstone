@@ -14,6 +14,7 @@ class Navbar extends HTMLElement {
             <ul class="navbar-menu">
               <li><a href="#/dashboard">Home</a></li>
               <li><a href="#/laporan">Laporan</a></li>
+              <li><a href="#/laporan-user">Laporan Kamu</a></li>
               <li><a href="#/about">About</a></li>
             </ul>
             <div class="navbar-right">
@@ -27,32 +28,25 @@ class Navbar extends HTMLElement {
       </header>
       `;
 
-    // Event listener untuk ikon bel
     const bellIcon = this.querySelector('#notification-bell');
     bellIcon.addEventListener('click', this.showNotificationDetails.bind(this));
 
-    // Event listener untuk profil
     const profileLink = this.querySelector('#user-profile');
     profileLink.addEventListener('click', this.showProfile.bind(this));
 
-    // Panggil fungsi untuk memuat data pengguna
     this.loadUserData();
   }
 
-  // Fungsi untuk menampilkan halaman detail notifikasi
   showNotificationDetails() {
     window.location.hash = '#/notifikasi';
   }
-
-  // Fungsi untuk navigasi ke profil
   showProfile() {
     window.location.hash = '#/profile';
   }
 
-  // Fungsi untuk memuat data pengguna dari API
   async loadUserData() {
-    const userId = localStorage.getItem('userId'); // Ambil userId dari localStorage
-    const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
+    const userId = localStorage.getItem('userId');
+    const authToken = localStorage.getItem('authToken');
 
     if (!userId || !authToken) {
       console.error('User ID atau Auth Token tidak ditemukan di localStorage');
@@ -64,7 +58,7 @@ class Navbar extends HTMLElement {
         method: 'GET',
         credentials: 'include',
         headers: {
-          Authorization: `Bearer ${authToken}`, // Kirim token dalam header Authorization
+          Authorization: `Bearer ${authToken}`, 
           'Content-Type': 'application/json',
         },
       });
@@ -75,7 +69,6 @@ class Navbar extends HTMLElement {
 
       const data = await response.json();
 
-      // Perbarui avatar dan nama pengguna
       const userAvatar = this.querySelector('#user-avatar');
       const userName = this.querySelector('#user-name');
 
