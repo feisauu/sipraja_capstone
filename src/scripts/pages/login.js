@@ -1,4 +1,5 @@
-/* eslint-disable no-alert */
+import '../../components/navbar.js';
+import '../../components/footer.js';
 import Swal from 'sweetalert2';
 import ENDPOINT from '../globals/endpoint';
 
@@ -12,12 +13,11 @@ const renderLoginPage = () => {
 
       <section class="login-container">
         <form id="login-form">
-        <h1>Login</h1>
           <div class="form-group">
             <label for="email">Email</label>
             <div class="input-icon">
               <i class="fas fa-envelope"></i>
-              <input type="email" id="email" placeholder="Masukkan email" required>
+              <input type="email" id="email" placeholder="kimtaehyung@gmail.com" required>
             </div>
           </div>
           <div class="form-group">
@@ -28,24 +28,19 @@ const renderLoginPage = () => {
             </div>
           </div>
           <div class="form-footer">
-            <a href="#" class="forgot-password">Lupa password?</a>
+            <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa password?</a>
           </div>
-          <button type="submit" class="btn primary" id="login-button">Masuk</button>
+          <button type="submit" class="btn primary">Masuk</button>
           <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
         </form>
       </section>
     </main>
   `;
 
+  // Event listener untuk login
   const loginForm = document.getElementById('login-form');
-  const loginButton = document.getElementById('login-button');
-
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-
-    // Indikator loading
-    loginButton.textContent = 'Memproses...';
-    loginButton.disabled = true;
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -54,65 +49,47 @@ const renderLoginPage = () => {
       const response = await fetch(ENDPOINT.LOGIN, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        const errorResult = await response.json();
-        Swal.fire({
-          title: 'Login Gagal',
-          text: errorResult.message || 'Email atau kata sandi salah.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-        loginButton.textContent = 'Masuk';
-        loginButton.disabled = false;
-        return;
+        const result = await response.json();
+        throw new Error(result.message || 'Login gagal.');
       }
 
       const result = await response.json();
-      if (result.token) {
-        localStorage.setItem('authToken', result.token);
-      }
-      if (result.userId) {
-        localStorage.setItem('userId', result.userId);
-      }
+      localStorage.setItem('authToken', result.token);
+      localStorage.setItem('userId', result.userId);
+      localStorage.setItem('role', result.role);
 
-      Swal.fire({
-        title: 'Login Berhasil!',
-        text: 'Anda akan diarahkan ke halaman dashboard.',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      }).then(() => {
-        if (result.role === 'admin') {
-          window.location.hash = '#/dashboard-admin';
-        } else {
-          window.location.hash = '#/dashboard';
-        }
-
-        document.body.classList.remove('swal2-shown');
-        document.body.style.overflow = '';
-      });
+      if (result.role === 'admin') {
+        window.location.hash = '#/dashboard-admin';
+      } else if (result.role === 'user') {
+        window.location.hash = '#/dashboard';
+      } else {
+        Swal.fire('Error', 'Role pengguna tidak dikenali.', 'error');
+      }
     } catch (error) {
-      Swal.fire({
-        title: 'Terjadi Kesalahan',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-    } finally {
-      loginButton.textContent = 'Masuk';
-      loginButton.disabled = false;
+      Swal.fire('Error', error.message, 'error');
     }
   });
 
+  // Navigasi ke halaman register
   const registerLink = document.getElementById('register-link');
   registerLink.addEventListener('click', (event) => {
     event.preventDefault();
     window.location.hash = '#/register';
   });
+
+  const forgotPasswordLink = document.getElementById('forgot-password-link');
+  forgotPasswordLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.hash = '#/lupa-sandi';
+  });
 };
+
 
 export default renderLoginPage;
