@@ -56,16 +56,26 @@ const createDashboardAdmin = async () => {
     </div>
   `;
 
-  // Fetch report data
-  const reportData = await fetchReportData();
-  const dashboardAdmin = createDashboardSection(reportData);
-  contentAdmin.append(headerAdmin, dashboardAdmin);
+  // Add loading indicator
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'loading-indicator';
+  loadingIndicator.textContent = 'Loading...';
+  contentAdmin.append(loadingIndicator);
 
   // Append all to container
   containerAdmin.append(sidebarAdmin, contentAdmin);
 
   // Append container to body
   document.body.appendChild(containerAdmin);
+
+  // Fetch report data
+  const reportData = await fetchReportData();
+
+  // Remove loading indicator
+  loadingIndicator.remove();
+
+  const dashboardAdmin = createDashboardSection(reportData);
+  contentAdmin.append(headerAdmin, dashboardAdmin);
 };
 
 // Helper function to create menu sections
@@ -156,16 +166,16 @@ const fetchReportData = async () => {
       },
     });
 
-    console.log('Response status:', response.status); // Log response status
+    console.log('Response status:', response.status);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
     const data = await response.json();
-    console.log('Fetched data:', data); // Log response data
+    console.log('Fetched data:', data);
 
-    const laporan = data.message || []; // Assuming 'message' contains the report array
+    const laporan = data.message || [];
 
     // Count total reports and categorize them based on their status
     const totalLaporan = laporan.length;
@@ -219,10 +229,10 @@ function logout(event) {
     showCancelButton: true,
     confirmButtonText: 'Ya, Keluar',
     cancelButtonText: 'Batal',
-  }).then(async (result) => { // Pindahkan .then() ke sini
+  }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const authToken = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        const authToken = localStorage.getItem('authToken');
         if (!authToken) {
           throw new Error('Token tidak ditemukan, silakan login ulang.');
         }
@@ -232,7 +242,7 @@ function logout(event) {
           method: 'POST',
           credentials: 'include',
           headers: {
-            Authorization: `Bearer ${authToken}`, // Sertakan token dalam header Authorization
+            Authorization: `Bearer ${authToken}`,
             'Content-Type': 'application/json',
           },
         });
@@ -244,8 +254,14 @@ function logout(event) {
           localStorage.removeItem('authToken');
           localStorage.removeItem('userId');
 
+          // Clean up admin-specific styles and scripts
+          document.body.className = '';
+          document.body.innerHTML = '';
+
           // Arahkan ke halaman login
-          window.location.hash = '#/login';
+          setTimeout(() => {
+            window.location.hash = '#/login';
+          }, 1000);
 
           Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
         } else {
