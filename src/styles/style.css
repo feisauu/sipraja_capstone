@@ -2030,6 +2030,7 @@ h3{
 .form-group-admin input {
   width: 50%;
   padding: 15px;
+  margin-bottom: 10px;
   border: 1px solid #D0D2DD;
   border-radius: 10px;
   font-size: 14px;
