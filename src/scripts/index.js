@@ -91,7 +91,7 @@ function handleHashChange() {
     renderLoginPage();
   } else if (currentHash === '#/register') {
     renderRegisterPage();
-  } else if (currentHash === '#/forget') {
+  } else if (currentHash === '#/lupa-sandi') {
     renderForgetPasswordPage();
   } else if (currentHash.startsWith('#/konfirmasi')) {
     const id = currentHash.split('/').pop();
