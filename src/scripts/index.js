@@ -25,7 +25,7 @@ import createLaporanPage from './pages/laporan.js';
 import createAboutPage from './pages/about.js';
 import createNotificationPage from './pages/detail-notif.js';
 import createProfilePage from './pages/profile.js';
-import createChangePasswordPage from './pages/ubah-sandi.js';
+import renderResetPasswordPage from './pages/ubah-sandi.js';
 import renderUpdatePage from './pages/update-profil.js';
 import createDetailnyaPage from './pages/detailnya.js';
 import createEditLaporanPage from './pages/edit-laporan.js';
@@ -138,6 +138,8 @@ function handleHashChange() {
     }
   } else if (currentHash === '#/updateprofile') {
     renderUpdatePage();
+  } else if (currentHash == '#/ubah-sandi'){
+    renderResetPasswordPage();
   } else {
     document.body.innerHTML = '<p>Error 404: Halaman tidak ditemukan.</p>';
   }
