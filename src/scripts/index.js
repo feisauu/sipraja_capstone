@@ -30,6 +30,7 @@ import renderUpdatePage from './pages/update-profil.js';
 import createDetailnyaPage from './pages/detailnya.js';
 import createEditLaporanPage from './pages/edit-laporan.js';
 import createDetailLaporanPage from './pages/detail-laporan.js';
+import createLaporanPageUser from './pages/laporanbyuser.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
@@ -115,6 +116,8 @@ function handleHashChange() {
     createAboutPage();
   } else if (currentHash === '#/laporan') {
     createLaporanPage();
+  } else if (currentHash === '#/laporan-user') {
+    createLaporanPageUser();
   } else if (currentHash === '#/notifikasi') {
     createNotificationPage();
   } else if (currentHash === '#/profile') {
