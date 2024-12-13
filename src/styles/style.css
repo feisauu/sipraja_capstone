@@ -2854,3 +2854,47 @@ h1 {
   background-color: #c82333;
 }
 
+
+/* Dropdown styling */
+.form-group select {
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover and focus effects */
+.form-group select:hover {
+  border-color: #4b4a91;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #4b4a91;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling for disabled option */
+.form-group select option[value=""] {
+  color: #999;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group select {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
