@@ -23,24 +23,110 @@ const createArsipAdmin = () => {
   logo.className = 'logo-admin';
   logo.textContent = 'ADMIN SIPRAJA';
 
+  // Membuat menu sidebar
   const menu = document.createElement('nav');
   menu.className = 'menu';
 
   menu.innerHTML = `
       <div class="menu-section-admin">
         <span>Menu</span>
-        <a href="#/dashboard-admin" class="active"><i class="fas fa-home"></i>Dashboard</a>
-        <a href="#/laporan-admin"><i class="fas fa-file-alt"></i>Laporan</a>
-        <a href="#/arsip-admin"><i class="fas fa-archive"></i>Arsip Laporan</a>
+        <a href="#/dashboard-admin" class="${window.location.hash === '#/dashboard-admin' ? 'active' : ''}">
+          <i class="fas fa-home"></i>Dashboard
+        </a>
+        <a href="#/laporan-admin" class="${window.location.hash === '#/laporan-admin' ? 'active' : ''}">
+          <i class="fas fa-file-alt"></i>Laporan
+        </a>
+        <a href="#/arsip-admin" class="${window.location.hash === '#/arsip-admin' ? 'active' : ''}">
+          <i class="fas fa-archive"></i>Arsip Laporan
+        </a>
       </div>
       <div class="menu-section-admin">
         <span>Akun</span>
-        <a href="#/profil-admin"><i class="fas fa-user"></i>Profil</a>
-        <a href="#"><i class="fas fa-sign-out-alt"></i>Keluar</a>
+        <a href="#/profil-admin" class="${window.location.hash === '#/profil-admin' ? 'active' : ''}">
+          <i class="fas fa-user"></i>Profil
+        </a>
+        <a href="#" id="logoutLink">
+          <i class="fas fa-sign-out-alt"></i>Keluar
+        </a>
       </div>
-    `;
+  `;
 
   sidebar.append(logo, menu);
+  document.body.appendChild(sidebar);
+
+  // Menambahkan event listener untuk hashchange
+  window.addEventListener('hashchange', () => {
+    // Ambil semua tautan di menu
+    const menuLinks = document.querySelectorAll('.menu a');
+
+    menuLinks.forEach((link) => {
+      // Hapus kelas 'active' dari semua tautan
+      link.classList.remove('active');
+
+      // Tambahkan kelas 'active' pada tautan yang sesuai dengan hash URL saat ini
+      if (link.getAttribute('href') === window.location.hash) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // Event listener untuk logout
+  document.getElementById('logoutLink').addEventListener('click', async (event) => {
+    event.preventDefault();
+    const authToken = localStorage.getItem('authToken');
+
+    Swal.fire({
+      title: 'Konfirmasi Logout',
+      text: 'Apakah Anda yakin ingin keluar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Keluar',
+      cancelButtonText: 'Batal',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch('https://backend-sipraja.vercel.app/api/v1/user/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Gagal logout, silakan coba lagi.');
+          }
+
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userId');
+
+          Swal.fire({
+            title: 'Berhasil Logout',
+            text: 'Anda telah keluar dari aplikasi.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+
+          setTimeout(() => {
+            // Clean up admin-specific styles and scripts
+            document.body.className = '';
+            document.body.innerHTML = '';
+            // Redirect to the login page
+            window.location.hash = '#/login';
+          }, 2000);
+        } catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
+      }
+    });
+  });
 
   // Main Content
   const mainContent = document.createElement('main');
