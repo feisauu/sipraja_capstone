@@ -2920,3 +2920,49 @@ h1 {
   }
 }
 
+/* Reset password container styling */
+.reset-password-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Form title */
+.reset-password-title {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* Form group styling */
+.reset-password-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reset-password-group label {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.reset-password-group input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reset-password-group input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
+}
