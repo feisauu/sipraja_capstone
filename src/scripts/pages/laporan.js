@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
-import createDetailLaporanPage from './detail-laporan.js'; 
+import createDetailLaporanPage from './detail-laporan.js';
 import ENDPOINT from '../globals/endpoint';
 
 const fetchLaporan = async () => {
@@ -53,7 +53,7 @@ const createLaporanCard = (laporan) => {
   detailButton.addEventListener('click', (event) => {
     event.preventDefault();
     const laporanId = detailButton.dataset.id;
-    window.location.href = `#/detailnya?id=${laporanId}`; 
+    window.location.href = `#/detailnya?id=${laporanId}`;
   });
 
   return card;
@@ -139,7 +139,7 @@ const createLaporanPage = () => {
   mainContent.className = 'main-content';
   mainContent.innerHTML = '<p>Loading laporan...</p>';
 
-let laporanDataCache = []; // Cache laporan untuk mempermudah filter
+let laporanDataCache = [];
 
   const renderLaporan = (laporanList) => {
     mainContent.innerHTML = '';
@@ -155,7 +155,7 @@ let laporanDataCache = []; // Cache laporan untuk mempermudah filter
 
   fetchLaporan()
     .then((laporanData) => {
-      laporanDataCache = laporanData; // Simpan data laporan di cache
+      laporanDataCache = laporanData;
       renderLaporan(laporanData);
     })
     .catch((error) => {
@@ -170,7 +170,7 @@ let laporanDataCache = []; // Cache laporan untuk mempermudah filter
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
-  // Event Listener untuk pencarian
+
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
 
