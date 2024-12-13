@@ -2966,3 +2966,77 @@ h1 {
   border-color: #6c63ff;
   box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
 }
+
+/* Container utama halaman lupa password */
+.forget-password-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Forget Password */
+#forget-password-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Judul halaman */
+.forget-password-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Deskripsi / paragraf */
+.forget-password-container p {
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Tombol sekunder (batal) */
+.btn.secondary {
+  background-color: #f44336; /* Warna merah */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover tombol sekunder */
+.btn.secondary:hover {
+  background-color: #e53935;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  .forget-password-container {
+    padding: 15px;
+  }
+
+  .forget-password-container h1 {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .btn {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
