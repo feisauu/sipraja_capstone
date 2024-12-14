@@ -31,6 +31,7 @@ import createDetailnyaPage from './pages/detailnya.js';
 import createEditLaporanPage from './pages/edit-laporan.js';
 import createDetailLaporanPage from './pages/detail-laporan.js';
 import createLaporanPageUser from './pages/laporanbyuser.js';
+import renderResetPassword from './pages/reset.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.getElementById('hamburger');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   if (!window.location.hash || window.location.hash === '#/') {
-    window.location.hash = '#/'; 
+    window.location.hash = '#/';
     renderHomePage();
   } else {
     handleHashChange();
@@ -91,9 +92,11 @@ function handleHashChange() {
     renderLoginPage();
   } else if (currentHash === '#/register') {
     renderRegisterPage();
-  } else if (currentHash.startsWith('#/lupa-sandi') {
+  } else if (currentHash === '#/lupa-sandi') {
     renderForgetPasswordPage();
-  } else if (currentHash.startsWith('#/konfirmasi')) {
+  } else if (currentHash.startsWith('#/reset-password')) {
+    renderResetPassword();
+  }  else if (currentHash.startsWith('#/konfirmasi')) {
     const id = currentHash.split('/').pop();
     if (id) {
       createKonfirmasi(id);
