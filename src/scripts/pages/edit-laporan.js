@@ -1,6 +1,7 @@
 import '../../components/navbar.js';
 import '../../components/footer.js';
 import ENDPOINT from '../globals/endpoint';
+import Swal from 'sweetalert2';
 
 const getLaporanIdFromUrl = () => {
   const params = new URLSearchParams(window.location.hash.split('?')[1]);
@@ -95,9 +96,14 @@ const createEditLaporanPage = async () => {
 
         <div class="form-group">
           <label for="kategori">Kategori Laporan</label>
-          <input type="text" id="kategori" name="kategori" placeholder="Masukkan Kategori Laporan" value="${laporan.kategori || ''}" required>
+          <select id="kategori" name="kategori" required>
+            <option value="" disabled selected>Pilih Kategori</option>
+            <option value="Jembatan" ${laporan.kategori === 'Jembatan' ? 'selected' : ''}>Jembatan</option>
+            <option value="Jalan" ${laporan.kategori === 'Jalan' ? 'selected' : ''}>Jalan</option>
+            <option value="Lalu Lintas" ${laporan.kategori === 'Lalu Lintas' ? 'selected' : ''}>Lalu Lintas</option>
+            <option value="Lainnya" ${laporan.kategori === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+          </select>
         </div>
-
         <div class="form-group">
           <label for="lokasi">Lokasi</label>
           <input type="text" id="lokasi" name="lokasi" placeholder="Masukkan Lokasi" value="${laporan.lokasi || ''}" required>
@@ -159,30 +165,30 @@ const createEditLaporanPage = async () => {
         description: document.getElementById('deskripsi').value,
       };
 
-      // Handle file upload
-      const fotoInput = document.getElementById('foto');
-      const files = fotoInput.files;
-      if (files.length > 0) {
-        const formData = new FormData();
-        formData.append('gambar_pendukung', files[0]);
-        updatedData.gambar_pendukung = formData;
-      }
-
       try {
         await updateLaporanDetail(laporanId, updatedData);
-        alert('Laporan berhasil diperbarui!');
+        await Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Laporan berhasil diperbarui!',
+        });
         window.location.hash = '#/laporan';
       } catch (error) {
-        alert(`Gagal memperbarui laporan: ${error.message}`);
+        await Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: `Gagal memperbarui laporan: ${error.message}`,
+        });
       }
     });
 
   } catch (error) {
     loadingContainer.remove();
-    const errorContainer = document.createElement('div');
-    errorContainer.className = 'edit-error-container';
-    errorContainer.innerHTML = `<h1 class="edit-error-title">Error</h1><p>${error.message}</p>`;
-    document.body.appendChild(errorContainer);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.message,
+    });
   }
 
   const footer = document.createElement('footer-component');
