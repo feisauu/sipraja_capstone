@@ -71,10 +71,9 @@ header nav {
   align-items: center;
 }
 
-header .logo {
-  font-size: 2em; /* Memperbesar font size logo */
+header .logo-text {
   font-weight: bold;
-  color: #6c5ce7;
+  color: #6f42c1;
   animation: slideInUp 0.8s ease forwards;
 }
 
@@ -808,15 +807,6 @@ header .logo {
 
 
 
-
-/* Footer */
-footer {
-  padding: 20px;
-  text-align: center;
-  background-color: #333;
-  color: #fff;
-  margin-top: auto;
-}
 
 .login {
   background: #6c63ff;
@@ -3146,6 +3136,7 @@ h1 {
   background-color: #c82333;
 }
 
+
 .sub-menu-wrap {
   position: absolute;
   top: 100%;
@@ -3194,7 +3185,8 @@ h1 {
 }
 
 .sub-menu-list ul li a:hover {
-  font-weight: 600; 
+  color: #6c5ce7;
+  font-weight: bold;
 }
 
 .sub-menu-list ul li i.fas.fa-user {
@@ -3203,4 +3195,89 @@ h1 {
 
 .sub-menu-list ul li i.fas.fa-sign-out-alt {
   margin-right: 12px;
+}
+
+/* Footer Container */
+.footer {
+  background-color: #f8f9fa; 
+  color: #555; 
+  padding: 40px 20px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-left, .footer-center, .footer-right {
+  flex: 1;
+  margin: 20px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #6f42c1; /* Warna logo */
+}
+
+.logo-icon {
+  background-color: #6f42c1;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.footer p, .footer small {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.footer h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #6f42c1;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer ul li {
+  margin: 8px 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.footer ul li i {
+  margin-right: 10px;
+  color: #6f42c1;
+}
+
+.footer ul li a {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.footer ul li a:hover {
+  color: #6f42c1;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #888;
 }
