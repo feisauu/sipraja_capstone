@@ -3116,4 +3116,32 @@ h1 {
   }
 }
 
+/* Button styling */
+.form-submit-button, .form-cancel-button {
+  padding: 12px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
 
+.form-submit-button {
+  background-color: #4b4a91;
+  color: white;
+}
+
+.form-submit-button:hover {
+  background-color: #4b4a91;
+}
+
+.form-cancel-button {
+  background-color: #dc3545;
+  color: white;
+  margin-left: 10px;
+}
+
+.form-cancel-button:hover {
+  background-color: #c82333;
+}
