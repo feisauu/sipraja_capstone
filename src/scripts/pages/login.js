@@ -26,7 +26,7 @@ const renderLoginPage = () => {
         <label for="email">Email</label>
         <div class="input-icon">
           <i class="fas fa-envelope"></i>
-          <input type="email" id="email" placeholder="kimtaehyung@gmail.com" required>
+          <input type="email" id="email" placeholder="Masukkan email" required>
         </div>
       </div>
       <div class="form-group">
