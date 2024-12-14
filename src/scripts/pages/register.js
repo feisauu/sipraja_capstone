@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-alert */
 import Swal from 'sweetalert2';
 import ENDPOINT from '../globals/endpoint';
@@ -40,13 +41,12 @@ const renderRegisterPage = () => {
           </div>
 
           <button type="submit" class="btn primary" id="register-button">Daftar</button>
-          <p class="login-link">Sudah punya akun? <a href="#" id="login-link">Masuk disini</a></p>
+          <p class="login-link">Sudah punya akun? <a href="#/login" id="login-link">Masuk disini</a></p>
         </form>
       </section>
     </main>
   `;
 
-  // Validasi Input
   const validateInput = (name, email, password, confirmPassword, phone) => {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     const phonePattern = /^[0-9]+$/;
@@ -86,7 +86,6 @@ const renderRegisterPage = () => {
     const confirmPassword = document.getElementById('confirm-password').value.trim();
     const phone = document.getElementById('phone').value.trim();
 
-    // Validasi input
     const validationError = validateInput(name, email, password, confirmPassword, phone);
     if (validationError) {
       Swal.fire({
@@ -116,12 +115,8 @@ const renderRegisterPage = () => {
         }),
       });
 
-      const textResponse = await response.text();
-      console.log('Raw Response:', textResponse);
-
       if (!response.ok) {
-        const errorData = JSON.parse(textResponse);
-        console.error('Error Details:', errorData);
+        const errorData = await response.json();
         Swal.fire({
           icon: 'error',
           title: 'Registrasi Gagal',
@@ -130,31 +125,32 @@ const renderRegisterPage = () => {
         return;
       }
 
-      const jsonResponse = JSON.parse(textResponse);
+      const jsonResponse = await response.json();
       console.log('Success Response:', jsonResponse);
 
       Swal.fire({
         icon: 'success',
         title: 'Registrasi Berhasil',
-        text: jsonResponse.message || 'Akun Anda telah berhasil dibuat!',
+        text: 'Akun Anda telah berhasil dibuat! Anda akan diarahkan ke halaman login.',
       }).then(() => {
-        document.body.classList.remove('swal2-shown');
-        document.body.style.overflow = '';
-
         window.location.hash = '#/login';
       });
     } catch (error) {
-      console.error('Error:', error.message);
       Swal.fire({
         icon: 'error',
         title: 'Registrasi Gagal',
         text: `Registrasi gagal: ${error.message}`,
       });
     } finally {
-      // Reset button state
       registerButton.textContent = 'Daftar';
       registerButton.disabled = false;
     }
+  });
+
+  const loginLink = document.getElementById('login-link');
+  loginLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.hash = '#/login';
   });
 };
 
