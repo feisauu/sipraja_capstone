@@ -1,3 +1,6 @@
+/* eslint-disable arrow-parens */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable lines-between-class-members */
 /* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
 class Navbar extends HTMLElement {
@@ -20,28 +23,53 @@ class Navbar extends HTMLElement {
             <div class="navbar-right">
               <i class="fas fa-bell" id="notification-bell"></i>
               <div class="user" id="user-profile">
-                <img src="../images/profil.webp" alt="User Profile" id="user-avatar">
-                <span id="user-name">Loading...</span>
-              </div>
-            </div>
-          </nav>
-      </header>
+            <img src="../images/profil.webp" alt="User Profile" id="user-avatar">
+            <span id="user-name">Loading...</span>
+            <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+            <div class="sub-menu-list">
+              <ul>
+                <li><a href="#/profile"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="#/login"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+              </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  </nav>
+</header>
       `;
+
+    const subMenu = this.querySelector('#subMenu');
+    const userProfile = this.querySelector('#user-profile');
+
+    // Event listener untuk toggle menu
+    userProfile.addEventListener('click', (event) => {
+      event.preventDefault(); // Mencegah perilaku default (jika ada)
+      subMenu.classList.toggle('open-menu');
+    });
+
+    // Event listener untuk navigasi pada menu
+    const menuItems = subMenu.querySelectorAll('a');
+    menuItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        const target = event.target;
+        const href = target.getAttribute('href');
+        if (href) {
+          window.location.hash = href; // Navigasi ke halaman yang sesuai
+          subMenu.classList.remove('open-menu'); // Menutup menu setelah klik
+        }
+      });
+    });
 
     const bellIcon = this.querySelector('#notification-bell');
     bellIcon.addEventListener('click', this.showNotificationDetails.bind(this));
-
-    const profileLink = this.querySelector('#user-profile');
-    profileLink.addEventListener('click', this.showProfile.bind(this));
 
     this.loadUserData();
   }
 
   showNotificationDetails() {
     window.location.hash = '#/notifikasi';
-  }
-  showProfile() {
-    window.location.hash = '#/profile';
   }
 
   async loadUserData() {
@@ -58,7 +86,7 @@ class Navbar extends HTMLElement {
         method: 'GET',
         credentials: 'include',
         headers: {
-          Authorization: `Bearer ${authToken}`, 
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
       });
