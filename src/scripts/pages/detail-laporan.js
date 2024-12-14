@@ -156,6 +156,7 @@ const createDetailLaporanPage = async () => {
         icon: 'success',
         confirmButtonText: 'OK',
       }).then(() => {
+        window.scrollTo(0, 0);
         window.location.href = '#/laporan';
       });
     } catch (error) {
@@ -176,8 +177,11 @@ const createDetailLaporanPage = async () => {
     window.location.hash = '#/laporan';
   });
 
-  const footer = document.createElement('footer-component');
-  document.body.appendChild(footer);
+  // Check if the footer already exists before adding
+  if (!document.querySelector('footer-component')) {
+    const footer = document.createElement('footer-component');
+    document.body.appendChild(footer);
+  }
 };
 
 export default createDetailLaporanPage;
