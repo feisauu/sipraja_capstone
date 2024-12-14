@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-loop-func */
 /* eslint-disable no-undef */
 /* eslint-disable no-shadow */
 /* eslint-disable new-cap */
@@ -146,46 +149,46 @@ const createArsipAdmin = () => {
   filterSection.className = 'filters-admin';
   filterSection.innerHTML = `
   <h2 class="h2">Arsip</h2>
-      <div class="filter-input-admin">
-        <input type="text" placeholder="Cari Laporan">
-      </div>
-      <div class="filter-date-admin">
-        <input type="date">
-        <span>To</span>
-        <input type="date">
-      </div>
-      <button class="filter-btn-admin">
-        <i class="fas fa-search"></i> Cari
-      </button>
-      <button class="print-btn">
-        <i class="fas fa-print"></i> Cetak Laporan
-      </button>
-    `;
+  <div class="filter-input-admin">
+    <input type="text" id="searchInput" placeholder="Cari Laporan">
+  </div>
+  <div class="filter-date-admin">
+    <input type="date" id="startDate">
+    <span>To</span>
+    <input type="date" id="endDate">
+  </div>
+  <button class="filter-btn-admin" id="searchButton">
+    <i class="fas fa-search"></i> Cari
+  </button>
+  <button class="print-btn">
+    <i class="fas fa-print"></i> Cetak Laporan
+  </button>
+`;
 
   // Table Section
   const tableSection = document.createElement('section');
   tableSection.className = 'table-admin';
   tableSection.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Judul</th>
-          <th>Status</th>
-          <th>Kategori</th>
-          <th>Lokasi</th>
-          <th>Tanggal</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="arsipTableBody">
-        <!-- Data rows will be appended here -->
-      </tbody>
-    </table>
-  `;
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Judul</th>
+        <th>Status</th>
+        <th>Kategori</th>
+        <th>Lokasi</th>
+        <th>Tanggal</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="arsipTableBody">
+      <!-- Data rows will be appended here -->
+    </tbody>
+  </table>
+`;
 
   // Function to Fetch and Populate Data
-  const tableContainer = async () => {
+  const tableContainer = async (search = '', startDate = '', endDate = '') => {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
       Swal.fire('Error', 'Token not found or expired. Please log in again.', 'error');
@@ -204,12 +207,16 @@ const createArsipAdmin = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('API Response:', data); // Debugging log
+        const filteredLaporan = (data.message || []).filter((laporan) => {
+          const matchSearch = laporan.judul.toLowerCase().includes(search.toLowerCase())
+          || laporan.nama.toLowerCase().includes(search.toLowerCase())
+          || laporan.lokasi.toLowerCase().includes(search.toLowerCase());
+          const matchStartDate = !startDate || new Date(laporan.tanggal) >= new Date(startDate);
+          const matchEndDate = !endDate || new Date(laporan.tanggal) <= new Date(endDate);
+          return matchSearch && matchStartDate && matchEndDate && laporan.isArchived;
+        });
 
-        const archivedLaporan = (data.message || []).filter((laporan) => laporan.isArchived);
-        console.log('Filtered Archived Reports:', archivedLaporan); // Debugging log
-
-        populateTable(archivedLaporan);
+        populateTable(filteredLaporan);
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch archived reports.');
@@ -235,17 +242,17 @@ const createArsipAdmin = () => {
     arsip.forEach((laporan, index) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${index + 1}</td>
-        <td><strong>${laporan.judul}</strong><br><small>${laporan.nama}</small></td>
-        <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
-        <td>${laporan.kategori}</td>
-        <td>${laporan.lokasi}</td>
-        <td>${laporan.tanggal}</td>
-        <td class="action-icons">
-          <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id || ''}')"><i class="fas fa-trash-alt"></i></button>
-          <button class="icon unarchive-btn" onclick="unarchiveLaporan('${laporan._id || ''}')"><i class="fas fa-folder-open"></i></button>
-        </td>
-      `;
+      <td>${index + 1}</td>
+      <td><strong>${laporan.judul}</strong><br><small>${laporan.nama}</small></td>
+      <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
+      <td>${laporan.kategori}</td>
+      <td>${laporan.lokasi}</td>
+      <td>${laporan.tanggal}</td>
+      <td class="action-icons">
+        <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id || ''}')"><i class="fas fa-trash-alt"></i></button>
+        <button class="icon unarchive-btn" onclick="unarchiveLaporan('${laporan._id || ''}')"><i class="fas fa-folder-open"></i></button>
+      </td>
+    `;
       tableBody.appendChild(row);
     });
   };
@@ -254,39 +261,93 @@ const createArsipAdmin = () => {
   const sidebarFilters = document.createElement('div');
   sidebarFilters.className = 'filters-sidebar-admin';
   sidebarFilters.innerHTML = `
-      <h3>Status Laporan</h3>
-      <form>
-        <label><input type="radio" name="status" value="semua" checked><span>Semua</span></label>
-        <label><input type="radio" name="status" value="selesai"><span>Selesai</span></label>
-        <label><input type="radio" name="status" value="diproses"><span>Diproses</span></label>
-        <label><input type="radio" name="status" value="belum_diproses"><span>Belum Diproses</span></label>
-      </form>
-      <h3>Kategori Laporan</h3>
-      <form>
-        <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
-        <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
-        <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
-        <label><input type="radio" name="kategori" value="lalu_lintas"><span>Lalu Lintas</span></label>
-      </form>
-    `;
+  <h3>Status Laporan</h3>
+  <form>
+    <label><input type="radio" name="status" value="semua" checked><span>Semua</span></label>
+    <label><input type="radio" name="status" value="selesai"><span>Selesai</span></label>
+    <label><input type="radio" name="status" value="diproses"><span>Diproses</span></label>
+    <label><input type="radio" name="status" value="belum_diproses"><span>Belum Diproses</span></label>
+  </form>
+  <h3>Kategori Laporan</h3>
+  <form>
+    <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
+    <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
+    <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
+    <label><input type="radio" name="kategori" value="lalu_lintas"><span>Lalu Lintas</span></label>
+  </form>
+`;
 
   // Pagination
   const pagination = document.createElement('div');
   pagination.className = 'pagination';
   pagination.innerHTML = `
-      <button class="page-btn">«</button>
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">»</button>
-    `;
+  <button class="page-btn" id="prevPageBtn">«</button>
+  <div id="paginationPages"></div>
+  <button class="page-btn active">1</button>
+  <button class="page-btn">2</button>
+  <button class="page-btn">3</button>
+  <button class="page-btn" id="nextPageBtn">»</button>
+`;
 
   mainContent.append(header, filterSection, tableSection, sidebarFilters, pagination);
   container.append(sidebar, mainContent);
   document.body.appendChild(container);
 
+  let currentPage = 1;
+  const reportsPerPage = 10;
+  const totalReports = 0; // Initialize totalReports here
+
   // Fetch data after DOM setup
   tableContainer();
+
+  // Handle pagination
+  const updatePagination = (totalPages, currentPage) => {
+    const paginationPages = document.getElementById('paginationPages');
+    paginationPages.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.className = 'page-btn';
+      pageBtn.id = `page${i}Btn`;
+      pageBtn.textContent = i;
+      if (i === currentPage) {
+        pageBtn.classList.add('active');
+      }
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        tableContainer();
+      });
+      paginationPages.appendChild(pageBtn);
+    }
+
+    // Disable/enable pagination buttons based on currentPage
+    document.getElementById('prevPageBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+  };
+
+  // Handle page change
+  document.getElementById('prevPageBtn').addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      tableContainer();
+    }
+  });
+
+  document.getElementById('nextPageBtn').addEventListener('click', () => {
+    if (currentPage < Math.ceil(totalReports / reportsPerPage)) {
+      currentPage++;
+      tableContainer();
+    }
+  });
+
+  // Handle search and filter
+  const searchButton = document.getElementById('searchButton');
+  searchButton.addEventListener('click', () => {
+    const searchInput = document.getElementById('searchInput').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    tableContainer(searchInput, startDate, endDate);
+  });
 
   // Print Report Function
   const printReportArsip = () => {
