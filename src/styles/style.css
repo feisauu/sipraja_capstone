@@ -3000,6 +3000,27 @@ h1 {
   margin-bottom: 20px;
 }
 
+.reset-password-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #6f42c1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.reset-password-button:hover {
+  background-color: #6f42c1;
+}
+
+.reset-password-button:active {
+  background-color: #6f42c1;
+}
+
 /* Tombol sekunder (batal) */
 .btn.secondary {
   background-color: #f44336; /* Warna merah */
