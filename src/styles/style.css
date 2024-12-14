@@ -3040,3 +3040,59 @@ h1 {
     padding: 8px;
   }
 }
+
+/* Container utama halaman lupa password */
+.forget-password-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Forget Password */
+#forget-password-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Judul halaman */
+.forget-password-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Deskripsi / paragraf */
+.forget-password-container p {
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  .forget-password-container {
+    padding: 15px;
+  }
+
+  .forget-password-container h1 {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .btn {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+
