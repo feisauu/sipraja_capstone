@@ -64,6 +64,7 @@ const createDetailLaporanPage = async () => {
       </div>
 
       <button type="submit" class="submit-button">Buat Laporan</button>
+      <button type="button" id="cancel-button" class="form-cancel-button">Batal</button>
     </form>
   `;
   document.body.appendChild(detailLaporanSection);
@@ -129,7 +130,9 @@ const createDetailLaporanPage = async () => {
 
   const form = document.getElementById('form-laporan');
   const submitButton = form.querySelector('.submit-button');
-
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    window.location.hash = '#/laporan';
+  });
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); 
 
