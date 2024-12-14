@@ -12,67 +12,60 @@ const createAboutPage = () => {
   document.body.appendChild(navbar);
 
   const aboutSection = document.createElement('section-page');
-  aboutSection.setAttribute('title', 'About');
+  aboutSection.setAttribute('title', 'Apa itu SIPRAJA?🧐');
   aboutSection.innerHTML = `
     <p>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt
-      labore ipsa repudiandae laboriosam ea magnam deleniti quia eius illo,
-      nam numquam enim consequuntur, dignissimos voluptas assumenda odit hic
-      ipsum sequi voluptate cupiditate inventore! Cum dolores temporibus
-      assumenda, eius obcaecati, quo vero illum quod magnam itaque mollitia.
-      Inventore eius omnis voluptas, placeat, pariatur nam perferendis dolorum
-      quo illo odio reprehenderit ad deserunt aspernatur laudantium iusto
-      alias explicabo consequuntur debitis a quaerat architecto minus quam.
-      Numquam modi sequi, quia repudiandae commodi a maxime ex voluptas
-      temporibus ipsa blanditiis et, aliquid, repellendus autem voluptatum hic
-      iusto debitis accusantium fugiat in adipisci dignissimos? Cupiditate
-      iste ipsum error soluta porro vitae odit, fugiat voluptatum incidunt
-      pariatur laboriosam adipisci minima quasi eveniet tenetur. Praesentium
-      fuga necessitatibus quae suscipit perspiciatis id ullam neque expedita
-      nisi quam blanditiis temporibus debitis odit voluptas, unde fugiat ipsum
-      tenetur! Nisi vitae culpa, pariatur ex maxime architecto fugiat
-      perspiciatis repudiandae quisquam aliquam quod hic? Pariatur, velit
-      neque vero laborum corrupti voluptates alias quo! Quisquam dolorem
-      exercitationem maxime possimus est ipsa ex culpa adipisci eius veniam at
-      praesentium totam excepturi sunt eum, suscipit, minus voluptatibus
-      eligendi voluptates aut fuga eos doloremque ab. Aliquid quisquam nulla
-      quam architecto quasi aut eligendi fugit, eos voluptas.
+      SIPRAJA adalah singkatan dari Sistem Informasi Pelaporan Kerusakan Infrastruktur Daerah Jogja. Aplikasi ini dirancang untuk mempermudah masyarakat dalam melaporkan kerusakan infrastruktur yang ada di daerah Jogja. Dengan menggunakan sistem ini, masyarakat dapat dengan cepat melaporkan berbagai jenis kerusakan, seperti jalan berlubang, jembatan rusak, dan fasilitas umum lainnya, yang kemudian dapat dikelola oleh pihak berwenang untuk segera ditindaklanjuti. Aplikasi ini menyediakan platform yang efisien dan mudah digunakan oleh warga dan pemerintah daerah untuk berkomunikasi dan memperbaiki kondisi infrastruktur secara lebih terorganisir.
     </p>
   `;
   document.body.appendChild(aboutSection);
 
-  const developersSection = document.createElement('section-page');
-  developersSection.setAttribute('title', 'Developers');
-  const developerCards = document.createElement('div');
-  developerCards.className = 'developer-cards';
+  const section = document.createElement('section-page');
+  section.setAttribute('title', 'Tujuan dan Manfaat🎯');
+  section.innerHTML = `
+  <p>
+<br><h2>🎯 Tujuan:</h2>
+<li>Mempermudah masyarakat untuk melaporkan kerusakan infrastruktur.</li>
+<li>Menyediakan sistem yang efisien untuk pengelolaan laporan kerusakan oleh pemerintah daerah.</li>
+<li>Mengoptimalkan respons terhadap kerusakan infrastruktur yang ada di daerah Jogja.</li><br>
+<br><h2>💡 Manfaat</h2>
+<li>Meningkatkan Keterlibatan Masyarakat: Masyarakat dapat lebih aktif melaporkan kerusakan yang ditemukan.</li>
+<li>Efisiensi Pengelolaan Laporan: Admin dapat mengelola dan menindaklanjuti laporan dengan lebih cepat dan terstruktur.</li>
+<li>Peningkatan Kualitas Infrastruktur: Dengan adanya laporan yang mudah diakses, perbaikan infrastruktur dapat dilakukan lebih tepat waktu.</li>
+    </p>
+  `;
+  document.body.appendChild(section);
 
-  const devCard1 = document.createElement('dev-card');
-  devCard1.setAttribute('image', '../images/profil.webp');
-  devCard1.setAttribute('name', 'Nama Lengkap 1');
-  devCard1.setAttribute('role', 'Bagian project 1');
+  const about = document.createElement('section');
+  about.className = 'about';
+  about.innerHTML = `
+    <div class="container">
+      <div class="about-text">
+        <h3>Tentang Kami</h3>
+        <p>
+          Di <strong>SIPRAJA</strong>, kami menyediakan sarana bagi masyarakat Yogyakarta untuk melaporkan segala bentuk kerusakan pada fasilitas umum seperti jalan berlubang, lampu penerangan jalan yang mati, kerusakan taman, dan lainnya.
+        </p>
+        <p>
+          Dengan melibatkan masyarakat, kami bertujuan untuk mempercepat perbaikan infrastruktur kota dan menciptakan Yogyakarta yang lebih nyaman, aman, dan layak huni. 
+          Kami bekerja sama dengan <strong>Dinas Pekerjaan Umum Yogyakarta</strong> untuk menjaga keberlangsungan infrastruktur kota.
+        </p>
+      </div>
 
-  const devCard2 = document.createElement('dev-card');
-  devCard2.setAttribute('image', '../images/profil.webp');
-  devCard2.setAttribute('name', 'Nama Lengkap 2');
-  devCard2.setAttribute('role', 'Bagian project 2');
-
-  const devCard3 = document.createElement('dev-card');
-  devCard3.setAttribute('image', '../images/profil.webp');
-  devCard3.setAttribute('name', 'Nama Lengkap 3');
-  devCard3.setAttribute('role', 'Bagian project 3');
-
-  const devCard4 = document.createElement('dev-card');
-  devCard4.setAttribute('image', '../images/profil.webp');
-  devCard4.setAttribute('name', 'Nama Lengkap 4');
-  devCard4.setAttribute('role', 'Bagian project 4');
-
-  developerCards.appendChild(devCard1);
-  developerCards.appendChild(devCard2);
-  developerCards.appendChild(devCard3);
-  developerCards.appendChild(devCard4);
-
-  developersSection.appendChild(developerCards);
-  document.body.appendChild(developersSection);
+      <div class="about-map">
+        <h3>Lokasi Kami</h3>
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.9286416230725!2d110.38876667471252!3d-7.800427292123149!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5790f07cf09b%3A0x8132a30c009a85b7!2sUniversitas%20Gadjah%20Mada!5e0!3m2!1sid!2sid!4v1699212345678!5m2!1sid!2sid" 
+          width="100%" 
+          height="300" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(about);
 
   // Create and append the footer
   const footer = document.createElement('footer-component');
