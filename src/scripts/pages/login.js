@@ -1,46 +1,62 @@
+/* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
 import Swal from 'sweetalert2';
 import ENDPOINT from '../globals/endpoint';
 
 const renderLoginPage = () => {
-  document.body.innerHTML = `
-    <main>
-      <section class="welcome-section">
-        <h1>Selamat datang!</h1>
-        <p class="subtitle">Ayo, mulai laporkan kerusakan!</p>
-      </section>
+  document.body.className = '';
+  document.body.innerHTML = '';
 
-      <section class="login-container">
-        <form id="login-form">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <div class="input-icon">
-              <i class="fas fa-envelope"></i>
-              <input type="email" id="email" placeholder="kimtaehyung@gmail.com" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="password">Kata Sandi</label>
-            <div class="input-icon">
-              <i class="fas fa-lock"></i>
-              <input type="password" id="password" placeholder="*******" required>
-            </div>
-          </div>
-          <div class="form-footer">
-            <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa password?</a>
-          </div>
-          <button type="submit" class="btn primary">Masuk</button>
-          <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
-        </form>
-      </section>
-    </main>
+  document.body.style.overflow = 'auto';
+
+  const main = document.createElement('main');
+  const welcomeSection = document.createElement('section');
+  welcomeSection.className = 'welcome-section';
+  welcomeSection.innerHTML = `
+    <h1>Selamat datang!</h1>
+    <p class="subtitle">Ayo, mulai laporkan kerusakan!</p>
   `;
 
-  // Event listener untuk login
+  const loginContainer = document.createElement('section');
+  loginContainer.className = 'login-container';
+  loginContainer.innerHTML = `
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-icon">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" placeholder="kimtaehyung@gmail.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Kata Sandi</label>
+        <div class="input-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="*******" required>
+        </div>
+      </div>
+      <div class="form-footer">
+        <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa password?</a>
+      </div>
+      <button type="submit" class="btn primary" id="login-button">Masuk</button>
+      <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
+    </form>
+  `;
+
+  // Append sections to main
+  main.append(welcomeSection, loginContainer);
+  document.body.appendChild(main);
+
   const loginForm = document.getElementById('login-form');
+  const loginButton = document.getElementById('login-button');
+
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    // Disable button and show loading state
+    loginButton.disabled = true;
+    loginButton.textContent = 'Memproses...';
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -65,19 +81,30 @@ const renderLoginPage = () => {
       localStorage.setItem('userId', result.userId);
       localStorage.setItem('role', result.role);
 
-      if (result.role === 'admin') {
-        window.location.hash = '#/dashboard-admin';
-      } else if (result.role === 'user') {
-        window.location.hash = '#/dashboard';
-      } else {
-        Swal.fire('Error', 'Role pengguna tidak dikenali.', 'error');
-      }
+      Swal.fire({
+        title: 'Berhasil!',
+        text: 'Anda berhasil login. Mengarahkan ke dashboard...',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        if (result.role === 'admin') {
+          window.location.hash = '#/dashboard-admin';
+        } else if (result.role === 'user') {
+          window.location.hash = '#/dashboard';
+        } else {
+          Swal.fire('Error', 'Role pengguna tidak dikenali.', 'error');
+        }
+      });
     } catch (error) {
       Swal.fire('Error', error.message, 'error');
+    } finally {
+      // Re-enable button and reset text
+      loginButton.disabled = false;
+      loginButton.textContent = 'Masuk';
     }
   });
 
-  // Navigasi ke halaman register
   const registerLink = document.getElementById('register-link');
   registerLink.addEventListener('click', (event) => {
     event.preventDefault();
@@ -90,6 +117,5 @@ const renderLoginPage = () => {
     window.location.hash = '#/lupa-sandi';
   });
 };
-
 
 export default renderLoginPage;
