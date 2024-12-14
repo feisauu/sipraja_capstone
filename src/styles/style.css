@@ -3145,3 +3145,62 @@ h1 {
 .form-cancel-button:hover {
   background-color: #c82333;
 }
+
+.sub-menu-wrap {
+  position: absolute;
+  top: 100%;
+  right: 5%;
+  width: 200px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.sub-menu-wrap.open-menu {
+  max-height: 400px;
+}
+
+.sub-menu {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.sub-menu-list ul {
+  list-style: none; 
+  padding: 0;       
+  margin: 0;        
+}
+
+.sub-menu-list ul li {
+  margin: 10px 0; 
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.sub-menu-list ul li:last-child {
+  border-bottom: none; 
+}
+
+.sub-menu-list ul li a {
+  text-decoration: none; 
+  color: #333;           
+  font-size: 16px;       
+  display: block;        
+  padding: 5px;         
+}
+
+.sub-menu-list ul li a:hover {
+  font-weight: 600; 
+}
+
+.sub-menu-list ul li i.fas.fa-user {
+  margin-right: 12px;
+}
+
+.sub-menu-list ul li i.fas.fa-sign-out-alt {
+  margin-right: 12px;
+}
