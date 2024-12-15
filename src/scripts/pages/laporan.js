@@ -153,6 +153,24 @@ let laporanDataCache = [];
     }
   };
 
+  const applyFilters = () => {
+    const statusValue = document.querySelector('input[name="status"]:checked').value;
+    const kategoriValue = document.querySelector('input[name="kategori"]:checked').value;
+
+    const filteredLaporan = laporanDataCache.filter((laporan) => {
+      const statusMatch = statusValue === 'semua'
+        || (statusValue === 'selesai' && laporan.status === 'selesai')
+        || (statusValue === 'di proses' && laporan.status === 'di proses')
+        || (statusValue === 'belum_diproses' && laporan.status === 'belum_diproses');
+
+      const kategoriMatch = kategoriValue === 'semua' || laporan.kategori?.toLowerCase() === kategoriValue;
+
+      return statusMatch && kategoriMatch;
+    });
+
+    renderLaporan(filteredLaporan);
+  };
+  
   fetchLaporan()
     .then((laporanData) => {
       laporanDataCache = laporanData;
