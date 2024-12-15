@@ -104,8 +104,8 @@ const createLaporanPage = () => {
         <span>Diproses</span>
       </label>
       <label>
-        <input type="radio" name="status" value="belum_diproses">
-        <span>Belum Diproses</span>
+        <input type="radio" name="status" value="belum di proses">
+        <span>Belum Di proses</span>
       </label>
     </form>
   `;
@@ -163,7 +163,7 @@ const createLaporanPage = () => {
       const statusMatch = statusValue === 'semua'
         || (statusValue === 'selesai' && laporan.status === 'selesai')
         || (statusValue === 'di proses' && laporan.status === 'di proses')
-        || (statusValue === 'belum_diproses' && laporan.status === 'belum_diproses');
+        || (statusValue === 'belum di proses' && laporan.status === 'belum di proses');
 
       const kategoriMatch = kategoriValue === 'semua'
         || (kategoriValue === 'jalan' && laporan.kategori?.toLowerCase() === 'jalan')
