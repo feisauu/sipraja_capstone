@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
@@ -38,10 +39,10 @@ const createDetailnyaPage = async (id) => {
   const loadingContainer = document.createElement('div');
   loadingContainer.className = 'loading-container';
   loadingContainer.innerHTML = `
-    <div class="loading">
-      <p>Loading detail laporan...</p>
-    </div>
-  `;
+  <div class="loading">
+    <div class="loading-indicator"></div>
+  </div>
+`;
   document.body.appendChild(loadingContainer);
 
   try {
