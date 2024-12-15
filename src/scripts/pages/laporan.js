@@ -88,7 +88,7 @@ const createLaporanPage = () => {
   statusSidebar.className = 'sidebar';
   statusSidebar.innerHTML = `
     <h3>Status Laporan</h3>
-    <form>
+    <form id="status-filter">
       <label>
         <input type="radio" name="status" value="semua" checked>
         <span>Semua</span>
