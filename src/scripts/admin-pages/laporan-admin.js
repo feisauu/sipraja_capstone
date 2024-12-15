@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import '../../components/modal-admin.js';
-import ENDPOINT from '../globals/endpoint'; // Assuming you have the ENDPOINTs imported
+import ENDPOINT from '../globals/endpoint';
 // eslint-disable-next-line no-unused-vars
 import CONFIG from '../globals/config';
 
@@ -197,14 +197,14 @@ const createLaporanAdmin = () => {
   sidebarFilters.className = 'filters-sidebar-admin';
   sidebarFilters.innerHTML = `
     <h3>Status Laporan</h3>
-    <form>
+    <form id="statusForm">
       <label><input type="radio" name="status" value="semua" checked><span>Semua</span></label>
       <label><input type="radio" name="status" value="selesai"><span>Selesai</span></label>
-      <label><input type="radio" name="status" value="diproses"><span>Diproses</span></label>
-      <label><input type="radio" name="status" value="belum_diproses"><span>Belum Diproses</span></label>
+      <label><input type="radio" name="status" value="di proses"><span>Diproses</span></label>
+      <label><input type="radio" name="status" value="belum di proses"><span>Belum Diproses</span></label>
     </form>
     <h3>Kategori Laporan</h3>
-    <form>
+    <form id="kategoriForm">
       <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
       <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
       <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
@@ -212,23 +212,21 @@ const createLaporanAdmin = () => {
     </form>
   `;
 
-  // Pagination
   const pagination = document.createElement('div');
   pagination.className = 'pagination';
   pagination.innerHTML = `
-    <button class="page-btn" id="prevPageBtn">«</button>
-    <button class="page-btn active" id="page1Btn">1</button>
-    <button class="page-btn" id="page2Btn">2</button>
-    <button class="page-btn" id="page3Btn">3</button>
-    <button class="page-btn" id="nextPageBtn">»</button>
+    <button class="page-btn" id="prevPageBtn"><< Sebelumnya</button>
+    <div id="paginationControls" class="pagination-controls"></div>
+    <button class="page-btn" id="nextPageBtn">Selanjutnya >></button>
   `;
 
+  // Add sidebar filters to the page
   mainContent.append(header, filterSection, tableContainer, sidebarFilters, pagination);
   container.append(sidebar, mainContent);
   document.body.appendChild(container);
 
   let currentPage = 1;
-  const reportsPerPage = 10;
+  const reportsPerPage = 5;
 
   // Fetch Laporan data and display in table
   const fetchLaporanData = async (filters = {}, page = 1) => {
@@ -243,9 +241,13 @@ const createLaporanAdmin = () => {
     try {
       filters.page = page;
       filters.limit = reportsPerPage;
-      filters.search = filters.search || ''; // Add default value for search
+      filters.search = filters.search || ''; // Pastikan search selalu ada
 
-      console.log('Filters sent to API:', filters); // Log filters
+      // Default filters jika belum ada
+      filters.status = filters.status || 'semua';
+      filters.kategori = filters.kategori || 'semua';
+
+      console.log('Filters sent to API:', filters);
 
       const response = await fetch(`${ENDPOINT.GETLAPORAN}?${new URLSearchParams(filters).toString()}`, {
         method: 'GET',
@@ -262,33 +264,40 @@ const createLaporanAdmin = () => {
       }
 
       const data = await response.json();
-      console.log('Data received from API:', data); // Log data
+      console.log('Data received from API:', data);
 
       const laporanData = Array.isArray(data.message) ? data.message : [];
       const totalReports = data.total || 0;
 
-      if (laporanData.length === 0) {
-        console.error('No laporan data found.');
-        return;
-      }
-
       const laporanTableBody = document.getElementById('laporanTableBody');
       laporanTableBody.innerHTML = '';
 
+      if (laporanData.length === 0) {
+        laporanTableBody.innerHTML = '<tr><td colspan="7">Tidak ada laporan ditemukan.</td></tr>';
+        return;
+      }
+
+      // Apply filtering logic to laporanData as before
       const filteredLaporanData = laporanData.filter((laporan) => {
+        const matchesStatus = filters.status === 'semua' || laporan.status.toLowerCase() === filters.status;
+        const matchesKategori = filters.kategori === 'semua' || laporan.kategori.toLowerCase() === filters.kategori;
         const matchesSearch = filters.search.toLowerCase();
         const matchesNama = laporan.nama.toLowerCase().includes(matchesSearch);
         const matchesJudul = laporan.judul.toLowerCase().includes(matchesSearch);
-        const matchesStatus = laporan.status.toLowerCase().includes(matchesSearch);
+        const matchesStatusSearch = laporan.status.toLowerCase().includes(matchesSearch);
         const matchesLokasi = laporan.lokasi.toLowerCase().includes(matchesSearch);
-        const matchesKategori = laporan.kategori.toLowerCase().includes(matchesSearch);
+        const matchesKategoriSearch = laporan.kategori.toLowerCase().includes(matchesSearch);
         const matchesTanggal = (!filters.start_date || new Date(laporan.tanggal) >= new Date(filters.start_date))
           && (!filters.end_date || new Date(laporan.tanggal) <= new Date(filters.end_date));
 
-        return !laporan.isArchived && (matchesNama || matchesJudul || matchesStatus || matchesLokasi || matchesKategori) && matchesTanggal;
+        return !laporan.isArchived && matchesStatus && matchesKategori && (matchesNama || matchesJudul || matchesStatusSearch || matchesLokasi || matchesKategoriSearch) && matchesTanggal;
       });
 
-      filteredLaporanData.forEach((laporan, index) => {
+      console.log('Filtered laporanData:', filteredLaporanData);
+
+      const paginatedLaporanData = filteredLaporanData.slice((page - 1) * reportsPerPage, page * reportsPerPage);
+
+      paginatedLaporanData.forEach((laporan, index) => {
         const row = document.createElement('tr');
         row.id = `laporan-${laporan._id}`;
         row.innerHTML = `
@@ -317,12 +326,30 @@ const createLaporanAdmin = () => {
         laporanTableBody.appendChild(row);
       });
 
-      // Handle pagination
       const totalPages = Math.ceil(totalReports / reportsPerPage);
       updatePagination(totalPages, page);
     } catch (error) {
       console.error('Error fetching laporan data:', error);
     }
+  };
+
+  // Initial load of laporan data
+  fetchLaporanData({ status: 'semua', kategori: 'semua' }, currentPage);
+
+  // Filter event listeners
+  document.getElementById('statusForm').addEventListener('change', () => {
+    applyFilters();
+  });
+
+  document.getElementById('kategoriForm').addEventListener('change', () => {
+    applyFilters();
+  });
+
+  const applyFilters = () => {
+    const selectedStatus = document.querySelector('input[name="status"]:checked').value;
+    const selectedKategori = document.querySelector('input[name="kategori"]:checked').value;
+
+    fetchLaporanData({ status: selectedStatus, kategori: selectedKategori, search: '' }, currentPage);
   };
 
   // Handle pagination
@@ -347,8 +374,9 @@ const createLaporanAdmin = () => {
     }
 
     // Update page buttons dynamically
-    paginationControls.innerHTML = '';
+    paginationControls.innerHTML = ''; // Clear existing page buttons
 
+    // Adding page buttons
     for (let i = 1; i <= totalPages; i++) {
       const pageBtn = document.createElement('button');
       pageBtn.id = `page${i}Btn`;
