@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
@@ -98,7 +100,7 @@ const createLaporanPage = () => {
         <span>Selesai</span>
       </label>
       <label>
-        <input type="radio" name="status" value="di proses">
+        <input type="radio" name="status" value="diproses">
         <span>Diproses</span>
       </label>
       <label>
@@ -139,7 +141,7 @@ const createLaporanPage = () => {
   mainContent.className = 'main-content';
   mainContent.innerHTML = '<p>Loading laporan...</p>';
 
-let laporanDataCache = [];
+  let laporanDataCache = [];
 
   const renderLaporan = (laporanList) => {
     mainContent.innerHTML = '';
@@ -170,7 +172,7 @@ let laporanDataCache = [];
 
     renderLaporan(filteredLaporan);
   };
-  
+
   fetchLaporan()
     .then((laporanData) => {
       laporanDataCache = laporanData;
@@ -193,7 +195,7 @@ let laporanDataCache = [];
 
   statusFilter.addEventListener('change', applyFilters);
   kategoriFilter.addEventListener('change', applyFilters);
-  
+
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
 
