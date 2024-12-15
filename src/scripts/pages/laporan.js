@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-use-before-define */
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable import/extensions */
@@ -147,16 +149,24 @@ const createLaporanPage = () => {
   document.body.appendChild(mainContent);
 
   let laporanDataCache = []; // Cache laporan untuk mempermudah filter
+  let currentPage = 1; // Current page
+  const laporanPerPage = 5; // Number of laporan per page
 
   const renderLaporan = (laporanList) => {
     mainContent.innerHTML = '';
     if (laporanList.length === 0) {
       mainContent.innerHTML = '<p>Tidak ada laporan sesuai pencarian.</p>';
     } else {
-      laporanList.forEach((laporan) => {
+      const startIndex = (currentPage - 1) * laporanPerPage;
+      const endIndex = startIndex + laporanPerPage;
+      const paginatedLaporan = laporanList.slice(startIndex, endIndex);
+
+      paginatedLaporan.forEach((laporan) => {
         const card = createLaporanCard(laporan);
         mainContent.appendChild(card);
       });
+
+      renderPaginationButtons(laporanList.length);
     }
   };
 
@@ -178,7 +188,34 @@ const createLaporanPage = () => {
       return statusMatch && kategoriMatch;
     });
 
+    currentPage = 1; // Reset to the first page when applying filters
     renderLaporan(filteredLaporan);
+  };
+
+  const renderPaginationButtons = (totalLaporan) => {
+    const totalPages = Math.ceil(totalLaporan / laporanPerPage);
+
+    const paginationContainer = document.createElement('div');
+    paginationContainer.className = 'pagination-container';
+
+    const createPaginationButton = (text, page) => {
+      const button = document.createElement('button');
+      button.textContent = text;
+      button.disabled = currentPage === page;
+      button.addEventListener('click', () => {
+        currentPage = page;
+        renderLaporan(laporanDataCache);
+      });
+      return button;
+    };
+
+    paginationContainer.appendChild(createPaginationButton('<<', currentPage - 1 > 0 ? currentPage - 1 : currentPage));
+    for (let i = 1; i <= totalPages; i++) {
+      paginationContainer.appendChild(createPaginationButton(i, i));
+    }
+    paginationContainer.appendChild(createPaginationButton('>>', currentPage + 1 <= totalPages ? currentPage + 1 : currentPage));
+
+    mainContent.appendChild(paginationContainer);
   };
 
   fetchLaporan()
@@ -199,6 +236,7 @@ const createLaporanPage = () => {
   document.body.appendChild(footer);
 
   // Event Listener untuk filter status dan kategori
+  // Event Listener untuk filter status dan kategori
   const statusFilter = document.getElementById('status-filter');
   const kategoriFilter = document.getElementById('kategori-filter');
 
@@ -211,6 +249,7 @@ const createLaporanPage = () => {
   searchButton.addEventListener('click', () => {
     const keyword = searchInput.value.toLowerCase().trim();
     const filteredLaporan = laporanDataCache.filter((laporan) => laporan.judul.toLowerCase().includes(keyword));
+    currentPage = 1; // Reset to the first page when searching
     renderLaporan(filteredLaporan);
   });
 
