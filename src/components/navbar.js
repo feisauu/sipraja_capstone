@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable lines-between-class-members */
@@ -22,6 +23,28 @@ class Navbar extends HTMLElement {
             </ul>
             <div class="navbar-right">
               <i class="fas fa-bell" id="notification-bell"></i>
+              <div class="notification-wrap" id="notificationWrap">
+              <div class="notification-menu">
+              <div class="notification-item">
+              <span class="notif-badge selesai">● Laporan Selesai</span>
+              <span class="notif-time">2 hari yang lalu</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+              </div>
+              <div class="notification-item">
+              <span class="notif-badge diproses">● Laporan Diproses</span>
+              <span class="notif-time">2 hari yang lalu</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+              </div>
+            <div class="notification-item">
+            <span class="notif-badge selesai">● Laporan Selesai</span>
+            <span class="notif-time">2 hari yang lalu</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+            </div>
+              <div class="notif-footer">
+            <a href="#/notifikasi">Lihat semua notifikasi →</a>
+            </div>
+            </div>
+            </div>
               <div class="user" id="user-profile">
             <img src="../images/profil.webp" alt="User Profile" id="user-avatar">
             <span id="user-name">Loading...</span>
@@ -40,72 +63,101 @@ class Navbar extends HTMLElement {
 </header>
       `;
 
-    const subMenu = this.querySelector('#subMenu');
-    const userProfile = this.querySelector('#user-profile');
+    const subMenu = this.querySelector("#subMenu");
+    const userProfile = this.querySelector("#user-profile");
 
     // Event listener untuk toggle menu
-    userProfile.addEventListener('click', (event) => {
+    userProfile.addEventListener("click", (event) => {
       event.preventDefault(); // Mencegah perilaku default (jika ada)
-      subMenu.classList.toggle('open-menu');
+      subMenu.classList.toggle("open-menu");
     });
 
     // Event listener untuk navigasi pada menu
-    const menuItems = subMenu.querySelectorAll('a');
-    menuItems.forEach(item => {
-      item.addEventListener('click', (event) => {
+    const menuItems = subMenu.querySelectorAll("a");
+    menuItems.forEach((item) => {
+      item.addEventListener("click", (event) => {
         const target = event.target;
-        const href = target.getAttribute('href');
+        const href = target.getAttribute("href");
         if (href) {
           window.location.hash = href; // Navigasi ke halaman yang sesuai
-          subMenu.classList.remove('open-menu'); // Menutup menu setelah klik
+          subMenu.classList.remove("open-menu"); // Menutup menu setelah klik
         }
       });
     });
 
-    const bellIcon = this.querySelector('#notification-bell');
-    bellIcon.addEventListener('click', this.showNotificationDetails.bind(this));
+    const bellIcon = this.querySelector("#notification-bell");
+    const notificationWrap = this.querySelector("#notificationWrap");
+
+    // Event listener untuk toggle notifikasi
+    bellIcon.addEventListener("click", (event) => {
+      event.stopPropagation();
+      notificationWrap.classList.toggle("open-menu");
+    });
+
+    // Menutup dropdown notif saat klik di luar
+    document.addEventListener("click", (event) => {
+      if (
+        !notificationWrap.contains(event.target) &&
+        !bellIcon.contains(event.target)
+      ) {
+        notificationWrap.classList.remove("open-menu");
+      }
+    });
+
+    // Menutup submenu user saat klik di luar
+    document.addEventListener("click", (event) => {
+      if (
+        !subMenu.contains(event.target) && 
+        !userProfile.contains(event.target)
+      ) {
+        subMenu.classList.remove("open-menu");
+      }
+    });
 
     this.loadUserData();
   }
 
   showNotificationDetails() {
-    window.location.hash = '#/notifikasi';
+    window.location.hash = "#/notifikasi";
   }
 
   async loadUserData() {
-    const userId = localStorage.getItem('userId');
-    const authToken = localStorage.getItem('authToken');
+    const userId = localStorage.getItem("userId");
+    const authToken = localStorage.getItem("authToken");
 
     if (!userId || !authToken) {
-      console.error('User ID atau Auth Token tidak ditemukan di localStorage');
+      console.error("User ID atau Auth Token tidak ditemukan di localStorage");
       return;
     }
 
     try {
-      const response = await fetch(`https://backend-sipraja.vercel.app/api/v1/user/${userId}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `https://backend-sipraja.vercel.app/api/v1/user/${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Gagal mengambil data pengguna');
+        throw new Error("Gagal mengambil data pengguna");
       }
 
       const data = await response.json();
 
-      const userAvatar = this.querySelector('#user-avatar');
-      const userName = this.querySelector('#user-name');
+      const userAvatar = this.querySelector("#user-avatar");
+      const userName = this.querySelector("#user-name");
 
-      userAvatar.src = data.image || '../images/profil.webp';
-      userName.textContent = data.nama || 'Nama tidak tersedia';
+      userAvatar.src = data.image || "../images/profil.webp";
+      userName.textContent = data.nama || "Nama tidak tersedia";
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
     }
   }
 }
 
-customElements.define('navbar-component', Navbar);
+customElements.define("navbar-component", Navbar);
