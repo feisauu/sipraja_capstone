@@ -165,7 +165,10 @@ const createLaporanPage = () => {
         || (statusValue === 'di proses' && laporan.status === 'di proses')
         || (statusValue === 'belum_diproses' && laporan.status === 'belum_diproses');
 
-      const kategoriMatch = kategoriValue === 'semua' || laporan.kategori?.toLowerCase() === kategoriValue;
+      const kategoriMatch = kategoriValue === 'semua'
+        || (kategoriValue === 'jalan' && laporan.kategori?.toLowerCase() === 'jalan')
+        || (kategoriValue === 'jembatan' && laporan.kategori?.toLowerCase() === 'jembatan')
+        || (kategoriValue === 'lalu_lintas' && laporan.kategori?.toLowerCase() === 'lalu_lintas');
 
       return statusMatch && kategoriMatch;
     });
@@ -197,7 +200,6 @@ const createLaporanPage = () => {
   statusFilter.addEventListener('change', applyFilters);
   kategoriFilter.addEventListener('change', applyFilters);
 
-  // Event Listener untuk pencarian
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
 
