@@ -139,7 +139,12 @@ const createLaporanPage = () => {
 
   const mainContent = document.createElement('div');
   mainContent.className = 'main-content';
-  mainContent.innerHTML = '<p>Loading laporan...</p>';
+
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'loading-indicator';
+
+  mainContent.appendChild(loadingIndicator);
+  document.body.appendChild(mainContent);
 
   let laporanDataCache = []; // Cache laporan untuk mempermudah filter
 
