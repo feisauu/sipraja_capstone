@@ -100,7 +100,7 @@ const createLaporanPage = () => {
         <span>Selesai</span>
       </label>
       <label>
-        <input type="radio" name="status" value="diproses">
+        <input type="radio" name="status" value="di proses">
         <span>Diproses</span>
       </label>
       <label>
@@ -141,7 +141,7 @@ const createLaporanPage = () => {
   mainContent.className = 'main-content';
   mainContent.innerHTML = '<p>Loading laporan...</p>';
 
-  let laporanDataCache = [];
+  let laporanDataCache = []; // Cache laporan untuk mempermudah filter
 
   const renderLaporan = (laporanList) => {
     mainContent.innerHTML = '';
@@ -175,7 +175,7 @@ const createLaporanPage = () => {
 
   fetchLaporan()
     .then((laporanData) => {
-      laporanDataCache = laporanData;
+      laporanDataCache = laporanData; // Simpan data laporan di cache
       renderLaporan(laporanData);
     })
     .catch((error) => {
@@ -190,12 +190,14 @@ const createLaporanPage = () => {
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
+  // Event Listener untuk filter status dan kategori
   const statusFilter = document.getElementById('status-filter');
   const kategoriFilter = document.getElementById('kategori-filter');
 
   statusFilter.addEventListener('change', applyFilters);
   kategoriFilter.addEventListener('change', applyFilters);
 
+  // Event Listener untuk pencarian
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
 
