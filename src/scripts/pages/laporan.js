@@ -112,7 +112,7 @@ const createLaporanPage = () => {
   kategoriSidebar.className = 'sidebar';
   kategoriSidebar.innerHTML = `
     <h3>Kategori Laporan</h3>
-    <form>
+    <form id="kategori-filter">
       <label>
         <input type="radio" name="kategori" value="semua" checked>
         <span>Semua</span>
