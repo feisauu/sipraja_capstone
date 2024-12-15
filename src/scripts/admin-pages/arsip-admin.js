@@ -210,6 +210,8 @@ const createArsipAdmin = () => {
         const filteredLaporan = (data.message || []).filter((laporan) => {
           const matchSearch = laporan.judul.toLowerCase().includes(search.toLowerCase())
           || laporan.nama.toLowerCase().includes(search.toLowerCase())
+          || laporan.status.toLowerCase().includes(search.toLowerCase())
+          || laporan.kategori.toLowerCase().includes(search.toLowerCase())
           || laporan.lokasi.toLowerCase().includes(search.toLowerCase());
           const matchStartDate = !startDate || new Date(laporan.tanggal) >= new Date(startDate);
           const matchEndDate = !endDate || new Date(laporan.tanggal) <= new Date(endDate);
