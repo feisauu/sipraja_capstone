@@ -64,7 +64,7 @@ const createEditLaporanPage = async () => {
   loadingContainer.className = 'edit-loading-container';
   loadingContainer.innerHTML = `
     <div class="edit-loading">
-      <p>Loading report for editing...</p>
+       <div class="loading-indicator"></div>
     </div>
   `;
   document.body.appendChild(loadingContainer);
