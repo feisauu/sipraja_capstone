@@ -59,7 +59,6 @@ const createDashboardAdmin = async () => {
   // Add loading indicator
   const loadingIndicator = document.createElement('div');
   loadingIndicator.className = 'loading-indicator';
-  loadingIndicator.textContent = 'Loading...';
   contentAdmin.append(loadingIndicator);
 
   // Append all to container
