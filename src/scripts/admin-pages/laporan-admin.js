@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable new-cap */
 /* eslint-disable max-len */
 /* eslint-disable import/extensions */
@@ -172,6 +173,7 @@ const createLaporanAdmin = () => {
   const tableContainer = document.createElement('div');
   tableContainer.className = 'table-container-admin';
   tableContainer.innerHTML = `
+  <div id="paginationControls"></div>
     <table>
       <thead>
         <tr>
@@ -241,12 +243,16 @@ const createLaporanAdmin = () => {
     try {
       filters.page = page;
       filters.limit = reportsPerPage;
+      filters.search = filters.search || ''; // Add default value for search
+
+      console.log('Filters sent to API:', filters); // Log filters
 
       const response = await fetch(`${ENDPOINT.GETLAPORAN}?${new URLSearchParams(filters).toString()}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
         },
       });
 
@@ -256,6 +262,8 @@ const createLaporanAdmin = () => {
       }
 
       const data = await response.json();
+      console.log('Data received from API:', data); // Log data
+
       const laporanData = Array.isArray(data.message) ? data.message : [];
       const totalReports = data.total || 0;
 
@@ -267,34 +275,45 @@ const createLaporanAdmin = () => {
       const laporanTableBody = document.getElementById('laporanTableBody');
       laporanTableBody.innerHTML = '';
 
-      const filteredLaporanData = laporanData.filter((laporan) => !laporan.isArchived);
+      const filteredLaporanData = laporanData.filter((laporan) => {
+        const matchesSearch = filters.search.toLowerCase();
+        const matchesNama = laporan.nama.toLowerCase().includes(matchesSearch);
+        const matchesJudul = laporan.judul.toLowerCase().includes(matchesSearch);
+        const matchesStatus = laporan.status.toLowerCase().includes(matchesSearch);
+        const matchesLokasi = laporan.lokasi.toLowerCase().includes(matchesSearch);
+        const matchesKategori = laporan.kategori.toLowerCase().includes(matchesSearch);
+        const matchesTanggal = (!filters.start_date || new Date(laporan.tanggal) >= new Date(filters.start_date))
+          && (!filters.end_date || new Date(laporan.tanggal) <= new Date(filters.end_date));
+
+        return !laporan.isArchived && (matchesNama || matchesJudul || matchesStatus || matchesLokasi || matchesKategori) && matchesTanggal;
+      });
 
       filteredLaporanData.forEach((laporan, index) => {
         const row = document.createElement('tr');
         row.id = `laporan-${laporan._id}`;
         row.innerHTML = `
-        <td>${(page - 1) * reportsPerPage + index + 1}</td>
-        <td><a href="#/konfirmasi/${laporan._id}">
-            <strong>${laporan.judul}</strong><br>
-            <small>${laporan.nama}</small>
-          </a>
-        </td>
-        <td><span class="status ${laporan.status.toLowerCase()}" id="status-${laporan._id}">${laporan.status}</span></td>
-        <td>${laporan.kategori}</td>
-        <td>${laporan.lokasi}</td>
-        <td>${laporan.tanggal}</td>
-        <td class="action-icons">
-          <button class="icon edit-btn" onclick="showEditForm('${laporan._id}', '${laporan.status}')">
-            <i class="fas fa-edit"></i> 
-          </button>
-          <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id}')">
-            <i class="fas fa-trash-alt"></i> 
-          </button>
-          <button class="archive-btn" onclick="archiveLaporan('${laporan._id}')">
-            <i class="fas fa-folder-plus"></i> 
-          </button>
-        </td>
-      `;
+          <td>${(page - 1) * reportsPerPage + index + 1}</td>
+          <td><a href="#/konfirmasi/${laporan._id}">
+              <strong>${laporan.judul}</strong><br>
+              <small>${laporan.nama}</small>
+            </a>
+          </td>
+          <td><span class="status ${laporan.status.toLowerCase()}" id="status-${laporan._id}">${laporan.status}</span></td>
+          <td>${laporan.kategori}</td>
+          <td>${laporan.lokasi}</td>
+          <td>${laporan.tanggal}</td>
+          <td class="action-icons">
+            <button class="icon edit-btn" onclick="showEditForm('${laporan._id}', '${laporan.status}')">
+              <i class="fas fa-edit"></i> 
+            </button>
+            <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id}')">
+              <i class="fas fa-trash-alt"></i> 
+            </button>
+            <button class="archive-btn" onclick="archiveLaporan('${laporan._id}')">
+              <i class="fas fa-folder-plus"></i> 
+            </button>
+          </td>
+        `;
         laporanTableBody.appendChild(row);
       });
 
@@ -308,29 +327,51 @@ const createLaporanAdmin = () => {
 
   // Handle pagination
   const updatePagination = (totalPages, currentPage) => {
+    const paginationControls = document.getElementById('paginationControls');
+
+    if (!paginationControls) {
+      console.error('Pagination controls element not found.');
+      return;
+    }
+
     // Disable/enable pagination buttons based on currentPage
-    document.getElementById('prevPageBtn').disabled = currentPage === 1;
-    document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+
+    if (prevPageBtn) {
+      prevPageBtn.disabled = currentPage === 1;
+    }
+
+    if (nextPageBtn) {
+      nextPageBtn.disabled = currentPage === totalPages;
+    }
 
     // Update page buttons dynamically
+    paginationControls.innerHTML = '';
+
     for (let i = 1; i <= totalPages; i++) {
-      const pageBtn = document.getElementById(`page${i}Btn`);
-      if (pageBtn) {
-        pageBtn.textContent = i;
-        pageBtn.classList.toggle('active', i === currentPage);
-      }
+      const pageBtn = document.createElement('button');
+      pageBtn.id = `page${i}Btn`;
+      pageBtn.textContent = i;
+      pageBtn.classList.add('page-btn');
+      pageBtn.classList.toggle('active', i === currentPage);
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        fetchLaporanData({}, i);
+      });
+      paginationControls.appendChild(pageBtn);
     }
   };
 
   // Handle page change
-  document.getElementById('prevPageBtn').addEventListener('click', () => {
+  document.getElementById('prevPageBtn')?.addEventListener('click', () => {
     if (currentPage > 1) {
       currentPage--;
       fetchLaporanData({}, currentPage);
     }
   });
 
-  document.getElementById('nextPageBtn').addEventListener('click', () => {
+  document.getElementById('nextPageBtn')?.addEventListener('click', () => {
     currentPage++;
     fetchLaporanData({}, currentPage);
   });
@@ -338,11 +379,20 @@ const createLaporanAdmin = () => {
   // Handle filter button click
   const filterButton = document.getElementById('filterBtn');
   filterButton.addEventListener('click', () => {
-    const searchInput = document.getElementById('searchInput').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    const status = document.querySelector('input[name="status"]:checked').value;
-    const kategori = document.querySelector('input[name="kategori"]:checked').value;
+    const searchInput = document.getElementById('searchInput')?.value || '';
+    const startDate = document.getElementById('startDate')?.value || '';
+    const endDate = document.getElementById('endDate')?.value || '';
+    const status = document.querySelector('input[name="status"]:checked')?.value || 'semua';
+    const kategori = document.querySelector('input[name="kategori"]:checked')?.value || 'semua';
+
+    // Log applied filters
+    console.log('Filters applied:', {
+      search: searchInput,
+      start_date: startDate,
+      end_date: endDate,
+      status: status !== 'semua' ? status : '',
+      kategori: kategori !== 'semua' ? kategori : '',
+    });
 
     // Send filters to the API
     const filters = {
