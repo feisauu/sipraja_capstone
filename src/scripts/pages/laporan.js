@@ -188,7 +188,12 @@ let laporanDataCache = [];
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
+  const statusFilter = document.getElementById('status-filter');
+  const kategoriFilter = document.getElementById('kategori-filter');
 
+  statusFilter.addEventListener('change', applyFilters);
+  kategoriFilter.addEventListener('change', applyFilters);
+  
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
 
