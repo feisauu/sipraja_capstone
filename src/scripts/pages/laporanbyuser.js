@@ -154,16 +154,24 @@ const createLaporanPageUser = () => {
   document.body.appendChild(mainContent);
 
   let laporanDataCache = [];
+  let currentPage = 1; 
+  const laporanPerPage = 5;
 
   const renderLaporan = (laporanList) => {
     mainContent.innerHTML = '';
     if (laporanList.length === 0) {
       mainContent.innerHTML = '<p>Tidak ada laporan sesuai pencarian.</p>';
     } else {
-      laporanList.forEach((laporan) => {
+      const startIndex = (currentPage - 1) * laporanPerPage;
+      const endIndex = startIndex + laporanPerPage;
+      const paginatedLaporan = laporanList.slice(startIndex, endIndex);
+
+      paginatedLaporan.forEach((laporan) => {
         const card = createLaporanCard(laporan);
         mainContent.appendChild(card);
       });
+
+      renderPaginationButtons(laporanList.length);
     }
   };
 
