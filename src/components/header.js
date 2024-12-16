@@ -4,11 +4,11 @@ class HeaderComponent extends HTMLElement {
     <header>
       <nav>
         <div class="navbar-left">
-          <div class="logo">
-            <i class="fas fa-square"></i>
-            <span>SIPRAJA</span>
-          </div>
-        </div>
+              <div class="logo">
+                <span class="logo-icon">S</span>
+              <span class="logo-text">SIPRAJA</span>
+              </div>
+            </div>
         <div class="hamburger" id="hamburger">
           <i class="fas fa-bars"></i>
         </div>
