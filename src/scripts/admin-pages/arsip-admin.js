@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-loop-func */
@@ -195,6 +196,10 @@ const createArsipAdmin = () => {
       return;
     }
 
+    // Get selected filter values
+    const statusFilter = document.querySelector('input[name="status"]:checked').value;
+    const kategoriFilter = document.querySelector('input[name="kategori"]:checked').value;
+
     try {
       const response = await fetch(`${ENDPOINT.GETLAPORAN}`, {
         method: 'GET',
@@ -209,16 +214,21 @@ const createArsipAdmin = () => {
         const data = await response.json();
         const filteredLaporan = (data.message || []).filter((laporan) => {
           const matchSearch = laporan.judul.toLowerCase().includes(search.toLowerCase())
-          || laporan.nama.toLowerCase().includes(search.toLowerCase())
-          || laporan.status.toLowerCase().includes(search.toLowerCase())
-          || laporan.kategori.toLowerCase().includes(search.toLowerCase())
-          || laporan.lokasi.toLowerCase().includes(search.toLowerCase());
+                    || laporan.nama.toLowerCase().includes(search.toLowerCase())
+                    || laporan.status.toLowerCase().includes(search.toLowerCase())
+                    || laporan.kategori.toLowerCase().includes(search.toLowerCase())
+                    || laporan.lokasi.toLowerCase().includes(search.toLowerCase());
           const matchStartDate = !startDate || new Date(laporan.tanggal) >= new Date(startDate);
           const matchEndDate = !endDate || new Date(laporan.tanggal) <= new Date(endDate);
-          return matchSearch && matchStartDate && matchEndDate && laporan.isArchived;
+          const matchStatus = statusFilter === 'semua' || laporan.status.toLowerCase() === statusFilter;
+          const matchKategori = kategoriFilter === 'semua' || laporan.kategori.toLowerCase() === kategoriFilter;
+          return matchSearch && matchStartDate && matchEndDate && matchStatus && matchKategori && laporan.isArchived;
         });
 
         populateTable(filteredLaporan);
+        totalReports = filteredLaporan.length; // Update totalReports here
+        const totalPages = Math.ceil(totalReports / reportsPerPage);
+        updatePagination(totalPages, currentPage);
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch archived reports.');
@@ -241,20 +251,20 @@ const createArsipAdmin = () => {
       return;
     }
 
-    arsip.forEach((laporan, index) => {
+    arsip.slice((currentPage - 1) * reportsPerPage, currentPage * reportsPerPage).forEach((laporan, index) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-      <td>${index + 1}</td>
-      <td><strong>${laporan.judul}</strong><br><small>${laporan.nama}</small></td>
-      <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
-      <td>${laporan.kategori}</td>
-      <td>${laporan.lokasi}</td>
-      <td>${laporan.tanggal}</td>
-      <td class="action-icons">
-        <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id || ''}')"><i class="fas fa-trash-alt"></i></button>
-        <button class="icon unarchive-btn" onclick="unarchiveLaporan('${laporan._id || ''}')"><i class="fas fa-folder-open"></i></button>
-      </td>
-    `;
+            <td>${(currentPage - 1) * reportsPerPage + index + 1}</td>
+            <td><strong>${laporan.judul}</strong><br><small>${laporan.nama}</small></td>
+            <td><span class="status ${laporan.status.toLowerCase()}">${laporan.status}</span></td>
+            <td>${laporan.kategori}</td>
+            <td>${laporan.lokasi}</td>
+            <td>${laporan.tanggal}</td>
+            <td class="action-icons">
+                <button class="icon delete-btn" onclick="deleteLaporan('${laporan._id || ''}')"><i class="fas fa-trash-alt"></i></button>
+                <button class="icon unarchive-btn" onclick="unarchiveLaporan('${laporan._id || ''}')"><i class="fas fa-folder-open"></i></button>
+            </td>
+        `;
       tableBody.appendChild(row);
     });
   };
@@ -263,32 +273,29 @@ const createArsipAdmin = () => {
   const sidebarFilters = document.createElement('div');
   sidebarFilters.className = 'filters-sidebar-admin';
   sidebarFilters.innerHTML = `
-  <h3>Status Laporan</h3>
-  <form>
-    <label><input type="radio" name="status" value="semua" checked><span>Semua</span></label>
-    <label><input type="radio" name="status" value="selesai"><span>Selesai</span></label>
-    <label><input type="radio" name="status" value="diproses"><span>Diproses</span></label>
-    <label><input type="radio" name="status" value="belum_diproses"><span>Belum Diproses</span></label>
-  </form>
-  <h3>Kategori Laporan</h3>
-  <form>
-    <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
-    <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
-    <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
-    <label><input type="radio" name="kategori" value="lalu_lintas"><span>Lalu Lintas</span></label>
-  </form>
+    <h3>Status Laporan</h3>
+    <form>
+        <label><input type="radio" name="status" value="semua" checked><span>Semua</span></label>
+        <label><input type="radio" name="status" value="selesai"><span>Selesai</span></label>
+        <label><input type="radio" name="status" value="di proses"><span>Diproses</span></label>
+        <label><input type="radio" name="status" value="belum di proses"><span>Belum Diproses</span></label>
+    </form>
+    <h3>Kategori Laporan</h3>
+    <form>
+        <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
+        <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
+        <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
+        <label><input type="radio" name="kategori" value="lalu lintas"><span>Lalu Lintas</span></label>
+    </form>
 `;
 
   // Pagination
   const pagination = document.createElement('div');
   pagination.className = 'pagination';
   pagination.innerHTML = `
-  <button class="page-btn" id="prevPageBtn">«</button>
-  <div id="paginationPages"></div>
-  <button class="page-btn active">1</button>
-  <button class="page-btn">2</button>
-  <button class="page-btn">3</button>
-  <button class="page-btn" id="nextPageBtn">»</button>
+    <button class="page-btn" id="prevPageBtn"><< Sebelumnya</button>
+    <div id="paginationPages"></div>
+    <button class="page-btn" id="nextPageBtn">Selanjutnya >></button>
 `;
 
   mainContent.append(header, filterSection, tableSection, sidebarFilters, pagination);
@@ -296,10 +303,9 @@ const createArsipAdmin = () => {
   document.body.appendChild(container);
 
   let currentPage = 1;
-  const reportsPerPage = 10;
-  const totalReports = 0; // Initialize totalReports here
+  const reportsPerPage = 5;
+  let totalReports = 0;
 
-  // Fetch data after DOM setup
   tableContainer();
 
   // Handle pagination
@@ -349,6 +355,13 @@ const createArsipAdmin = () => {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     tableContainer(searchInput, startDate, endDate);
+  });
+
+  // Listen for filter changes and update table
+  document.querySelectorAll('input[name="status"], input[name="kategori"]').forEach((filter) => {
+    filter.addEventListener('change', () => {
+      tableContainer();
+    });
   });
 
   // Print Report Function
