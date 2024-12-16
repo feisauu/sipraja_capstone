@@ -208,7 +208,7 @@ const createLaporanAdmin = () => {
       <label><input type="radio" name="kategori" value="semua" checked><span>Semua</span></label>
       <label><input type="radio" name="kategori" value="jalan"><span>Jalan</span></label>
       <label><input type="radio" name="kategori" value="jembatan"><span>Jembatan</span></label>
-      <label><input type="radio" name="kategori" value="lalu_lintas"><span>Lalu Lintas</span></label>
+      <label><input type="radio" name="kategori" value="lalu lintas"><span>Lalu Lintas</span></label>
     </form>
   `;
 
