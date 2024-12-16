@@ -197,6 +197,32 @@ const createLaporanPageUser = () => {
     renderLaporan(filteredLaporan);
   };
 
+    const renderPaginationButtons = (totalLaporan) => {
+    const totalPages = Math.ceil(totalLaporan / laporanPerPage);
+
+    const paginationContainer = document.createElement('div');
+    paginationContainer.className = 'pagination-container';
+
+    const createPaginationButton = (text, page) => {
+      const button = document.createElement('button');
+      button.textContent = text;
+      button.disabled = currentPage === page;
+      button.addEventListener('click', () => {
+        currentPage = page;
+        renderLaporan(laporanDataCache);
+      });
+      return button;
+    };
+
+    paginationContainer.appendChild(createPaginationButton('<<', currentPage - 1 > 0 ? currentPage - 1 : currentPage));
+    for (let i = 1; i <= totalPages; i++) {
+      paginationContainer.appendChild(createPaginationButton(i, i));
+    }
+    paginationContainer.appendChild(createPaginationButton('>>', currentPage + 1 <= totalPages ? currentPage + 1 : currentPage));
+
+    mainContent.appendChild(paginationContainer);
+  };
+
   fetchLaporan()
     .then((laporanData) => {
       laporanDataCache = laporanData.filter((laporan) => laporan.userId === userId);
