@@ -1,7 +1,8 @@
+/* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
-import ENDPOINT from '../globals/endpoint';
 import Swal from 'sweetalert2';
+import ENDPOINT from '../globals/endpoint';
 
 const getLaporanIdFromUrl = () => {
   const params = new URLSearchParams(window.location.hash.split('?')[1]);
@@ -156,6 +157,10 @@ const createEditLaporanPage = async () => {
     document.getElementById('form-laporan').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const saveButton = document.querySelector('.form-submit-button');
+      saveButton.disabled = true;
+      saveButton.innerHTML = 'Menyimpan...';
+
       const updatedData = {
         judul: document.getElementById('judul').value,
         nama: document.getElementById('nama').value,
@@ -172,16 +177,24 @@ const createEditLaporanPage = async () => {
           title: 'Berhasil',
           text: 'Laporan berhasil diperbarui!',
         });
-        window.location.hash = '#/laporan';
+
+        saveButton.innerHTML = 'Disimpan';
+
+        // Redirect after a short delay
+        setTimeout(() => {
+          window.location.hash = '#/laporan';
+        }, 1500); // Delay before redirect
       } catch (error) {
         await Swal.fire({
           icon: 'error',
           title: 'Gagal',
           text: `Gagal memperbarui laporan: ${error.message}`,
         });
+
+        saveButton.disabled = false;
+        saveButton.innerHTML = 'Simpan';
       }
     });
-
   } catch (error) {
     loadingContainer.remove();
     await Swal.fire({
