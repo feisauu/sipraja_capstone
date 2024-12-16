@@ -208,6 +208,20 @@ const createKonfirmasi = async (id) => {
       continueButton.href = '#';
       continueButton.innerHTML = '<i class="fas fa-paper-plane"></i> Teruskan ke Instansi';
 
+      document.body.appendChild(continueButton);
+
+      continueButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        // Show SweetAlert
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Laporan berhasil dikirimkan ke instansi.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      });
+
       // Handling supporting images (if any)
       if (Array.isArray(laporan.gambar_pendukung) && laporan.gambar_pendukung.length > 0) {
         const photosContainer = document.createElement('div');
