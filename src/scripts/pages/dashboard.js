@@ -8,7 +8,19 @@ const createDashboard = () => {
   const navbar = document.createElement('navbar-component');
   document.body.appendChild(navbar);
 
-  const hero = document.createElement('hero-section');
+  const hero = document.createElement('section');
+  hero.classList.add('hero');
+  hero.id = 'home';
+  hero.innerHTML = `
+    <div class="hero-content">
+      <h1>Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyaman <span class="highlight">Kota Bersama</span>!</h1>
+      <p>"Bantu kami memperbaiki kota dengan melaporkan kerusakan yang ada."</p>
+      <button class="cta-btn" onclick="window.location.href='#/laporan'">Get Started</button>
+    </div>
+    <div class="hero-image">
+      <img src="../images/image1.png" alt="People reporting issues">
+    </div>
+  `;
   document.body.appendChild(hero);
 
   const features = document.createElement('section');
