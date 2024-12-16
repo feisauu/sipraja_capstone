@@ -130,7 +130,7 @@ const createLaporanPage = () => {
         <span>Jembatan</span>
       </label>
       <label>
-        <input type="radio" name="kategori" value="lalu_lintas">
+        <input type="radio" name="kategori" value="lalu lintas">
         <span>Lalu Lintas</span>
       </label>
     </form>
@@ -183,7 +183,7 @@ const createLaporanPage = () => {
       const kategoriMatch = kategoriValue === 'semua'
         || (kategoriValue === 'jalan' && laporan.kategori?.toLowerCase() === 'jalan')
         || (kategoriValue === 'jembatan' && laporan.kategori?.toLowerCase() === 'jembatan')
-        || (kategoriValue === 'lalu_lintas' && laporan.kategori?.toLowerCase() === 'lalu_lintas');
+        || (kategoriValue === 'lalu lintas' && laporan.kategori?.toLowerCase() === 'lalu lintas');
 
       return statusMatch && kategoriMatch;
     });
