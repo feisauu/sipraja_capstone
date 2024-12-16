@@ -107,11 +107,11 @@ const createLaporanPageUser = () => {
         <span>Selesai</span>
       </label>
       <label>
-        <input type="radio" name="status" value="diproses">
+        <input type="radio" name="status" value="di proses">
         <span>Diproses</span>
       </label>
       <label>
-        <input type="radio" name="status" value="belum_diproses">
+        <input type="radio" name="status" value="belum di proses">
         <span>Belum Diproses</span>
       </label>
     </form>
@@ -135,7 +135,7 @@ const createLaporanPageUser = () => {
         <span>Jembatan</span>
       </label>
       <label>
-        <input type="radio" name="kategori" value="lalu_lintas">
+        <input type="radio" name="kategori" value="lalu lintas">
         <span>Lalu Lintas</span>
       </label>
     </form>
@@ -173,6 +173,28 @@ const createLaporanPageUser = () => {
 
       renderPaginationButtons(laporanList.length);
     }
+  };
+
+    const applyFilters = () => {
+    const statusValue = document.querySelector('input[name="status"]:checked').value;
+    const kategoriValue = document.querySelector('input[name="kategori"]:checked').value;
+
+    const filteredLaporan = laporanDataCache.filter((laporan) => {
+      const statusMatch = statusValue === 'semua'
+        || (statusValue === 'selesai' && laporan.status === 'selesai')
+        || (statusValue === 'di proses' && laporan.status === 'di proses')
+        || (statusValue === 'belum di proses' && laporan.status === 'belum di proses');
+
+      const kategoriMatch = kategoriValue === 'semua'
+        || (kategoriValue === 'jalan' && laporan.kategori?.toLowerCase() === 'jalan')
+        || (kategoriValue === 'jembatan' && laporan.kategori?.toLowerCase() === 'jembatan')
+        || (kategoriValue === 'lalu lintas' && laporan.kategori?.toLowerCase() === 'lalu lintas');
+
+      return statusMatch && kategoriMatch;
+    });
+
+    currentPage = 1; // Reset to the first page when applying filters
+    renderLaporan(filteredLaporan);
   };
 
   fetchLaporan()
