@@ -1204,9 +1204,12 @@ form label span {
 }
 
 .laporan-card-right {
+  display: flex;
+  flex-direction: column; 
   flex-grow: 1;
   margin-right: 10px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
+  overflow: hidden; 
 }
 
 .laporan-card-right h4 {
@@ -1229,12 +1232,19 @@ form label span {
 
 .laporan-card-right p {
   margin-bottom: 10px;
-  color: #667085
+  color: #667085;
 }
+
 .laporan-card-right .deskripsi {
   color: #000000; 
   margin-right: 10px;
+  max-width: 100%; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  box-sizing: border-box; 
 }
+
 /* Badge Umum */
 .status-badge {
   display: inline-block;
