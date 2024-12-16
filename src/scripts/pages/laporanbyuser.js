@@ -240,6 +240,12 @@ const createLaporanPageUser = () => {
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
 
+  const statusFilter = document.getElementById('status-filter');
+  const kategoriFilter = document.getElementById('kategori-filter');
+
+  statusFilter.addEventListener('change', applyFilters);
+  kategoriFilter.addEventListener('change', applyFilters);
+  
   // Event Listener untuk pencarian
   const searchButton = document.getElementById('search-button');
   const searchInput = document.getElementById('search-input');
@@ -247,6 +253,7 @@ const createLaporanPageUser = () => {
   searchButton.addEventListener('click', () => {
     const keyword = searchInput.value.toLowerCase().trim();
     const filteredLaporan = laporanDataCache.filter((laporan) => laporan.judul.toLowerCase().includes(keyword));
+    currentPage = 1;
     renderLaporan(filteredLaporan);
   });
 
