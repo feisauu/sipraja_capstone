@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
@@ -13,7 +14,7 @@ const fetchLaporanDetail = async (id) => {
   try {
     const response = await fetch(`${ENDPOINT.GETLAPORAN}${id}`, {
       method: 'GET',
-      credentials:'include',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -57,41 +58,38 @@ const createDetailnyaPage = async (id) => {
 
     detailContainer.innerHTML = `
       <h1>${laporan.judul || 'Judul tidak tersedia'}</h1>
-      <div class="status-badge">Laporan Selesai</div>
-      
+      <div class="status-badge ${laporan.status === 'selesai' ? 'status-done' : laporan.status === 'di proses' ? 'status-in-progress' : 'status-pending'}"> ${laporan.status || 'Status tidak tersedia'}</div>
       <div class="detail-content">
         <!-- Left section with profile and image gallery -->
         <div class="image-gallery">
           ${
-            laporan.gambar_pendukung?.length > 0
-              ? laporan.gambar_pendukung
-                  .map(
-                    (imageUrl, index) =>
-                      `<img src="${imageUrl}" alt="Gambar Pendukung ${index + 1}" class="image-item" />`
-                  )
-                  .join('')
-              : '<p>Gambar tidak tersedia</p>'
-          }
+  laporan.gambar_pendukung?.length > 0
+    ? laporan.gambar_pendukung
+      .map(
+        (imageUrl, index) => `<img src="${imageUrl}" alt="Gambar Pendukung ${index + 1}" class="image-item" />`,
+      )
+      .join('')
+    : '<p>Gambar tidak tersedia</p>'
+}
         </div>
 
         <!-- Right section with report details -->
         <div class="text-content">
-          <p><strong>Nama Pelapor:</strong> ${laporan.nama || 'Tidak tersedia'}</p>
-          <p><strong>Tanggal Laporan:</strong> ${laporan.tanggal || 'Tidak tersedia'}</p>
-          <p><strong>Kategori Laporan:</strong> ${laporan.kategori || 'Tidak tersedia'}</p>
-          <p><strong>Lokasi:</strong> ${laporan.lokasi || 'Tidak tersedia'}</p>
-          <p><strong>Status:</strong> ${laporan.status || 'Tidak tersedia'}</p>
-          <p><strong>Deskripsi Masalah:</strong></p>
-          <p>${laporan.description || 'Tidak tersedia'}</p>
+          <p><strong>Nama Pelapor:</strong><br>  ${laporan.nama || 'Tidak tersedia'}</p>
+          <p><strong>Tanggal Laporan:</strong><br> ${laporan.tanggal || 'Tidak tersedia'}</p>
+          <p><strong>Kategori Laporan:</strong><br> ${laporan.kategori || 'Tidak tersedia'}</p>
+          <p><strong>Lokasi:</strong><br> ${laporan.lokasi || 'Tidak tersedia'}</p>
+          <p><strong>Status:</strong><br> ${laporan.status || 'Tidak tersedia'}</p>
+          <p><strong>Deskripsi Masalah:</strong><br>${laporan.description || 'Tidak tersedia'}</p>
         </div>
       </div>
 
       <div class="detail-footer">
         ${
-          laporan.userId === loggedInUserId
-            ? `<button id="edit-button" class="btn-edit">Edit Laporan</button>`
-            : ''
-        }
+  laporan.userId === loggedInUserId
+    ? '<button id="edit-button" class="btn-edit">Edit Laporan</button>'
+    : ''
+}
         <button id="back-button" class="btn-back">Kembali</button>
       </div>
     `;
