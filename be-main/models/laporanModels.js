@@ -29,8 +29,13 @@ const laporanSchema = new Schema({
         type: String,
         required: true
     },
-    gambar_pendukung: [String] 
+    gambar_pendukung: [String],
+    isArchived: { 
+        type: Boolean,
+        default: false,
+    }, userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
+
 
  
 
