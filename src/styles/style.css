@@ -3755,3 +3755,52 @@ h1 {
   }
 }
 
+/* General styles */
+.navbar-menu {
+  display: flex;
+}
+
+.hamburger-navbar {
+  display: none;
+}
+
+.hamburger-navbar:hover{
+  color: #6941C6;
+}
+@media (max-width: 910px) {
+  .hamburger-navbar {
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .navbar-menu {
+    display: none;
+    flex-direction: column;
+    background-color: white;
+    position: absolute;
+    top: 60px;
+    left: 40%;
+    width: 60%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .navbar-menu li {
+    margin: 0 16px;
+    text-align: center;
+  }
+
+  .navbar-menu li:hover {
+    color: #6941C6;
+  }
+
+  .navbar-menu.open-menu {
+    display: flex;
+  }
+}
