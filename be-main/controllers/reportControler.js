@@ -6,7 +6,6 @@ const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier')
 const { uploadToCloudinary, extractPublicId } = require('../utils/cloudinary');
 
-// Ambil semua laporan
 const getLaporan = async (req, res) => {
     try {
         const laporan = await Laporan.find();
@@ -39,15 +38,22 @@ const createLaporan = async (req, res) => {
     }
 
     try {
-        const { nama, judul, lokasi, kategori, description } = req.body;
+        const { nama, tanggal, judul, lokasi, kategori, description } = req.body;
 
-        // Unggah gambar ke Cloudinary
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID tidak ditemukan. Silakan login ulang.' });
+        }
+
         const gambarPaths = await Promise.all(
             req.files.map(file => uploadToCloudinary(file.buffer, 'laporan'))
         );
 
         const newLaporan = new Laporan({
+            userId, 
             nama,
+            tanggal,
             judul,
             lokasi,
             kategori,
@@ -62,12 +68,13 @@ const createLaporan = async (req, res) => {
     }
 };
 
+
 // Perbarui laporan
 const updateLaporan = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const { nama, judul, lokasi, kategori, description } = req.body;
+        const { nama, tanggal, judul, lokasi, kategori, description } = req.body;
         const existingLaporan = await Laporan.findById(id);
 
         if (!existingLaporan) {
@@ -93,7 +100,7 @@ const updateLaporan = async (req, res) => {
 
         const updatedLaporan = await Laporan.findByIdAndUpdate(
             id,
-            { nama, judul, lokasi, kategori, description, gambar_pendukung: gambarPaths },
+            { nama, tanggal, judul, lokasi, kategori, description, gambar_pendukung: gambarPaths },
             { new: true, runValidators: true }
         );
 
@@ -130,6 +137,49 @@ const deleteLaporan = async (req, res) => {
     }
 };
 
+// Arsipkan laporan
+const archiveLaporan = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const laporan = await Laporan.findByIdAndUpdate(
+            id,
+            { isArchived: true },
+            { new: true }
+        );
+
+        if (!laporan) {
+            return res.status(404).json({ message: 'Laporan tidak ditemukan' });
+        }
+
+        res.status(200).json({ message: 'Laporan berhasil diarsipkan', laporan });
+    } catch (error) {
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengarsipkan laporan', error: error.message });
+    }
+};
+
+// Batalkan arsipkan laporan
+const unarchiveLaporan = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const laporan = await Laporan.findByIdAndUpdate(
+            id,
+            { isArchived: false },
+            { new: true }
+        );
+
+        if (!laporan) {
+            return res.status(404).json({ message: 'Laporan tidak ditemukan' });
+        }
+
+        res.status(200).json({ message: 'Laporan berhasil dibatalkan arsipnya', laporan });
+    } catch (error) {
+        res.status(500).json({ message: 'Terjadi kesalahan saat membatalkan arsip laporan', error: error.message });
+    }
+};
+
+
 // Approve laporan
 const accLaporan = async (req, res) => {
     const verifyRole = req.user.role;
@@ -162,4 +212,6 @@ module.exports = {
     deleteLaporan,
     updateLaporan,
     accLaporan,
+    archiveLaporan,
+    unarchiveLaporan,
 };
