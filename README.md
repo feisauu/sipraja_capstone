@@ -45,10 +45,11 @@ SIPRAJA dibangun menggunakan berbagai teknologi dan alat yang modern untuk memas
   - Node.js dengan Express
   - MongoDB untuk database penyimpanan laporan
   - JWT untuk autentikasi pengguna
+  - Cloudinary untuk menyimpan foto
 - **Tools & Library**:
   - NPM (Node Package Manager)
   - Webpack untuk bundling aplikasi
-  - Axios untuk pengambilan data API
+  - Fetch untuk pengambilan data API
 
 ---
 
