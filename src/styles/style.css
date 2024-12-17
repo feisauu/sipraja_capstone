@@ -768,8 +768,10 @@ header .logo-text {
   .card {
     width: 80%;
     margin: 10px auto;
+    flex: 1 1 100%;
   }
 
+  .hero-content,
   .solutions-content {
     flex-direction: column;
     text-align: center;
@@ -781,6 +783,16 @@ header .logo-text {
 
   .solutions-text ul {
     text-align: left;
+  }
+   .solutions-text ul li {
+    flex-direction: column;
+    text-align: center;
+  }
+  .number {
+    margin: 0 auto;
+  }
+  .report-container {
+    flex-direction: column;
   }
 }
 
