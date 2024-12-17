@@ -3666,3 +3666,80 @@ h1 {
   color: #6c757d;
 }
 
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .welcome-section .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .login-container {
+    padding: 15px;
+  }
+
+  .btn.primary {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .input-icon {
+    display: flex;
+    align-items: center;
+    position: relative; 
+  }
+
+  .input-icon input {
+    padding: 8px;
+    font-size: 0.9rem;
+    padding-left: 30px;
+    flex: 1;
+  }
+
+  .input-icon .icon {
+    position: absolute; 
+    left: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-section .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .login-container {
+    padding: 10px;
+  }
+
+  .btn.primary {
+    padding: 7px;
+    font-size: 0.8rem;
+  }
+
+  .input-icon {
+    display: flex;
+    align-items: center;
+    position: relative; 
+  }
+
+  .input-icon input {
+    padding: 7px;
+    font-size: 0.8rem;
+    padding-left: 30px; 
+    flex: 1;
+  }
+
+  .input-icon .icon {
+    position: absolute; 
+    left: 10px; 
+    font-size: 0.8rem;
+  }
+}
+
