@@ -26,17 +26,17 @@ class Navbar extends HTMLElement {
                 <div class="notification-item">
                   <span class="notif-badge selesai">● Laporan Selesai</span>
                   <span class="notif-time">2 hari yang lalu</span>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+                  <p>✅ Hore! Laporan Anda telah diproses dengan sukses. Silakan cek hasilnya!</p>
                 </div>
                 <div class="notification-item">
                   <span class="notif-badge diproses">● Laporan Diproses</span>
                   <span class="notif-time">2 hari yang lalu</span>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+                  <p>🔄 Sedang Diproses! Tim kami sedang memproses laporan Anda. Harap tunggu ya!</p>
                 </div>
                 <div class="notification-item">
                   <span class="notif-badge selesai">● Laporan Selesai</span>
                   <span class="notif-time">2 hari yang lalu</span>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet..</p>
+                  <p>✅ Hore! Laporan Anda telah diproses dengan sukses. Silakan cek hasilnya!</p>
                 </div>
                 <div class="notif-footer">
                   <a href="#/notifikasi">Lihat semua notifikasi →</a>
