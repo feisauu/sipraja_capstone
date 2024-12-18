@@ -67,6 +67,39 @@ const createAboutPage = () => {
   `;
   document.body.appendChild(about);
 
+  const developersSection = document.createElement('section-page');
+  developersSection.setAttribute('title', 'Developers');
+  const developerCards = document.createElement('div');
+  developerCards.className = 'developer-cards';
+
+  const devCard1 = document.createElement('dev-card');
+  devCard1.setAttribute('image', '../images/profil.webp');
+  devCard1.setAttribute('name', 'Fatiha Shafiyatun Nuha');
+  devCard1.setAttribute('role', 'Bagian project 1');
+
+  const devCard2 = document.createElement('dev-card');
+  devCard2.setAttribute('image', '../images/profil.webp');
+  devCard2.setAttribute('name', 'Feis Aulia Fatchuriani');
+  devCard2.setAttribute('role', 'Bagian project 2');
+
+  const devCard3 = document.createElement('dev-card');
+  devCard3.setAttribute('image', '../images/monica.png');
+  devCard3.setAttribute('name', 'Monica Oktaviani');
+  devCard3.setAttribute('role', 'Front-End Web Dev');
+
+  const devCard4 = document.createElement('dev-card');
+  devCard4.setAttribute('image', '../images/profil.webp');
+  devCard4.setAttribute('name', 'Almira Putri Wibowo');
+  devCard4.setAttribute('role', 'Bagian project 4');
+
+  developerCards.appendChild(devCard1);
+  developerCards.appendChild(devCard2);
+  developerCards.appendChild(devCard3);
+  developerCards.appendChild(devCard4);
+
+  developersSection.appendChild(developerCards);
+  document.body.appendChild(developersSection);
+
   // Create and append the footer
   const footer = document.createElement('footer-component');
   document.body.appendChild(footer);
