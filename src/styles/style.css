@@ -936,7 +936,22 @@ label {
 .btn.primary:hover {
   background-color: #574dd6;
 }
+.cancel {
+  margin-top : 10px;
+  background-color: #ff6363;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
+.cancel:hover {
+  background-color: #de1d1d;
+}
 .register-link {
   font-size: 14px;
   color: #333;
