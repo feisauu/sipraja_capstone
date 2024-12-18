@@ -78,8 +78,8 @@ class Navbar extends HTMLElement {
         const { target } = event;
         const href = target.getAttribute('href');
         if (href) {
-          window.location.hash = href; // Navigasi ke halaman yang sesuai
-          subMenu.classList.remove('open-menu'); // Menutup menu setelah klik
+          window.location.hash = href;
+          subMenu.classList.remove('open-menu');
         }
       });
     });
@@ -121,6 +121,21 @@ class Navbar extends HTMLElement {
     });
 
     this.loadUserData();
+    this.setActiveMenuItem();
+    window.addEventListener('hashchange', () => this.setActiveMenuItem());
+  }
+
+  setActiveMenuItem() {
+    const currentHash = window.location.hash;
+    const menuItems = this.querySelectorAll('.navbar-menu a');
+
+    menuItems.forEach((item) => {
+      if (item.getAttribute('href') === currentHash) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
   }
 
   showNotificationDetails() {
