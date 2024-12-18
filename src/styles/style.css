@@ -3865,19 +3865,6 @@ h1 {
 
 /* Media Queries */
 @media (max-width: 1220px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .features {
-    text-align: center;
-  }
-
-  .feature-cards .card {
-    flex: 1 1 100%;
-  }
-
   .solutions-content {
     flex-direction: column;
     text-align: center;
@@ -3901,87 +3888,15 @@ h1 {
   }
 }
 
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 1.5rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-  }
-
-  .features h2,
-  .solutions-text h3 {
-    font-size: 1.5rem;
-  }
-
-  .feature-cards .card {
-    padding: 0.5rem;
-  }
-
-  .solutions-text ul li div {
-    font-size: 0.9rem;
-  }
-
-  .report-content p {
-    font-size: 0.9rem;
-  }
-
-
-}
-
 /* Media Queries untuk layar kecil (< 500px) */
 @media (max-width: 570px) {
-  body {
-    margin: 0;
-    overflow-x: hidden;
-  }
-  
-  .hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero-content {
-    padding: 1rem;
-  }
-
-  .hero-content h1 {
-    font-size: 1rem;
-    line-height: 1.2;
-  }
-
-  .hero-content p {
-    font-size: 0.8rem;
-  }
-
-  .cta-btn {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-  }
-
   .features {
-    padding: 1rem;
     text-align: center;
-  }
-
-  .feature-cards {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .feature-cards .card {
-    padding: 0.5rem;
-    flex: 1 1 auto;
   }
 
   .solutions-content {
     flex-direction: column;
     text-align: center;
-  }
-
-  .solutions-text ul li div {
-    font-size: 0.8rem;
   }
 
   .solutions-image img {
@@ -3994,14 +3909,6 @@ h1 {
     flex-direction: column;
     text-align: center;
     padding: 1rem;
-  }
-
-  .report-content p {
-    font-size: 0.8rem;
-  }
-
-  .report-btn {
-    font-size: 0.9rem;
   }
 
   .about .container {
