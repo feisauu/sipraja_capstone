@@ -39,7 +39,7 @@ const renderLoginPage = () => {
       <div class="form-footer">
         <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa password?</a>
       </div>
-      <button type="submit" class="btn primary" id="login-button">Masuk</button>
+      <button type="submit" class="btn primary" id="login-button">Masuk</button><button type="button" id="cancel-button" class="cancel">Kembali</button>
       <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
     </form>
   `;
@@ -50,7 +50,10 @@ const renderLoginPage = () => {
 
   const loginForm = document.getElementById('login-form');
   const loginButton = document.getElementById('login-button');
-
+  
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    window.location.hash = renderHomePage();
+  });
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -118,4 +121,18 @@ const renderLoginPage = () => {
   });
 };
 
+function renderHomePage() {
+  fetch('index.html')
+    .then((response) => {
+      if (!response.ok) throw new Error('Gagal memuat halaman utama.');
+      return response.text();
+    })
+    .then((html) => {
+      document.body.innerHTML = html;
+    })
+    .catch((error) => {
+      console.error('Error loading index.html:', error);
+      document.body.innerHTML = '<p>Error: Tidak dapat memuat halaman utama.</p>';
+    });
+}
 export default renderLoginPage;
