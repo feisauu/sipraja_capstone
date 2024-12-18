@@ -3695,19 +3695,16 @@ h1 {
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .welcome-section h1 {
-    font-size: 1.8rem;
-  }
-
-  .welcome-section .subtitle {
-    font-size: 0.9rem;
-  }
-
   .login-container {
     padding: 15px;
   }
 
   .btn.primary {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .cancel {
     padding: 8px;
     font-size: 0.9rem;
   }
@@ -3733,19 +3730,16 @@ h1 {
 }
 
 @media (max-width: 480px) {
-  .welcome-section h1 {
-    font-size: 1.5rem;
-  }
-
-  .welcome-section .subtitle {
-    font-size: 0.8rem;
-  }
-
   .login-container {
     padding: 10px;
   }
 
   .btn.primary {
+    padding: 7px;
+    font-size: 0.8rem;
+  }
+
+  .cancel {
     padding: 7px;
     font-size: 0.8rem;
   }
@@ -3782,6 +3776,7 @@ h1 {
 .hamburger-navbar:hover{
   color: #6941C6;
 }
+
 @media (max-width: 910px) {
   .hamburger-navbar {
     display: block;
