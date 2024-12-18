@@ -539,15 +539,15 @@ header .logo-text {
 }
 
 .report-image img {
-  max-width: 350px; /* Agar gambar tidak melampaui container */
-  height: auto; /* Menjaga rasio gambar */
-  border-radius: 10px; /* Opsional, memberikan sudut melengkung */
+  max-width: 350px; 
+  height: auto; 
+  border-radius: 10px; 
 }
 
 /* Responsiveness */
 @media (max-width: 768px) {
   .report-container {
-    flex-direction: column; /* Tumpuk teks dan gambar */
+    flex-direction: column; 
     text-align: center;
   }
 
@@ -557,7 +557,7 @@ header .logo-text {
 
   .report-image img {
     max-width: 80%;
-    margin: 0 auto; /* Center gambar */
+    margin: 0 auto; 
   }
 }
 
@@ -683,7 +683,7 @@ header .logo-text {
 
 /* Tentang Kami Section */
 .about {
-  background-color: #f7f7f7;
+  background-color: #fff;
   padding: 40px 20px;
 }
 
@@ -694,7 +694,8 @@ header .logo-text {
   gap: 20px;
   justify-content: space-between;
   align-items: flex-start;
-  flex-direction: row-reverse; /* Membalikkan posisi maps ke kiri dan teks ke kanan */
+  flex-direction: row-reverse;
+  
 }
 
 /* Left Column (Map) */
@@ -728,6 +729,7 @@ header .logo-text {
   font-size: 1.8em;
   margin-bottom: 15px;
   color: #2a2a72;
+  text-align: center;
 }
 
 .about-text p {
@@ -735,22 +737,8 @@ header .logo-text {
   line-height: 1.6;
   margin-bottom: 15px;
   color: #555;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .about .container {
-    flex-direction: column; /* Pada layar kecil, elemen ditumpuk secara vertikal */
-  }
-
-  .about-text,
-  .about-map {
-    flex: 1 1 100%;
-  }
-
-  .about-map iframe {
-    height: 250px;
-  }
+  text-align: justify;
+  align-items: center;
 }
 
 /* Responsive adjustments */
