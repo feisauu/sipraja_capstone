@@ -15,7 +15,11 @@ const createAboutPage = () => {
   aboutSection.setAttribute('title', 'Apa itu SIPRAJA?🧐');
   aboutSection.innerHTML = `
     <p>
-      SIPRAJA adalah singkatan dari Sistem Informasi Pelaporan Kerusakan Infrastruktur Daerah Jogja. Aplikasi ini dirancang untuk mempermudah masyarakat dalam melaporkan kerusakan infrastruktur yang ada di daerah Jogja. Dengan menggunakan sistem ini, masyarakat dapat dengan cepat melaporkan berbagai jenis kerusakan, seperti jalan berlubang, jembatan rusak, dan fasilitas umum lainnya, yang kemudian dapat dikelola oleh pihak berwenang untuk segera ditindaklanjuti. Aplikasi ini menyediakan platform yang efisien dan mudah digunakan oleh warga dan pemerintah daerah untuk berkomunikasi dan memperbaiki kondisi infrastruktur secara lebih terorganisir.
+    Yogyakarta, sebagai kota wisata dan pusat pendidikan yang memiliki kerentanan tinggi terhadap bencana alam seperti gempa bumi, sering kali menghadapi berbagai tantangan dalam menjaga dan memelihara infrastruktur publik. Salah satu tantangan utamanya adalah keterbatasan sumber daya yang tersedia serta lambatnya proses pelaporan kerusakan oleh masyarakat, yang menyebabkan penanganan masalah menjadi tidak efektif dan cenderung memakan waktu lebih lama. Akibatnya, kerusakan fasilitas umum seperti jalan, jembatan, dan infrastruktur vital lainnya sering kali tidak segera tertangani, yang berpotensi membahayakan keselamatan masyarakat serta menghambat aktivitas sehari-hari.
+    <br>
+    <br>Untuk mengatasi hal ini, platform pelaporan berbasis web SIPRAJA dirancang sebagai solusi efektif yang memungkinkan masyarakat untuk melaporkan kerusakan fasilitas umum dengan cepat, mudah, dan akurat. Dengan adanya platform ini, setiap laporan yang diajukan dapat segera ditindaklanjuti oleh pihak terkait, sehingga proses perbaikan dapat dilakukan lebih efisien.
+    <br>
+    <br>SIPRAJA adalah singkatan dari Sistem Informasi Pelaporan Kerusakan Infrastruktur Daerah Jogja. Aplikasi ini dirancang untuk mempermudah masyarakat dalam melaporkan kerusakan infrastruktur yang ada di daerah Jogja. Dengan menggunakan sistem ini, masyarakat dapat dengan cepat melaporkan berbagai jenis kerusakan, seperti jalan berlubang, jembatan rusak, dan fasilitas umum lainnya, yang kemudian dapat dikelola oleh pihak berwenang untuk segera ditindaklanjuti. Aplikasi ini menyediakan platform yang efisien dan mudah digunakan oleh warga dan pemerintah daerah untuk berkomunikasi dan memperbaiki kondisi infrastruktur secara lebih terorganisir.
     </p>
   `;
   document.body.appendChild(aboutSection);
