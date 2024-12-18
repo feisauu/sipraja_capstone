@@ -5,10 +5,13 @@ class Navbar extends HTMLElement {
       <header>
         <nav>
           <div class="navbar-left">
-            <div class="logo">
-              <span class="logo-icon">S</span>
-              <span class="logo-text">SIPRAJA</span>
-            </div>
+            <a href="#/dashboard" class="logo-link">
+              <div class="logo">
+                <span class="logo-icon">S</span>
+                <span class="logo-text">SIPRAJA</span>
+              </div>
+            </a>
+          </div>
           </div>
           <div class="hamburger-navbar" id="hamburger-navbar">
             <i class="fas fa-bars"></i>
