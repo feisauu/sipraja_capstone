@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-empty */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/no-duplicates */
@@ -73,21 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (event.target && event.target.id === 'login-link') {
       event.preventDefault();
-      renderLoginPage(); 
+      renderLoginPage();
     }
   });
 });
 
 const getLaporanIdFromUrl = () => {
   const params = new URLSearchParams(window.location.hash.split('?')[1]);
-  return params.get('id'); 
+  return params.get('id');
 };
 
 function handleHashChange() {
   const currentHash = window.location.hash;
-
   document.body.innerHTML = '';
-
   if (currentHash === '#/login') {
     renderLoginPage();
   } else if (currentHash === '#/register') {
@@ -96,7 +95,7 @@ function handleHashChange() {
     renderForgetPasswordPage();
   } else if (currentHash.startsWith('#/reset-password')) {
     renderResetPassword();
-  }  else if (currentHash.startsWith('#/konfirmasi')) {
+  } else if (currentHash.startsWith('#/konfirmasi')) {
     const id = currentHash.split('/').pop();
     if (id) {
       createKonfirmasi(id);
@@ -128,21 +127,23 @@ function handleHashChange() {
   } else if (currentHash.startsWith('#/detailnya')) {
     const laporanId = getLaporanIdFromUrl();
     if (laporanId) {
-      createDetailnyaPage(laporanId); 
+      createDetailnyaPage(laporanId);
     } else {
       document.body.innerHTML = '<p>Error: ID laporan tidak ditemukan di URL.</p>';
     }
-  }else if (currentHash.startsWith('#/edit-laporan')) {
+  } else if (currentHash.startsWith('#/edit-laporan')) {
     const laporanId = getLaporanIdFromUrl();
-    if (laporanId && laporanId.trim() !== '') { 
-      createEditLaporanPage(laporanId); 
+    if (laporanId && laporanId.trim() !== '') {
+      createEditLaporanPage(laporanId);
     } else {
       document.body.innerHTML = '<p>Error: ID laporan tidak valid atau tidak ditemukan di URL.</p>';
     }
   } else if (currentHash === '#/updateprofile') {
     renderUpdatePage();
-  } else if (currentHash == '#/ubah-sandi'){
+  } else if (currentHash === '#/ubah-sandi') {
     renderResetPasswordPage();
+  } else if (!currentHash || currentHash === '#/') {
+    renderHomePage();
   } else {
     document.body.innerHTML = '<p>Error 404: Halaman tidak ditemukan.</p>';
   }
