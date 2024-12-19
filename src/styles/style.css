@@ -3860,6 +3860,103 @@ h1 {
     left: 10px; 
     font-size: 0.8rem;
   }
+  .container{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content{
+    width: auto;
+  }
+
+  .laporan-card {
+    flex-direction: column;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .laporan-card-left {
+    width: 100%;
+    text-align: center;
+  }
+
+  .laporan-card-left img {
+    width: 80%;
+    max-width: 150px;
+    margin: 0 auto;
+  }
+
+  .laporan-card-right {
+    width: 100%;
+    padding: 5px;
+    text-align: left;
+  }
+
+  .features-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    order: 1;
+  }
+
+  .search-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar input {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .search-bar button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .create-report a {
+    width: 100%;
+  }
+
+  .create-report button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .sidebars{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .sidebars .sidebar {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebars h3 {
+    margin: 10px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .pagination-container {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .pagination-container button {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
 }
 
 /* General styles */
