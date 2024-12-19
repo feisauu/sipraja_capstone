@@ -4021,6 +4021,7 @@ h1 {
     font-size: 0.9rem;
     text-align: justify;
     align-items: center;
+    align-content: center;
   }
   
   .about-map iframe {
