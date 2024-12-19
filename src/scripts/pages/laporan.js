@@ -26,12 +26,18 @@ const fetchLaporan = async () => {
     const data = await response.json();
     console.log('Respons API:', data);
 
-    return Array.isArray(data.message) ? data.message.filter((laporan) => !laporan.isArchived) : [];
+    // Filter laporan yang tidak diarsipkan dan urutkan berdasarkan createdAt (descending)
+    return Array.isArray(data.message)
+      ? data.message
+          .filter((laporan) => !laporan.isArchived)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Urutkan terbaru ke atas
+      : [];
   } catch (error) {
     console.error('Fetch Laporan Error:', error.message);
     return [];
   }
 };
+
 
 const createLaporanCard = (laporan) => {
   const card = document.createElement('div');
