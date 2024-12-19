@@ -13,7 +13,7 @@ const createDashboard = () => {
   hero.id = 'home';
   hero.innerHTML = `
     <div class="hero-content">
-      <h1>Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyaman <span class="highlight">Kota Bersama</span>!</h1>
+      <h1>Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyamanan <span class="highlight">Kota Bersama</span>!</h1>
       <p>"Bantu kami memperbaiki kota dengan melaporkan kerusakan yang ada."</p>
       <button class="cta-btn" onclick="window.location.href='#/laporan'">Mulai</button>
     </div>
