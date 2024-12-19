@@ -667,12 +667,13 @@ header .logo-text {
 
 /* Form Profil */
 #profile-form {
+  width: 100%;
   max-width: 600px;
   padding: 20px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-left: 20px; /* Jarak dari foto profil */
+  margin: 0 auto;
 }
 
 #profile-form .form-group {
@@ -828,16 +829,6 @@ header .logo-text {
   flex-wrap: wrap;
   margin-top: 1rem;
 }
-
-
-
-
-
-
-
-
-
-
 
 .login {
   background: #6c63ff;
@@ -1428,8 +1419,22 @@ margin-bottom: 20px;
 }
 
 .profile-container {
-padding: 20px;
-width: 300px;
+  padding: 20px;
+  max-width: 600px; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+@media screen and (max-width: 768px) {
+  .profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+    gap: 20px;
+  }
 }
 
 .profile-name {
