@@ -16,16 +16,16 @@ class Footer extends HTMLElement {
           
           <!-- Bagian Tengah -->
           <div class="footer-center">
-            <h4>Information</h4>
+            <h4>Informasi</h4>
             <ul>
-              <li><a href="#/about">About Us</a></li>
-              <li><a href="#/about">Contact Us</a></li>
+              <li><a href="#/about">Tentang Kami</a></li>
+              <li><a href="#/about">Kontak Kami</a></li>
             </ul>
           </div>
           
           <!-- Bagian Kanan -->
           <div class="footer-right">
-            <h4>Information</h4>
+            <h4>Informasi</h4>
             <ul>
               <li><i class="fas fa-map-marker-alt"></i> Klaten, Yogyakarta, Indonesia</li>
               <li><i class="fas fa-envelope"></i> contactsipraja@gmail.com</li>
