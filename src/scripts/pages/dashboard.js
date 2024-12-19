@@ -15,7 +15,7 @@ const createDashboard = () => {
     <div class="hero-content">
       <h1>Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyaman <span class="highlight">Kota Bersama</span>!</h1>
       <p>"Bantu kami memperbaiki kota dengan melaporkan kerusakan yang ada."</p>
-      <button class="cta-btn" onclick="window.location.href='#/laporan'">Get Started</button>
+      <button class="cta-btn" onclick="window.location.href='#/laporan'">Mulai</button>
     </div>
     <div class="hero-image">
       <img src="../images/image1.png" alt="People reporting issues">
@@ -26,7 +26,7 @@ const createDashboard = () => {
   const features = document.createElement('section');
   features.className = 'features scroll-element';
   features.innerHTML = `
-    <h2>Our <span class="highlight">Interactive</span> Features</h2>
+    <h2>Fitur <span class="highlight">Unggulan</span> Kami</h2>
     <div class="feature-cards">
       <div class="card purple scroll-element">
         <i class="fas fa-chart-line"></i>
@@ -55,7 +55,7 @@ const createDashboard = () => {
         <img src="../images/image2.png" alt="Illustration of reporting">
       </div>
       <div class="solutions-text scroll-element">
-        <h3>Simple <span class="highlight">Solutions!</span></h3>
+        <h3>Solusi <span class="highlight">Praktis!</span></h3>
         <ul>
           <li>
             <span class="number">1</span>
