@@ -2026,83 +2026,6 @@ margin-bottom: 48px;
   .filter-btn-admin {
     width: 100%;
   }
-  .laporan-card {
-    flex-direction: column;
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .laporan-card-left {
-    width: 100%;
-    text-align: center;
-  }
-
-  .laporan-card-left img {
-    width: 80%;
-    max-width: 150px;
-    margin: 0 auto;
-  }
-
-  .laporan-card-right {
-    width: 100%;
-    padding: 5px;
-    text-align: left;
-  }
-
-  .features-bar {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .search-bar {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-bar input {
-    width: 100%;
-    margin-bottom: 5px;
-  }
-
-  .search-bar button {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .create-report a {
-    width: 100%;
-  }
-
-  .create-report button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-  }
-
-  .sidebars .sidebar {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-  }
-
-  .sidebars h3 {
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-
-  .pagination-container {
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .pagination-container button {
-    font-size: 12px;
-    padding: 5px;
-  }
 }
 
 /* General Layout */
@@ -3930,6 +3853,7 @@ h1 {
     width: auto;
     display: flex;
     flex-direction: row;
+    align-self: center;
   }
 
   .sidebars .sidebar {
@@ -3942,7 +3866,7 @@ h1 {
   }
 
   .sidebars h3 {
-    margin: 10px;
+    margin: 10px 3px 10px 3px;
     font-size: 16px;
     text-align: center;
   }
