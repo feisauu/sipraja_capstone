@@ -37,7 +37,7 @@ const renderLoginPage = () => {
         </div>
       </div>
       <div class="form-footer">
-        <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa password?</a>
+        <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa kata sandi?</a>
       </div>
       <button type="submit" class="btn primary" id="login-button">Masuk</button><button type="button" id="cancel-button" class="cancel">Kembali</button>
       <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
