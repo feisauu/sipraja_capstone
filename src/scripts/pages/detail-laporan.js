@@ -15,7 +15,7 @@ const createDetailLaporanPage = async () => {
   detailLaporanSection.innerHTML = `
     <h1 class="form-title">Formulir Laporan</h1>
     <div class="form-group" style="display: none;">
-        <label for="userId">User ID</label>
+        <label for="userId">ID Pengguna</label>
         <input type="hidden" id="userId" name="userId">
       </div>
 
