@@ -106,7 +106,7 @@ const createProfilePage = () => {
         profileName.textContent = data.nama || 'Nama tidak tersedia';
         profileImage.src = data.image || '../images/profil.webp';
         const formTitle = document.createElement('h2');
-        formTitle.textContent = 'Informasi User';
+        formTitle.textContent = 'Informasi Pengguna';
         profileForm.appendChild(formTitle);
         const formFields = [
           { id: 'nama', label: 'Nama', type: 'text', value: data.nama || '-' },
@@ -143,7 +143,20 @@ const createProfilePage = () => {
   };
   
   fetchUserData();
-  
+  function renderHomePage() {
+    fetch('index.html')
+      .then((response) => {
+        if (!response.ok) throw new Error('Gagal memuat halaman utama.');
+        return response.text();
+      })
+      .then((html) => {
+        document.body.innerHTML = html;
+      })
+      .catch((error) => {
+        console.error('Error loading index.html:', error);
+        document.body.innerHTML = '<p>Error: Tidak dapat memuat halaman utama.</p>';
+      });
+  }
   profileMenu.addEventListener('click', async (event) => {
     const action = event.target.closest('a')?.dataset.action;
     if (!action) return;
@@ -182,12 +195,11 @@ const createProfilePage = () => {
             const data = await response.json();
   
             if (response.ok) {
-              // Hapus data dari localStorage
+              Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
               localStorage.removeItem('authToken');
               localStorage.removeItem('userId');
-              // Arahkan ke halaman login
-              window.location.hash = '#/login';
-              Swal.fire('Berhasil', 'Anda telah berhasil logout.', 'success');
+              window.location.hash = '#/';
+              renderHomePage();
             } else {
               throw new Error(data.message || 'Gagal logout. Silakan coba lagi.');
             }
