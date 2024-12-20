@@ -75,17 +75,17 @@ const createDashboard = () => {
       <div class="card purple scroll-element">
         <i class="fas fa-chart-line"></i>
         <h3>Pantau Progres</h3>
-        <p>Lihat status perbaikan secara berkala melalui fitur ini.</p>
+            <p>Lihat status perbaikan secara berkala melalui fitur ini. Anda dapat memantau setiap langkah dalam proses perbaikan untuk memastikan masalah segera ditangani.</p>
       </div>
       <div class="card yellow scroll-element">
         <i class="fas fa-bolt"></i>
         <h3>Laporkan Cepat</h3>
-        <p>Lapor kerusakan dengan cepat dan mudah.</p>
+            <p>Lapor kerusakan dengan cepat dan mudah hanya dengan beberapa langkah sederhana. Fitur ini dirancang untuk mempermudah masyarakat dalam melaporkan kejadian dengan lebih efisien.</p>
       </div>
       <div class="card purple scroll-element">
         <i class="fas fa-hands-helping"></i>
         <h3>Dukung Perbaikan</h3>
-        <p>Bersama-sama kita dapat menciptakan fasilitas yang lebih baik.</p>
+            <p>Bersama-sama kita dapat menciptakan fasilitas yang lebih baik. Dukung setiap perbaikan yang dilakukan untuk menjaga kenyamanan dan keamanan lingkungan kita.</p>
       </div>
     </div>
   `;
