@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable import/no-useless-path-segments */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
@@ -13,7 +14,9 @@ const createDashboard = () => {
   hero.id = 'home';
   hero.innerHTML = `
     <div class="hero-content">
-      <h1>Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyamanan <span class="highlight">Kota Bersama</span>!</h1>
+      <h1 id="hero-text">
+        Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyamanan <span class="highlight">Kota Bersama</span>!
+      </h1>
       <p>"Bantu kami memperbaiki kota dengan melaporkan kerusakan yang ada."</p>
       <button class="cta-btn" onclick="window.location.href='#/laporan'">Mulai</button>
     </div>
@@ -21,12 +24,53 @@ const createDashboard = () => {
       <img src="../images/image1.png" alt="People reporting issues">
     </div>
   `;
+
   document.body.appendChild(hero);
+
+  const element = document.querySelector('#hero-text');
+  const text = 'Lapor <span class="highlight">Kerusakan</span>, Jaga Kenyamanan <span class="highlight">Kota Bersama</span>!';
+  element.innerHTML = '';
+  let index = 0;
+  let isTag = false;
+  let currentText = '';
+
+  function type() {
+    if (index < text.length) {
+      const currentChar = text[index];
+      if (currentChar === '<') {
+        isTag = true;
+      }
+
+      if (isTag) {
+        currentText += currentChar;
+      } else {
+        currentText += currentChar;
+      }
+
+      if (currentChar === '>') {
+        isTag = false;
+      }
+
+      element.innerHTML = `${currentText}<span class="cursor">|</span>`;
+      index++;
+      setTimeout(type, 50);
+    } else {
+      element.querySelector('.cursor').remove();
+      setTimeout(() => {
+        index = 0;
+        currentText = '';
+        element.innerHTML = '';
+        type();
+      }, 2000);
+    }
+  }
+
+  type();
 
   const features = document.createElement('section');
   features.className = 'features scroll-element';
   features.innerHTML = `
-    <h2>Fitur <span class="highlight">Unggulan</span> Kami</h2>
+    <h2>Fitur <span class="highlight-features">Unggulan</span> Kami</h2>
     <div class="feature-cards">
       <div class="card purple scroll-element">
         <i class="fas fa-chart-line"></i>
