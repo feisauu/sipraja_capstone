@@ -64,7 +64,7 @@ Untuk menjalankan aplikasi SIPRAJA secara lokal, ikuti langkah-langkah berikut:
 
 2. **Masuk ke Direktori Aplikasi**
    ```bash
-   cd sipraja
+   cd sipraja_capstone
    ```
 
 3. **Instalasi Dependensi**
