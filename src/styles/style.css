@@ -4036,3 +4036,23 @@ h1 {
     align-items: center;
   }
 }
+
+.highlight {
+  color: #FF5733; 
+}
+
+.highlight-features {
+  color: #6941C6;
+}
+
+.cursor {
+  color: inherit;
+  background-color: currentColor;
+  animation: blink 0.7s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
