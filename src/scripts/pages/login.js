@@ -1,158 +1,112 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
+// about.js
+
 import '../../components/navbar.js';
 import '../../components/footer.js';
-import Swal from 'sweetalert2';
-import ENDPOINT from '../globals/endpoint';
+import '../../components/section-page.js';
+import '../../components/dev-card.js';
 
-const renderLoginPage = () => {
-  document.body.className = '';
-  document.body.innerHTML = '';
+const createAboutPage = () => {
+  const navbar = document.createElement('navbar-component');
+  document.body.appendChild(navbar);
 
-  document.body.style.overflow = 'auto';
-
-  const main = document.createElement('main');
-  const welcomeSection = document.createElement('section');
-  welcomeSection.className = 'welcome-section';
-  welcomeSection.innerHTML = `
-    <h1>Selamat datang!</h1>
-    <p class="subtitle">Ayo, mulai laporkan kerusakan!</p>
+  const aboutSection = document.createElement('section-page');
+  aboutSection.setAttribute('title', 'Apa itu SIPRAJA?🧐');
+  aboutSection.innerHTML = `
+    <p>
+    Yogyakarta, sebagai kota wisata dan pusat pendidikan yang memiliki kerentanan tinggi terhadap bencana alam seperti gempa bumi, sering kali menghadapi berbagai tantangan dalam menjaga dan memelihara infrastruktur publik. Salah satu tantangan utamanya adalah keterbatasan sumber daya yang tersedia serta lambatnya proses pelaporan kerusakan oleh masyarakat, yang menyebabkan penanganan masalah menjadi tidak efektif dan cenderung memakan waktu lebih lama. Akibatnya, kerusakan fasilitas umum seperti jalan, jembatan, dan infrastruktur vital lainnya sering kali tidak segera tertangani, yang berpotensi membahayakan keselamatan masyarakat serta menghambat aktivitas sehari-hari.
+    <br>
+    <br>Untuk mengatasi hal ini, platform pelaporan berbasis web SIPRAJA dirancang sebagai solusi efektif yang memungkinkan masyarakat untuk melaporkan kerusakan fasilitas umum dengan cepat, mudah, dan akurat. Dengan adanya platform ini, setiap laporan yang diajukan dapat segera ditindaklanjuti oleh pihak terkait, sehingga proses perbaikan dapat dilakukan lebih efisien.
+    <br>
+    <br>SIPRAJA adalah singkatan dari Sistem Informasi Pelaporan Kerusakan Infrastruktur Daerah Jogja. Aplikasi ini dirancang untuk mempermudah masyarakat dalam melaporkan kerusakan infrastruktur yang ada di daerah Jogja. Dengan menggunakan sistem ini, masyarakat dapat dengan cepat melaporkan berbagai jenis kerusakan, seperti jalan berlubang, jembatan rusak, dan fasilitas umum lainnya, yang kemudian dapat dikelola oleh pihak berwenang untuk segera ditindaklanjuti. Aplikasi ini menyediakan platform yang efisien dan mudah digunakan oleh warga dan pemerintah daerah untuk berkomunikasi dan memperbaiki kondisi infrastruktur secara lebih terorganisir.
+    </p>
   `;
+  document.body.appendChild(aboutSection);
 
-  const loginContainer = document.createElement('section');
-  loginContainer.className = 'login-container';
-  loginContainer.innerHTML = `
-    <form id="login-form">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="input-icon">
-          <i class="fas fa-envelope"></i>
-          <input type="email" id="email" placeholder="Masukkan email" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Kata Sandi</label>
-        <div class="input-icon">
-          <i class="fas fa-lock"></i>
-          <input type="password" id="password" placeholder="*******" required>
-        </div>
-      </div>
-      <div class="form-footer">
-        <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa kata sandi?</a>
-      </div>
-      <button type="submit" class="btn primary" id="login-button">Masuk</button>
-      <button type="button" id="cancel-button" class="cancel">Kembali</button>
-      <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
-    </form>
+  const section = document.createElement('section-page');
+  section.setAttribute('title', 'Tujuan dan Manfaat🎯');
+  section.innerHTML = `
+  <p>
+<br><h2>🎯 Tujuan:</h2>
+<li>Mempermudah masyarakat untuk melaporkan kerusakan infrastruktur.</li>
+<li>Menyediakan sistem yang efisien untuk pengelolaan laporan kerusakan oleh pemerintah daerah.</li>
+<li>Mengoptimalkan respons terhadap kerusakan infrastruktur yang ada di daerah Jogja.</li><br>
+<br><h2>💡 Manfaat</h2>
+<li>Meningkatkan Keterlibatan Masyarakat: Masyarakat dapat lebih aktif melaporkan kerusakan yang ditemukan.</li>
+<li>Efisiensi Pengelolaan Laporan: Admin dapat mengelola dan menindaklanjuti laporan dengan lebih cepat dan terstruktur.</li>
+<li>Peningkatan Kualitas Infrastruktur: Dengan adanya laporan yang mudah diakses, perbaikan infrastruktur dapat dilakukan lebih tepat waktu.</li>
+    </p>
   `;
+  document.body.appendChild(section);
 
-  // Append sections to main
-  main.append(welcomeSection, loginContainer);
-  document.body.appendChild(main);
+  const about = document.createElement('section');
+  about.className = 'about';
+  about.innerHTML = `
+    <div class="container">
+      <div class="about-text">
+        <h3>Tentang Kami</h3>
+        <p>
+          Di <strong>SIPRAJA</strong>, kami menyediakan sarana bagi masyarakat Yogyakarta untuk melaporkan segala bentuk kerusakan pada fasilitas umum seperti jalan berlubang, lampu penerangan jalan yang mati, kerusakan taman, dan lainnya.
+        </p>
+        <p>
+          Dengan melibatkan masyarakat, kami bertujuan untuk mempercepat perbaikan infrastruktur kota dan menciptakan Yogyakarta yang lebih nyaman, aman, dan layak huni. 
+          Kami bekerja sama dengan <strong>Dinas Pekerjaan Umum Yogyakarta</strong> untuk menjaga keberlangsungan infrastruktur kota.
+        </p>
+      </div>
 
-  const loginForm = document.getElementById('login-form');
-  const loginButton = document.getElementById('login-button');
+      <div class="about-map">
+        <h3>Lokasi Kami</h3>
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.9286416230725!2d110.38876667471252!3d-7.800427292123149!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5790f07cf09b%3A0x8132a30c009a85b7!2sUniversitas%20Gadjah%20Mada!5e0!3m2!1sid!2sid!4v1699212345678!5m2!1sid!2sid" 
+          width="100%" 
+          height="300" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(about);
 
-  document.getElementById('cancel-button').addEventListener('click', () => {
-    window.location.hash = '#/';
-  });
+  const developersSection = document.createElement('section-page');
+  developersSection.setAttribute('title', 'Developers');
+  const developerCards = document.createElement('div');
+  developerCards.className = 'developer-cards';
 
-  loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  const devCard1 = document.createElement('dev-card');
+  devCard1.setAttribute('image', '../images/profil.webp');
+  devCard1.setAttribute('name', 'Fatiha Shafiyatun Nuha');
+  devCard1.setAttribute('role', 'Bagian project 1');
 
-    loginButton.disabled = true;
-    loginButton.textContent = 'Memproses...';
+  const devCard2 = document.createElement('dev-card');
+  devCard2.setAttribute('image', '../images/fei.jpeg');
+  devCard2.setAttribute('name', 'Feis Aulia Fatchuriani');
+  devCard2.setAttribute('role', 'Front-End Web Dev');
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+  const devCard3 = document.createElement('dev-card');
+  devCard3.setAttribute('image', '../images/monica.png');
+  devCard3.setAttribute('name', 'Monica Oktaviani');
+  devCard3.setAttribute('role', 'Front-End Web Dev');
 
-    try {
-      const response = await fetch(ENDPOINT.LOGIN, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  const devCard4 = document.createElement('dev-card');
+  devCard4.setAttribute('image', '../images/mira.jpg');
+  devCard4.setAttribute('name', 'Almira Putri Wibowo');
+  devCard4.setAttribute('role', 'Fullstack Web Dev');
 
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || 'Login gagal.');
-      }
+  developerCards.appendChild(devCard1);
+  developerCards.appendChild(devCard2);
+  developerCards.appendChild(devCard3);
+  developerCards.appendChild(devCard4);
 
-      const result = await response.json();
-      localStorage.setItem('authToken', result.token);
-      localStorage.setItem('userId', result.userId);
-      localStorage.setItem('role', result.role);
+  developersSection.appendChild(developerCards);
+  document.body.appendChild(developersSection);
 
-      Swal.fire({
-        title: 'Berhasil!',
-        text: 'Anda berhasil login. Mengarahkan ke dashboard...',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      }).then(() => {
-        if (result.role === 'admin') {
-          window.location.hash = '#/dashboard-admin';
-        } else if (result.role === 'user') {
-          window.location.hash = '#/dashboard';
-        } else {
-          Swal.fire('Error', 'Role pengguna tidak dikenali.', 'error');
-        }
-      });
-    } catch (error) {
-      Swal.fire('Error', error.message, 'error');
-    } finally {
-      // Re-enable button and reset text
-      loginButton.disabled = false;
-      loginButton.textContent = 'Masuk';
-    }
-  });
-
-  const registerLink = document.getElementById('register-link');
-  registerLink.addEventListener('click', (event) => {
-    event.preventDefault();
-    window.location.hash = '#/register';
-  });
-
-  const forgotPasswordLink = document.getElementById('forgot-password-link');
-  forgotPasswordLink.addEventListener('click', (event) => {
-    event.preventDefault();
-    window.location.hash = '#/lupa-sandi';
-  });
+  // Create and append the footer
+  const footer = document.createElement('footer-component');
+  document.body.appendChild(footer);
 };
 
-function renderHomePage() {
-  fetch('index.html')
-    .then((response) => {
-      if (!response.ok) throw new Error('Gagal memuat halaman utama.');
-      return response.text();
-    })
-    .then((html) => {
-      document.body.innerHTML = html;
-    })
-    .catch((error) => {
-      console.error('Error loading index.html:', error);
-      document.body.innerHTML = '<p>Error: Tidak dapat memuat halaman utama.</p>';
-    });
-}
-
-window.addEventListener('hashchange', () => {
-  const { hash } = window.location;
-
-  if (hash === '#/') {
-    renderHomePage();
-  }
-});
-
-if (window.location.hash) {
-  const { hash } = window.location;
-  if (hash === '#/') {
-    renderHomePage();
-  }
-} else {
-  renderHomePage();
-}
-
-export default renderLoginPage;
+export default createAboutPage;
