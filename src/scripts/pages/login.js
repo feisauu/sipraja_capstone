@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable import/extensions */
 import '../../components/navbar.js';
 import '../../components/footer.js';
@@ -39,7 +40,8 @@ const renderLoginPage = () => {
       <div class="form-footer">
         <a href="#/forget-password" id="forgot-password-link" class="forgot-password">Lupa kata sandi?</a>
       </div>
-      <button type="submit" class="btn primary" id="login-button">Masuk</button><button type="button" id="cancel-button" class="cancel">Kembali</button>
+      <button type="submit" class="btn primary" id="login-button">Masuk</button>
+      <button type="button" id="cancel-button" class="cancel">Kembali</button>
       <p class="register-link">Belum punya akun? <a href="#/register" id="register-link">Daftar disini</a></p>
     </form>
   `;
@@ -50,14 +52,14 @@ const renderLoginPage = () => {
 
   const loginForm = document.getElementById('login-form');
   const loginButton = document.getElementById('login-button');
-  
+
   document.getElementById('cancel-button').addEventListener('click', () => {
-    window.location.hash = renderHomePage();
+    window.location.hash = '#/';
   });
+
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Disable button and show loading state
     loginButton.disabled = true;
     loginButton.textContent = 'Memproses...';
 
@@ -135,4 +137,22 @@ function renderHomePage() {
       document.body.innerHTML = '<p>Error: Tidak dapat memuat halaman utama.</p>';
     });
 }
+
+window.addEventListener('hashchange', () => {
+  const { hash } = window.location;
+
+  if (hash === '#/') {
+    renderHomePage();
+  }
+});
+
+if (window.location.hash) {
+  const { hash } = window.location;
+  if (hash === '#/') {
+    renderHomePage();
+  }
+} else {
+  renderHomePage();
+}
+
 export default renderLoginPage;
