@@ -82,7 +82,7 @@ const createAboutPage = () => {
   devCard1.setAttribute('role', 'Bagian project 1');
 
   const devCard2 = document.createElement('dev-card');
-  devCard2.setAttribute('image', '../images/fei.jpg');
+  devCard2.setAttribute('image', '../images/fei.jpeg');
   devCard2.setAttribute('name', 'Feis Aulia Fatchuriani');
   devCard2.setAttribute('role', 'Front-End Web Dev');
 
